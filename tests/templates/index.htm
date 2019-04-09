@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Long running task app</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>    
+    </head>
+    <body>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var socket = io.connect('http://127.0.0.1:5000');
+                    socket.on('connect', function() {
+                        socket.send('User has connected!');
+                    });
+                    socket.on('message', function(msg) {
+                        $("#Results").append('<li>'+msg+'</li>');
+                        console.log('Received message');
+                    });
+                    socket.on('my response', function(msg) {
+                        $('#log').append('<p>Received: ' + msg.data + '</p>');
+                    });
+
+                    socket.on('my response 2', function(msg) {
+                        $('#log2').append('<p>Received: ' + msg.data + '</p>');
+                    });
+
+                    $('#sendbutton').on('click', function() {
+                        socket.send($('#myMessage').val());
+                        $('#myMessage').val('');
+                    });
+                });
+                </script>
+
+        <div>Click the button to start the task</div>
+        <form method='post', action="/runTask">
+            <button type="submit" id="taskButton">Task</button>
+        </form>
+        <div id="log">...</div>
+        <div id="log2">...</div>
+        <div id="Results">...</div>
+    </body>
+</html>
