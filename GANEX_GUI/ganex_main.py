@@ -10,6 +10,10 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
+def projects_window():
+    return render_template('projects.htm')
+
+
 @app.route("/home")
 def hello():
     return render_template('home.htm')
@@ -34,6 +38,11 @@ def interactive():
     print("This is working")
     return render_template("interactive.htm")
     
+@app.route("/run_test_task", methods=['POST'])
+def test_task():
+    print("Test task is OK...")
+    return render_template("train.htm")
+
 
 @app.route('/background_process_1')
 def background_process_1():

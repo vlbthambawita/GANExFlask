@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, send, emit
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'abc123'
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='threading')
 
 @app.route("/", methods=['GET'])
 def index():
