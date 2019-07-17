@@ -1,17 +1,34 @@
 import os
+import json
 from flask import Flask, render_template, url_for, request, flash, redirect
 from werkzeug.utils import secure_filename
 from flask import jsonify
 
+#My classes
+from config import Config
+from app.forms import CreateProject_form
+from app.projects import Project
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+app_dict = {} # main dictionary file to keep project info
+
+#UPLOAD_FOLDER = '/path/to/the/uploads'
+#ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config.from_object(Config)
+#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@app.route("/")
+@app.route("/", methods = ["GET" , "POST"])
 def projects_window():
-    return render_template('projects.htm')
+    form = CreateProject_form()
+
+    if form.validate_on_submit():
+        
+        project = Project(form.projectName.data, form.projectPath.data)
+        app_dict[project.name] = project.full_path
+        print("Added project path and created a project in", project.json_file)
+        save_app_json(app_dict)
+
+    return render_template('projects.htm', form = form)
 
 
 @app.route("/home")
@@ -71,9 +88,30 @@ def background_process():
     except Exception as e:
         return str(e)
 
+######### Init app and save app dictionary #########
+def init_app(app_dict):
 
+    if os.path.isfile("json/app.json"):
+
+        with open("json/app.json") as pf:
+            # global projects_dict
+            app_dict = json.load(pf)
+            pf.close()
+    else:
+        with open("json/app.json", "w+") as pf:
+            # global projects_dict
+            json.dump(app_dict, pf)
+            pf.close()
+
+def save_app_json(app_dict):
+    with open("json/app.json", "w+") as pf:
+            # global projects_dict
+            json.dump(app_dict, pf)
+            pf.close()
 
 if __name__ == "__main__":
+
+    init_app(app_dict)
     
     app.run(debug=True)
     

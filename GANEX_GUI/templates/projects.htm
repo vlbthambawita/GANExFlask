@@ -7,5 +7,31 @@
     <body>
         <h1>Projects..!</h1>
         <a href="home" >Project 1</a>
+
+        <div>
+            {% block content %}
+
+            <form action="" method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <p>
+                    {{ form.projectName.label }} <br>
+                    {{ form.projectName(size=32) }}
+                </p>
+
+                <p>
+                    {{ form.projectPath.label }} <br>
+                    {{ form.projectPath(size=32) }}
+                </p>
+
+                <p>
+                    {{ form.submit() }}
+                </p>
+
+            </form>
+
+
+            {% endblock %}
+        </div>
     </body>
 </html>
