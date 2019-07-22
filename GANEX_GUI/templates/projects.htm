@@ -30,8 +30,18 @@
 
             </form>
 
-
+            <p>
+                {% for key, value in app_dict.items() %}
+                    <a href="home" onclick='gotoProject("{{ key }}", "{{ value }}")'; target="_blank" > {{ key }} </a>  <br>   
+                {% endfor %}
+            </p>
             {% endblock %}
         </div>
+        <script> 
+            function gotoProject(p_name, p_path){
+                document.write(p_name + "-" + p_path)
+            }
+        </script>
+
     </body>
 </html>

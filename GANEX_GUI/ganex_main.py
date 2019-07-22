@@ -21,6 +21,9 @@ app.config.from_object(Config)
 def projects_window():
     form = CreateProject_form()
 
+    init_app()
+    print(app_dict)
+
     if form.validate_on_submit():
         
         project = Project(form.projectName.data, form.projectPath.data)
@@ -28,7 +31,10 @@ def projects_window():
         print("Added project path and created a project in", project.json_file)
         save_app_json(app_dict)
 
-    return render_template('projects.htm', form = form)
+        #return redirect(url_for('projects_window', form = form))
+        return render_template('projects.htm', form = form, app_dict = app_dict)
+
+    return render_template('projects.htm', form = form, app_dict = app_dict)
 
 
 @app.route("/home")
@@ -89,14 +95,17 @@ def background_process():
         return str(e)
 
 ######### Init app and save app dictionary #########
-def init_app(app_dict):
+def init_app():
+    global app_dict
 
     if os.path.isfile("json/app.json"):
 
+        print("Json file found")
         with open("json/app.json") as pf:
             # global projects_dict
             app_dict = json.load(pf)
             pf.close()
+            print(app_dict)
     else:
         with open("json/app.json", "w+") as pf:
             # global projects_dict
@@ -110,8 +119,6 @@ def save_app_json(app_dict):
             pf.close()
 
 if __name__ == "__main__":
-
-    init_app(app_dict)
     
     app.run(debug=True)
     
