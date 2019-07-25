@@ -4,10 +4,13 @@ from flask import Flask, render_template, url_for, request, flash, redirect
 from werkzeug.utils import secure_filename
 from flask import jsonify
 
-#My classes
+#My modules
 from config import Config
-from app.forms import CreateProject_form
+from app.forms import CreateProject_form, CreateExperiment_form
 from app.projects import Project
+from app.experiment import Experiment
+
+# from views import projects_window
 
 app_dict = {} # main dictionary file to keep project info
 
@@ -17,6 +20,8 @@ app = Flask(__name__)
 app.config.from_object(Config)
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
+#projects
 @app.route("/", methods = ["GET" , "POST"])
 def projects_window():
     form = CreateProject_form()
@@ -35,6 +40,23 @@ def projects_window():
         return render_template('projects.htm', form = form, app_dict = app_dict)
 
     return render_template('projects.htm', form = form, app_dict = app_dict)
+
+# Experiments
+# theProject window (a window to create experiments)
+@app.route("/<project_name>", methods = ["GET" , "POST"])
+def theProjet(project_name):
+    
+    form = CreateExperiment_form()
+    project_path = app_dict[project_name]
+
+    if form.validate_on_submit():
+        
+        exp = Experiment(form.expName.data, project_name, project_path)
+        print("EXP Name:", exp.expName)
+        return render_template('theproject.htm', projectName=project_name, projectPath = project_path, form=form)
+
+
+    return render_template('theproject.htm', projectName=project_name, projectPath = project_path, form=form)
 
 
 @app.route("/home/<project_name>")

@@ -33,7 +33,7 @@
             <p>
                 {% for key, value in app_dict.items() %}
                     <!-- <a href="home" onclick='gotoProject("{{ key }}", "{{ value }}")'; > {{ key }} </a>  <br>   -->
-                    <a href="/home/{{ key }}" target="_blank"> {{ key }} </a> <br>
+                    <a href="/{{ key }}" target="_blank"> {{ key }} </a> <br>
                 {% endfor %}
             </p>
             {% endblock %}

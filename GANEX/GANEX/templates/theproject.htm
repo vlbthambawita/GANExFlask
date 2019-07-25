@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title> Managing Experiments </title>
+    </head>
+
+    <body>
+            <h1> Project Name: {{ projectName }}</h1>
+            <h1> Project Path : {{ projectPath }} </h1>
+
+            <div>
+                <form action="" method="POST">
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {{ form.expName.label }}
+                        {{ form.expName(size=32) }}
+
+                    </p>
+
+                    <p>
+                        {{ form.submit() }}
+                    </p>
+                </form>
+            </div>
+    </body>
+</html>
