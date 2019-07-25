@@ -37,9 +37,11 @@ def projects_window():
     return render_template('projects.htm', form = form, app_dict = app_dict)
 
 
-@app.route("/home")
-def hello():
-    return render_template('home.htm')
+@app.route("/home/<project_name>")
+def home(project_name):
+    #p_data = request.get_json() # get project name and path from the click of the project
+    #print(p_data)
+    return render_template('home.htm', projectName=project_name, projectPath = "")
 
 @app.route("/about")
 def about():
