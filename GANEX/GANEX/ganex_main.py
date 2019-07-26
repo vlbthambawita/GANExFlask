@@ -7,6 +7,7 @@ from flask import jsonify
 #My modules
 from config import Config
 from app.forms import CreateProject_form, CreateExperiment_form
+from app.misc import loadGans
 from app.projects import Project
 from app.experiment import Experiment
 
@@ -46,8 +47,20 @@ def projects_window():
 @app.route("/<project_name>", methods = ["GET" , "POST"])
 def theProjet(project_name):
     
+    sampleDict = {"GAN1": "Normal GAN", "GAN2" : "Conditional GAN"}
+
+    ganTypes = loadGans("json/gans.json")
+
+    #print(testArray)
+
     form = CreateExperiment_form()
+
+    # update choices
+    form.ganType.choices = ganTypes #[('cpp', 'C++'), ('py', 'Python')]
+    print("object created...!")
     project_path = app_dict[project_name]
+
+    
 
     if form.validate_on_submit():
         
