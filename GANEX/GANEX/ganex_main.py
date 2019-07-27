@@ -47,7 +47,7 @@ def projects_window():
 @app.route("/<project_name>", methods = ["GET" , "POST"])
 def theProjet(project_name):
     
-    sampleDict = {"GAN1": "Normal GAN", "GAN2" : "Conditional GAN"}
+    # sampleDict = {"GAN1": "Normal GAN", "GAN2" : "Conditional GAN"}
 
     ganTypes = loadGans("json/gans.json")
 
