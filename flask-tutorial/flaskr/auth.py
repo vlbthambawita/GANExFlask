@@ -37,7 +37,7 @@ def register():
 
         if error is None:
             db.execute(
-                'INSERT INTO user (username, passwork) VALUES (?, ?)',
+                'INSERT INTO user (username, password) VALUES (?, ?)',
                 (username, generate_password_hash(password))
             )
             db.commit()
@@ -77,5 +77,44 @@ def login():
 
     return render_template('auth/login.html')
 
+#============================
+# if a user is logged in their
+# information should be loaded and
+# made available to other view
+#============================
 
+@bp.before_app_first_request
+def load_logged_in_user():
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = get_db().execute(
+            'SELECT * FROM user WHERE id = ?', (user_id, )
+        ).fetchone()
+
+#================================
+# Logout
+#================================
+
+@bp.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+#================================
+# Require authenitication in other
+# views
+#=================================
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user in None:
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
 
