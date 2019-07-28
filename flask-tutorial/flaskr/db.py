@@ -1,3 +1,4 @@
+import pymongo
 import sqlite3
 
 import click
