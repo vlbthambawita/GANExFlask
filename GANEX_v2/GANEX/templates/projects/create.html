@@ -23,5 +23,16 @@
 
     </form>
 
+    <div>
+        <h2>Projects</h2>
+        {% for p in projects %}
+            <p> 
+                {{ p["_id"] }} - {{ p["name"] }} 
+                <a href="{{ url_for('projects.delete', pid=p['_id']) }}">Delete</a>
+            </p>
+            
+        {% endfor %}
+    </div>
+
     
 {% endblock %}
