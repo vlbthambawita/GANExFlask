@@ -5,6 +5,7 @@
 </head>
 
 <body>
+    {% block nav %}{% endblock %}
     <h1>GANEX - {% block head %}{% endblock %}</h1>
     <section>
         {% for message in get_flashed_messages() %}

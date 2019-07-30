@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 
-{% block head %}Project Main Window{% endblock %}
+{% block nav %}
+<h5>
+        <nav>
+                <a href="{{ url_for('projects.create') }}">Projects</a>
+        </nav>
+</h5>
+{% endblock %}
+
+{% block head %}Experiments Main Window{% endblock %}
 
 {% block content %}
+
+    
 
     <form action="" method="POST" novalidate>
         {{ form.hidden_tag() }}
@@ -28,6 +38,12 @@
 
     <div>
         <h2>Experiments</h2>
+        {% for exp in exps %}
+            <p>
+                {{ exp }}
+                <a href="{{ url_for('experiments.deleteExp', pid=exp['pid'], expid=exp['_id']) }}">Delete</a>
+            </p>
+        {% endfor %}
         
     </div>
 
