@@ -13,8 +13,6 @@ from GANEX.forms import CreateProject_form
 bp = Blueprint('projects', __name__)
 
 
-
-
 @bp.route('/index')
 def index():
     return render_template('projects/index.html')

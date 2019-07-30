@@ -27,7 +27,7 @@
         <h2>Projects</h2>
         {% for p in projects %}
             <p> 
-                {{ p["_id"] }} - {{ p["name"] }} 
+                {{ p["_id"] }} - <a href="{{ url_for('experiments.create', pid=p['_id']) }}">{{ p["name"] }}</a>
                 <a href="{{ url_for('projects.delete', pid=p['_id']) }}">Delete</a>
             </p>
             

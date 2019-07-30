@@ -29,6 +29,7 @@ def initSchema():
 def init_db():
     db = get_db()
     initSchema()
+    init_ganType() # add gantypes
     print(type(db))
     print(db.list_collection_names())
 
@@ -42,5 +43,15 @@ def init_db_command():
 
 def init_app(app):
     app.cli.add_command(init_db_command)
+
+def init_ganType():
+    db = get_db()
+    colGTypes = db["gantypes"]
+
+    gantypes = [{"name":"simple gan","run":"simpleGan"},
+    {"name":"conditional gan","run":"conditionalGan"}]
+
+    x = colGTypes.insert_many(gantypes)
+    print("Inserted GANs", x.inserted_ids)
 
 

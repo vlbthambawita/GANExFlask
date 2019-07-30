@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}Project Main Window{% endblock %}
+
+{% block content %}
+
+    <form action="" method="POST" novalidate>
+        {{ form.hidden_tag() }}
+
+        
+        <p>
+            {{ form.expName.label }}
+            {{ form.expName(size=32) }}
+
+        </p>
+
+        <p>
+                {{ form.ganType.label }}
+                {{ form.ganType }}
+
+            </p>
+
+        <p>
+            {{ form.submit() }}
+        </p>
+
+    </form>
+
+    <div>
+        <h2>Experiments</h2>
+        
+    </div>
+
+    
+{% endblock %}

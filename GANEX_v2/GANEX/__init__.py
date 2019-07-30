@@ -2,6 +2,8 @@ import os
 from flask import Flask
 from . import db
 from . import projects
+from . import experiments
+
 from . import config
 
 
@@ -21,5 +23,6 @@ def create_app():
     # initializations
     db.init_app(app)
     app.register_blueprint(projects.bp)
+    app.register_blueprint(experiments.bp)
 
     return app
