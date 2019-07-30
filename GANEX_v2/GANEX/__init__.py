@@ -3,6 +3,7 @@ from flask import Flask
 from . import db
 from . import projects
 from . import experiments
+from . import run
 
 from . import config
 
@@ -24,5 +25,6 @@ def create_app():
     db.init_app(app)
     app.register_blueprint(projects.bp)
     app.register_blueprint(experiments.bp)
+    app.register_blueprint(run.bp)
 
     return app
