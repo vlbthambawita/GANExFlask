@@ -40,7 +40,7 @@
         <h2>Experiments</h2>
         {% for exp in exps %}
             <p>
-                {{ exp["_id"] }} - <a href="{{ url_for('run.index', pid=exp['pid'], expid=exp['_id']) }}" target='_blank'>{{ exp["name"] }}</a>
+                {{ exp["_id"] }} - <a href="{{ url_for('run.summary', pid=exp['pid'], expid=exp['_id']) }}" target='_blank'>{{ exp["name"] }}</a>
                 <a href="{{ url_for('experiments.deleteExp', pid=exp['pid'], expid=exp['_id']) }}">Delete</a>
             </p>
         {% endfor %}
