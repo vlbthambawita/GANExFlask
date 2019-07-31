@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 from flask_socketio import SocketIO
 
 socketio = SocketIO()
@@ -14,4 +14,5 @@ def create_app(debug=False):
     app.register_blueprint(main_blueprint)
 
     socketio.init_app(app)
+    # g.socketio = socketio
     return app

@@ -1,20 +1,19 @@
 
 
 
-from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
-)
-from werkzeug.exceptions import abort
-from flask_pymongo import ObjectId
-
-
-
-from GANEX.db import get_db
-from GANEX.forms import CreateProject_form
-
-from GANEX import socketio
+from flask import session
+from flask_socketio import emit, join_room, leave_room
+#from . import socketio
 
 # socketio = get_socket()
+
+def init_events(socketio):
+
+    @socketio.on('joined', namespace='/chat')
+    def joined(message):
+        """Sent by clients when they enter a room.
+        A status message is broadcast to all people in the room."""
+        print("Joined")
 
 # Blue print
 #bp = Blueprint('events', __name__)
