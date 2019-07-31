@@ -4,7 +4,7 @@
 
 {% block content %}
 This is the page for train, re-train and reset experiments..!
-<form method="POST" action="{{ url_for('run.runexp', pid=pid, expid=expid) }}">
+<form method="POST" action="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">
     <button>Run</button>
 </form>
 {% endblock %}

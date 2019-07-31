@@ -6,14 +6,14 @@
 <div>
     <h3>
         <nav>
-            <a href="{{ url_for('run.summary', pid=pid, expid=expid) }}">Summary</a> |
-            <a href="{{ url_for('run.data', pid=pid, expid=expid) }}">Data</a> |
-            <a href="{{ url_for('run.hyperparam', pid=pid, expid=expid) }}">Hyper Parameters</a> |
-            <a href="{{ url_for('run.trainsettings', pid=pid, expid=expid) }}">Train Settings</a> |
-            <a href="{{ url_for('run.runexp', pid=pid, expid=expid) }}">RUN Experiment</a> |
-            <a href="{{ url_for('run.plots', pid=pid, expid=expid) }}">Plots</a> |
-            <a href="{{ url_for('run.inference', pid=pid, expid=expid) }}">Inference</a> |
-            <a href="{{ url_for('run.benchmark', pid=pid, expid=expid) }}">Benchmarking</a> |
+            <a href="{{ url_for('summary.summary', pid=pid, expid=expid) }}">Summary</a> |
+            <a href="{{ url_for('data.data', pid=pid, expid=expid) }}">Data</a> |
+            <a href="{{ url_for('hyperparam.hyperparam', pid=pid, expid=expid) }}">Hyper Parameters</a> |
+            <a href="{{ url_for('trainsettings.trainsettings', pid=pid, expid=expid) }}">Train Settings</a> |
+            <a href="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">RUN Experiment</a> |
+            <a href="{{ url_for('plots.plots', pid=pid, expid=expid) }}">Plots</a> |
+            <a href="{{ url_for('inference.inference', pid=pid, expid=expid) }}">Inference</a> |
+            <a href="{{ url_for('benchmark.benchmark', pid=pid, expid=expid) }}">Benchmarking</a> |
         </nav>
     </h3>
 </div>

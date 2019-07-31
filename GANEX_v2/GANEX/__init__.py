@@ -2,12 +2,13 @@ import os
 from flask import Flask
 # import flask
 #import flask_socketio
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 
 from . import db
 from . import projects
 from . import experiments
-from . import run
+#from . import run
+from GANEX.dash import summary,data, hyperparam, trainsettings, runexp, plots, inference, benchmark
 
 from . import config
 
@@ -33,7 +34,19 @@ def create_app(debug=False):
     db.init_app(app)
     app.register_blueprint(projects.bp)
     app.register_blueprint(experiments.bp)
-    app.register_blueprint(run.bp)
+    # app.register_blueprint(run.bp)
+
+    # dash board blueprints
+    app.register_blueprint(summary.bp)
+    app.register_blueprint(data.bp)
+    app.register_blueprint(hyperparam.bp)
+    app.register_blueprint(trainsettings.bp)
+    app.register_blueprint(runexp.bp)
+    app.register_blueprint(plots.bp)
+    app.register_blueprint(inference.bp)
+    app.register_blueprint(benchmark.bp)
+    
+    
 
     socketio.init_app(app)
 
