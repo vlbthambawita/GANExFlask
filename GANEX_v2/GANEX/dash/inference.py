@@ -9,6 +9,7 @@ from flask_pymongo import ObjectId
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
 
+
 # Blue print
 bp = Blueprint('inference', __name__, url_prefix='/run')
 

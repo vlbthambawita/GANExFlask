@@ -11,8 +11,11 @@ from . import experiments
 from GANEX.dash import summary,data, hyperparam, trainsettings, runexp, plots, inference, benchmark
 
 from . import config
+# from . import events
 
-socketio = SocketIO() # add websocket #async_mode='threading'
+socketio = SocketIO() # add websocket #'async_mode='threading'
+
+
 
 def create_app(debug=False):
 
@@ -45,6 +48,9 @@ def create_app(debug=False):
     app.register_blueprint(plots.bp)
     app.register_blueprint(inference.bp)
     app.register_blueprint(benchmark.bp)
+
+    # only for testing purpose
+    #app.register_blueprint(events.bp)
     
     
 
