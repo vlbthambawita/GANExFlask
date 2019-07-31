@@ -6,8 +6,8 @@ from flask_pymongo import ObjectId
 
 
 
-from GANEX.db import get_db
-from GANEX.forms import CreateProject_form
+from db import get_db
+from forms import CreateProject_form
 
 # Blue print
 bp = Blueprint('projects', __name__)

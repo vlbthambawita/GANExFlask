@@ -4,4 +4,7 @@
 
 {% block content %}
 This page for plots.
+{% for record in trainstat %}
+    <p> {{ record }} </p>
+{% endfor %}
 {% endblock %}

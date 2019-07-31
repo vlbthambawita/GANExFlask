@@ -6,8 +6,13 @@ from flask_pymongo import ObjectId
 
 
 
-from GANEX.db import get_db
-from GANEX.forms import CreateProject_form
+#from GANEX.db import get_db
+#from GANEX.forms import CreateProject_form
+
+from db import get_db
+from forms import CreateProject_form
+
+import task
 
 
 # Blue print
@@ -35,17 +40,24 @@ def trainsettings(pid, expid):
 
 
 # RUN experiments using this page
-@bp.route('/<pid>/<expid>/runexp/', methods=('GET',))
+@bp.route('/<pid>/<expid>/runexp/', methods=('GET','POST'))
 def runexp(pid, expid):
+
+    if request.method == "POST":
+        print("POST request received")
+        task.run(get_db(),pid, expid)
+
     return render_template('run/runexp.html', pid=pid, expid=expid)
 
 
 # plots
 @bp.route('/<pid>/<expid>/plots/', methods=('GET',))
 def plots(pid, expid):
-    return render_template('run/plots.html', pid=pid, expid=expid)
+    db = get_db()
+    col_trainstat = db["trainstats"].find({"expid":expid})
+    return render_template('run/plots.html', pid=pid, expid=expid, trainstat=col_trainstat)
 
-# plots
+# Inference
 @bp.route('/<pid>/<expid>/inference/', methods=('GET',))
 def inference(pid, expid):
     return render_template('run/inference.html', pid=pid, expid=expid)
