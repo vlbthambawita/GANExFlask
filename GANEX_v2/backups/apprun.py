@@ -13,7 +13,8 @@ import projects
 import experiments
 import run
 
-import config
+# import config
+from config import Config
 
 
 
@@ -22,7 +23,7 @@ import config
 # print("FLASK version:", flask.__version__)
 # print("FLASK socket:", flask.__version__)
 app = Flask(__name__)
-app.config.from_object(config.Config)
+app.config.from_object(Config())
 
 # app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
 # mongo = PyMongo(app)
