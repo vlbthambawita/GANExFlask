@@ -3,25 +3,35 @@ import numpy as np
 import time
 from flask_socketio import emit
 # from GANEX import socketio
+import threading
 
-def run(db, pid, expid):
+
+def simple_task(db, pid, expid):
+
     print("RUN method is running")
     print(db)
     print("PROJECT ID:", pid)
     print("EXP ID:", expid)
-
     trainstats_col = db["trainstats"]
-    trainstats_col.delete_many({})
+    trainstats_col.delete_many({}) # only in testing stage
 
-    for epoch in range(100):
+    
+
+    for epoch in range(10):
         rand_value = np.random.rand(1)
         query = {"expid":expid, "epoch": epoch, "value": rand_value[0]}
         #print(rand_value)
-        #print(query)
+        print(query)
         trainstats_col.insert_one(query)
+        time.sleep(10)
 
+def run(db, pid, expid):
+    t = threading.Thread(target=simple_task, args=(db, pid, expid))
+    t.start()
 
-    print(list(trainstats_col.find({})))
+    
+
+    #print(list(trainstats_col.find({})))
 
 def randnumber(socketio):
     for i in range(10):

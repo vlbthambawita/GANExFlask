@@ -3,8 +3,12 @@
 
 
 {% block content %}
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/plots.js') }}"></script> 
 This page for plots.
-{% for record in trainstat %}
+
+<div id="Results">...</div>
+<!--{% for record in trainstat %}
     <p> {{ record }} </p>
+    -->
 {% endfor %}
 {% endblock %}

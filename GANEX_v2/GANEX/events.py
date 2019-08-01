@@ -5,6 +5,8 @@ from flask_socketio import emit, join_room, leave_room
 #from . import socketio
 from GANEX.fastGAN.task import randnumber
 # socketio = get_socket()
+from GANEX.updates import updateplot
+from GANEX.db import get_db
 
 import threading
 
@@ -21,6 +23,14 @@ def init_events(socketio):
         emit('status', {'msg': 'connected from server'})
 
         x = threading.Thread(target=randnumber, args=(socketio,))
+        x.start()
+
+    # plot sta handle - near real time
+    @socketio.on('plotting', namespace='/plot')
+    def plotting():
+        print("plot tab connected")
+
+        x = threading.Thread(target=updateplot, args=(socketio,get_db()))
         x.start()
             
         
