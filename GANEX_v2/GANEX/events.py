@@ -1,5 +1,4 @@
-
-
+import time
 
 from flask import session
 from flask_socketio import emit, join_room, leave_room
@@ -9,12 +8,23 @@ from flask_socketio import emit, join_room, leave_room
 
 def init_events(socketio):
 
+    
+    
+
     @socketio.on('joined', namespace='/chat')
     def joined(message):
         """Sent by clients when they enter a room.
         A status message is broadcast to all people in the room."""
-        print("Joined")
+        print("Joined is running")
+        emit('status', {'msg': 'connected from server'})
 
+        for i in range(10):
+            time.sleep(1)
+            emit('test', {'msg': 'test msg -' + str(i)})
+            
+        
+
+    
 # Blue print
 #bp = Blueprint('events', __name__)
 

@@ -8,7 +8,7 @@ from flask_pymongo import ObjectId
 
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
-from GANEX.faskGAN import task
+from GANEX.fastGAN.task import run
 
 # Blue print
 bp = Blueprint('runexp', __name__, url_prefix='/run')
@@ -19,6 +19,6 @@ def runexp(pid, expid):
 
     if request.method == "POST":
         print("POST request received")
-        task.run(get_db(),pid, expid)
+        run(get_db(),pid, expid)
 
     return render_template('run/runexp.html', pid=pid, expid=expid)
