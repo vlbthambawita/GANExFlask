@@ -1,6 +1,8 @@
 import pymongo
 import numpy as np
 import time
+from flask_socketio import emit
+# from GANEX import socketio
 
 def run(db, pid, expid):
     print("RUN method is running")
@@ -20,3 +22,11 @@ def run(db, pid, expid):
 
 
     print(list(trainstats_col.find({})))
+
+def randnumber(socketio):
+    for i in range(10):
+        number = np.random.rand(1)
+        print(number)
+        socketio.emit('test',{'msg': 'from thread' + str(number)}, namespace='/chat')
+        time.sleep(1)
+

@@ -13,7 +13,7 @@ from GANEX.dash import summary,data, hyperparam, trainsettings, runexp, plots, i
 from . import config
 from .events import init_events
 
-socketio = SocketIO() # add websocket #'async_mode='threading'
+socketio = SocketIO(async_mode='threading') # add websocket #'async_mode='threading'
 
 
 
@@ -56,6 +56,7 @@ def create_app(debug=False):
 
     socketio.init_app(app)
     init_events(socketio)
+    
 
     return app
 

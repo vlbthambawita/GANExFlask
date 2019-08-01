@@ -3,12 +3,14 @@ import time
 from flask import session
 from flask_socketio import emit, join_room, leave_room
 #from . import socketio
-
+from GANEX.fastGAN.task import randnumber
 # socketio = get_socket()
+
+import threading
 
 def init_events(socketio):
 
-    
+    # global socketio
     
 
     @socketio.on('joined', namespace='/chat')
@@ -18,13 +20,13 @@ def init_events(socketio):
         print("Joined is running")
         emit('status', {'msg': 'connected from server'})
 
-        for i in range(10):
-            time.sleep(1)
-            emit('test', {'msg': 'test msg -' + str(i)})
+        x = threading.Thread(target=randnumber, args=(socketio,))
+        x.start()
             
         
 
-    
+    #def testEmit():
+    # socketio.emit('test', {'msg': 'socket emit working'}, namespace='/chat')
 # Blue print
 #bp = Blueprint('events', __name__)
 
