@@ -1,5 +1,9 @@
 import os
 from flask import Flask
+
+from dash import Dash
+import dash_html_components as html
+
 # import flask
 #import flask_socketio
 from flask_socketio import SocketIO
@@ -13,7 +17,27 @@ from GANEX.dash import summary,data, hyperparam, trainsettings, runexp, plots, i
 from . import config
 from .events import init_events
 
+from GANEX.dashapps import dashplot
+
 socketio = SocketIO(async_mode='threading') # add websocket #'async_mode='threading'
+
+
+
+def register_dashapps(app):
+    # add plotlydash apps
+    dashapp1 = Dash( __name__,
+                server=app,
+                routes_pathname_prefix='/dash/'
+            )
+
+    dashapp1.layout = html.Div("My Dash app")
+
+    dashapp2 = Dash( __name__,
+                server=app,
+                routes_pathname_prefix='/dash2/'
+            )
+
+    #dashapp2.layout = dashplot.dashapp1()
 
 
 
@@ -51,11 +75,17 @@ def create_app(debug=False):
 
     # only for testing purpose
     #app.register_blueprint(events.bp)
-    
-    
 
     socketio.init_app(app)
     init_events(socketio)
+    
+    
+    #register_dashapps(app)
+    dashplot.dashapp1(app)
+    dashplot.dashapp2(app)
+    
+
+    
     
 
     return app

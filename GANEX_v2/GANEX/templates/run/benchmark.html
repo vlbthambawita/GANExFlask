@@ -4,4 +4,13 @@
 
 {% block content %}
 This is the page for Benchmarking..!
+<script>
+    var source = new EventSource("{{ url_for('benchmark.progress') }}");
+    source.onmessage = function(event){
+        $("#Results").append('<li>'+ event.data +'</li>');
+    }
+</script>
+
+<div id="Results">...</div>
+
 {% endblock %}

@@ -27,11 +27,15 @@ def init_events(socketio):
 
     # plot sta handle - near real time
     @socketio.on('plotting', namespace='/plot')
-    def plotting():
-        print("plot tab connected")
+    def plotting(msg):
+        updateplot(socketio, get_db())
 
-        x = threading.Thread(target=updateplot, args=(socketio,get_db()))
-        x.start()
+        # x = threading.Thread(target=updateplot, args=(socketio,get_db()))
+        
+        #if (msg["status"] == "connected") and (x.is_alive() != True):
+        #    print("plot tab connected")
+        #    x.start()
+        
             
         
 

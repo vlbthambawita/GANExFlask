@@ -1,14 +1,14 @@
 {% extends 'run/base.html' %}
 
-
-
 {% block content %}
-<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/plots.js') }}"></script> 
-This page for plots.
 
-<div id="Results">...</div>
-<!--{% for record in trainstat %}
-    <p> {{ record }} </p>
-    -->
-{% endfor %}
+<script>
+        var source = new EventSource("{{ url_for('plots.update', pid=pid, expid=expid) }}");
+        source.onmessage = function(event){
+                $("#Results").append('<li>'+ event.data +'</li>');
+        }
+</script>
+
+<div id="Results">...</div>      
+
 {% endblock %}

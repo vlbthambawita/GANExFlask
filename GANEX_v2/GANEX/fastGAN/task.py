@@ -13,7 +13,7 @@ def simple_task(db, pid, expid):
     print("PROJECT ID:", pid)
     print("EXP ID:", expid)
     trainstats_col = db["trainstats"]
-    trainstats_col.delete_many({}) # only in testing stage
+    trainstats_col.delete_many({"expid": expid}) # only in testing stage
 
     
 

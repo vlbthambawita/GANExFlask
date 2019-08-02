@@ -4,4 +4,31 @@
 
 {% block content %}
 This is summary of the project..!
+<a href="{{ url_for('/dash2/', pid=pid) }}">Dash2</a>
+
+
+<div class="chart" id="bargraph">
+        <script>
+            var graphs = {{ plot | safe }};
+            Plotly.plot('bargraph',graphs,{});
+        </script>
+</div>
+
+
+
+
+<div class="chart" id="bargraph"></div>
+    <script>
+            var source = new EventSource("{{ url_for('summary.updatplots') }}");
+            source.onmessage = function(event){
+                var graphs = JSON.parse(event.data) //| safe;
+                Plotly.newPlot('bargraph',graphs,{});
+                //$("#Results").append('<li>'+ graphs +'</li>');
+            }
+    </script>
+</div>
+
+
+    
+<div id="Results">...</div>
 {% endblock %}
