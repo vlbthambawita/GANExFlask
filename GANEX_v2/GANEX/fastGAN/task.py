@@ -17,13 +17,13 @@ def simple_task(db, pid, expid):
 
     
 
-    for epoch in range(10):
+    for epoch in range(1000):
         rand_value = np.random.rand(1)
         query = {"expid":expid, "epoch": epoch, "value": rand_value[0]}
         #print(rand_value)
         print(query)
         trainstats_col.insert_one(query)
-        time.sleep(10)
+        time.sleep(0.5)
 
 def run(db, pid, expid):
     t = threading.Thread(target=simple_task, args=(db, pid, expid))

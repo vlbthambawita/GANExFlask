@@ -8,6 +8,7 @@ import time
 
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
+from GANEX.plots import training_plots
 
 # Blue print
 bp = Blueprint('plots', __name__, url_prefix='/run')
@@ -27,18 +28,20 @@ def update(pid, expid):
     db = get_db()
 
     def generate():
-        x = 0
+        #x = 0
         
         while True:
-
-            data = [] 
-            for r in db["trainstats"].find({"expid":expid},{"_id": 0, "value": 1}):
-                data.append(r["value"])
+            scat_plot = training_plots.trainLossPlot(db, expid)
+            #data = [] 
+            #for r in db["trainstats"].find({"expid":expid},{"_id": 0, "value": 1}):
+             #   data.append(r["value"])
 
             #yield "data:" + str(x) + "\n\n"
-            yield f"data:{data}\n\n"
-            x = x + 1
+            # yield f"data:{data}\n\n"
+            yield f"data:{scat_plot}\n\n"
+
+            #x = x + 1
             time.sleep(0.5)
-            print(data)
+            print(scat_plot)
 
     return Response(generate(), mimetype= 'text/event-stream')

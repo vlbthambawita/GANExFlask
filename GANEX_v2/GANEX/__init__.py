@@ -17,12 +17,12 @@ from GANEX.dash import summary,data, hyperparam, trainsettings, runexp, plots, i
 from . import config
 from .events import init_events
 
-from GANEX.dashapps import dashplot
+# from GANEX.plots import dashplot
 
 socketio = SocketIO(async_mode='threading') # add websocket #'async_mode='threading'
 
 
-
+'''
 def register_dashapps(app):
     # add plotlydash apps
     dashapp1 = Dash( __name__,
@@ -39,7 +39,7 @@ def register_dashapps(app):
 
     #dashapp2.layout = dashplot.dashapp1()
 
-
+'''
 
 def create_app(debug=False):
 
@@ -81,8 +81,8 @@ def create_app(debug=False):
     
     
     #register_dashapps(app)
-    dashplot.dashapp1(app)
-    dashplot.dashapp2(app)
+    # dashplot.dashapp1(app)
+    # dashplot.dashapp2(app)
     
 
     

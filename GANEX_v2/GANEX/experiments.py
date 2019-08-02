@@ -53,7 +53,7 @@ def create(pid):
     if exp_form.validate_on_submit():
 
         if error is None:
-            exp_dict = {"name":exp_form.expName.data, "type":exp_form.ganType.data, "pid": pid}
+            exp_dict = {"name":exp_form.expName.data, "type":exp_form.ganType.data, "pid": pid, "status": "TRAIN"}
 
             x = col_exp.insert_one(exp_dict)
             print(x.inserted_id) #out.inserted_id

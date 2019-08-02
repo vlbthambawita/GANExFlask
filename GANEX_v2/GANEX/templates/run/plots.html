@@ -2,12 +2,17 @@
 
 {% block content %}
 
+<div class="chart" id="scatterplot">
 <script>
         var source = new EventSource("{{ url_for('plots.update', pid=pid, expid=expid) }}");
         source.onmessage = function(event){
-                $("#Results").append('<li>'+ event.data +'</li>');
+                //$("#Results").append('<li>'+ event.data +'</li>');
+                var graphs = JSON.parse(event.data) //| safe;
+                Plotly.newPlot('scatterplot',graphs,{});
         }
 </script>
+
+</div>
 
 <div id="Results">...</div>      
 
