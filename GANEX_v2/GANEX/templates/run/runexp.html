@@ -4,7 +4,39 @@
 
 {% block content %}
 This is the page for train, re-train and reset experiments..!
+
 <form method="POST" action="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">
-    <button>Run</button>
+    
+        <button id="btnTrain" name="runexp_btn" value="train">Train</button>
+        <button id="btnRetrain" name="runexp_btn" value="re-train">Re-Train</button>
+        <button id="btnReset" name="runexp_btn" value="reset">Reset</button>
 </form>
+
+<script>
+    var source = new EventSource("{{ url_for('runexp.update', pid=pid, expid=expid) }}")
+    source.onmessage = function(event){
+                var values = JSON.parse(event.data)
+                var status = values.status
+                $("#Results").html('<li>'+ status +'</li>'); 
+
+                if (status == "TRAIN"){
+                    $("#btnTrain").attr("disabled", false)
+                    $("#btnRetrain").attr("disabled", true) 
+                    $("#btnReset").attr("disabled", true)
+                }
+                else if (status == "RUNNING"){
+                    $("#btnTrain").attr("disabled", true) 
+                    $("#btnRetrain").attr("disabled", true) 
+                    $("#btnReset").attr("disabled", true)
+                }
+
+                else if (status == "RETRAIN"){
+                    $("#btnTrain").attr("disabled", true)
+                    $("#btnRetrain").attr("disabled", false) 
+                    $("#btnReset").attr("disabled", false) 
+                }   
+    }
+</script>
+
+<div id="Results">...</div>   
 {% endblock %}

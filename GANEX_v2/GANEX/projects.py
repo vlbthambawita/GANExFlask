@@ -17,6 +17,7 @@ bp = Blueprint('projects', __name__)
 def index():
     return render_template('projects/index.html')
 
+@bp.route('/', methods=('GET', 'POST'))
 @bp.route('/create', methods=('GET', 'POST'))
 def create():
     pro_form = CreateProject_form()

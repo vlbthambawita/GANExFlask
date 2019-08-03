@@ -5,6 +5,7 @@ import click
 
 
 
+
 def get_db():
     if 'db' not in g:
         current_app.config["MONGO_URI"] = "mongodb://localhost:27017/GANEXdb"
@@ -53,5 +54,8 @@ def init_ganType():
 
     x = colGTypes.insert_many(gantypes)
     print("Inserted GANs", x.inserted_ids)
+
+
+
 
 
