@@ -1,6 +1,19 @@
 {% extends 'run/base.html' %}
 
+
+{% block script %}
+<!--Select the corresponding nav item-->
+<script>
+    $(document).ready(function(){
+      console.log("document is ready")
+      //$("#summary-tab").attr
+      $("#summary-tab").addClass("active")
+    })
+  </script>
+{% endblock %}
+
 {% block content %}
+
 <div class="container-fluid d-flex justify-content-center">
     <div class="row">
         <div class="col-xs-12 ">

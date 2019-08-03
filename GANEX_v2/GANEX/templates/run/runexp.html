@@ -1,9 +1,22 @@
 {% extends 'run/base.html' %}
 
-
+{% block script %}
+<!--Select the corresponding nav item-->
+<script>
+        $(document).ready(function(){
+          console.log("document is ready")
+          //$("#summary-tab").attr
+          $("#runexp-tab").addClass("active")
+        })
+</script>
+{% endblock %}
 
 {% block content %}
 This is the page for train, re-train and reset experiments..!
+
+<div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
 
 <form method="POST" action="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">
     
@@ -24,6 +37,7 @@ This is the page for train, re-train and reset experiments..!
                     $("#btnRetrain").attr("disabled", true) 
                     $("#btnReset").attr("disabled", true)
                 }
+
                 else if (status == "RUNNING"){
                     $("#btnTrain").attr("disabled", true) 
                     $("#btnRetrain").attr("disabled", true) 
@@ -39,4 +53,5 @@ This is the page for train, re-train and reset experiments..!
 </script>
 
 <div id="Results">...</div>   
+  
 {% endblock %}

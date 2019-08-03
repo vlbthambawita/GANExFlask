@@ -1,6 +1,15 @@
 {% extends 'run/base.html' %}
 
-
+{% block script %}
+<!--Select the corresponding nav item-->
+<script>
+        $(document).ready(function(){
+          console.log("document is ready")
+          //$("#summary-tab").attr
+          $("#trainsettings-tab").addClass("active")
+        })
+</script>
+{% endblock %}
 
 {% block content %}
 This is the page for train settings!
