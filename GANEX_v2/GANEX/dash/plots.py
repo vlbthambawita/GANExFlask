@@ -22,10 +22,11 @@ def plots(pid, expid):
 
 
 
-@bp.route('/<pid>/<expid>/update')
-def update(pid, expid):
+@bp.route('/<pid>/<expid>/updateplot')
+def updateplot(pid, expid):
 
     db = get_db()
+    # print("plot update method")
 
     def generate():
         #x = 0
@@ -42,6 +43,6 @@ def update(pid, expid):
 
             #x = x + 1
             time.sleep(0.5)
-            print(scat_plot)
+            #print(scat_plot)
 
     return Response(generate(), mimetype= 'text/event-stream')

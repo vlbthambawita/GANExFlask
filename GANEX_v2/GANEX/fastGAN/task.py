@@ -20,7 +20,7 @@ def simple_task(db, pid, expid, status):
 
     
 
-    for epoch in range(10):
+    for epoch in range(100):
         rand_value = np.random.rand(1)
         query = {"expid":expid, "epoch": epoch, "value": rand_value[0]}
         #print(rand_value)

@@ -24,7 +24,12 @@
 
 <body>
     {% block nav %}{% endblock %}
-    <h1>GANEX - {% block headding %}{% endblock %}</h1>
+
+    <div class="shadow p-3 mb-5 bg-white rounded" >
+            <h6>GANEX - {% block headding %}{% endblock %}</h6>
+    </div>
+
+
     {% block nav2 %}{% endblock %} 
     <section>
         {% for message in get_flashed_messages() %}
