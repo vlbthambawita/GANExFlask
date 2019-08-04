@@ -1,19 +1,64 @@
 {% extends 'run/base.html' %}
 
+{% block script %}
+<script>
+        var source;
+        $(function(){ // on load function
+                $("#plots-tab").addClass("active")
+
+                initRealTimePlot() // init real time updates
+
+                $("#btn_plt_pause").click(function() {
+                        alert("Stopped")
+                        source.close()
+                
+                })
+
+                $("#btn_plt_play").click(function() {
+                        initRealTimePlot()
+                
+                })
+        })
+
+        function initRealTimePlot(){
+                source = new EventSource("{{ url_for('plots.updateplot', pid=pid, expid=expid) }}");
+                source.onmessage = function(event){
+                        //$("#Results").append('<li>'+ event.data +'</li>');
+                        var graphs = JSON.parse(event.data) //| safe;
+                        Plotly.newPlot('scatterplot',graphs,{});
+                }
+        }
+
+        
+</script>
+        
+
+{% endblock %}
 
 {% block content %}
-<div class="chart" id="scatterplot">
-<script>
-        var source = new EventSource("{{ url_for('plots.updateplot', pid=pid, expid=expid) }}");
-        source.onmessage = function(event){
-                //$("#Results").append('<li>'+ event.data +'</li>');
-                var graphs = JSON.parse(event.data) //| safe;
-                Plotly.newPlot('scatterplot',graphs,{});
-        }
-</script>
 
+<div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                <button id="btn_plt_play">Play</button>
+                <button id="btn_plt_pause">Pause</button>
+                <div id="scatterplot"></div>
+                
+        </div>
+        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...profile</div>
+        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+      </div>
+    </div>
 </div>
-
-<div id="Results">...</div>      
 
 {% endblock %}

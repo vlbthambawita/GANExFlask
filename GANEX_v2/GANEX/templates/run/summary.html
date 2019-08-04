@@ -14,45 +14,47 @@
 
 {% block content %}
 
-<div class="container-fluid d-flex justify-content-center">
-    <div class="row">
-        <div class="col-xs-12 ">
-            <h4>Summary of the experiment:</h4>
-            
+<div class="row"><br></div> <!-- Space between heading and below contents -->
+  <div class="row">
+      <div class="col"></div>
+      <div class="col text-center">
+          <h4>Summary of the experiment:</h4>
+          
 
-            <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Project ID:
-                      <span class="badge badge-primary badge-pill">{{ expinfo["pid"] }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Project Name:
-                          <span class="badge badge-primary badge-pill">{{ pinfo["name"] }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Project Path:
-                          <span class="badge badge-primary badge-pill">{{ pinfo["path"] }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Exp ID:
-                      <span class="badge badge-primary badge-pill">{{ expinfo["_id"] }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Experiment Name: 
-                      <span class="badge badge-primary badge-pill">{{ expinfo["name"] }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Experiment Type:
-                      <span class="badge badge-primary badge-pill">{{ expinfo["type"] }}</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Experiment Status:
-                      <span class="badge badge-primary badge-pill badge-dark">{{ expinfo["status"] }}</span>
-                    </li>
-                  </ul>
-        </div>
-    </div>
+          <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      Project ID:
+                    <span class="badge badge-primary badge-pill">{{ expinfo["pid"] }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Project Name:
+                        <span class="badge badge-primary badge-pill">{{ pinfo["name"] }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Project Path:
+                        <span class="badge badge-primary badge-pill">{{ pinfo["path"] }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                      Exp ID:
+                    <span class="badge badge-primary badge-pill">{{ expinfo["_id"] }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Experiment Name: 
+                    <span class="badge badge-primary badge-pill">{{ expinfo["name"] }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Experiment Type:
+                    <span class="badge badge-primary badge-pill">{{ expinfo["type"] }}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                          Experiment Status:
+                    <span class="badge badge-primary badge-pill badge-dark">{{ expinfo["status"] }}</span>
+                  </li>
+                </ul>
+      </div>
+      <div class="col"></div>
+  </div>
 
-</div>
+
 
 {% endblock %}

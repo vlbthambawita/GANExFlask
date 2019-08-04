@@ -4,9 +4,14 @@
 <!--Select the corresponding nav item-->
 
 <script>
-
   $(document).ready(function(){
     
+  
+    $(document).ready(function(){
+      console.log("document is ready")
+      //$("#summary-tab").attr
+      $("#data-tab").addClass("active")
+    })
 
     $("button").click(function(){
       //$("#test").html("rw" )
@@ -14,7 +19,7 @@
       $.ajax({
         type: 'GET',
         url: "{{ url_for('data.setDataFolder', pid=pid, expid=expid ) }}", //"/run/{{ pid }}/{{ expid }}/setDataFolder",
-        data: {"path": "/path/apath"},//JSON.stringify(5),
+        data: {"path": $("#inputPath").val()}, //JSON.stringify(5),
         contentType: 'application/json',
         success: function(data){
           alert("success -" + data.x)
@@ -29,13 +34,31 @@
 {% block content %}
 
 
-<input type="text"  id="nameInput" placeholder="First Name">
-<button>Submit</button> 
+<div class="row"><br></div> <!-- Space between heading and below contents -->
+<div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="Data path">Data Path</a>
+        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="Test Data">Test Data</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="Analyse Data">Analyse Data</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="Setup Data">Settings</a>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+            <label>Data Folder Path:</label>
+            <input type="text"  id="inputPath" placeholder="/sample/Data/Folder/Path">
+            <button>Save</button> 
+            <div id="test">...</div>
+          
+            This is window for setup data.
+        </div>
+        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
+        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+      </div>
+    </div>
+</div>
 
-
-
-
-<div id="test">...</div>
-
-This is window for setup data.
 {% endblock %}

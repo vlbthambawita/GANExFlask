@@ -5,8 +5,8 @@
 {% block nav2 %}
 
     
-    <nav class="nav nav-pills nav-fill">
-        <div class="nav nav-tabs mr-auto" id="nav-tab" role="tablist"> 
+    <!--<nav class="nav nav-pills nav-fill">-->
+        <div class="nav nav-tabs" id="nav-tab" role="tablist"> 
             <a class="nav-link" id="summary-tab" href="{{ url_for('summary.summary', pid=pid, expid=expid) }}">Summary</a> 
             <a class="nav-link" id="data-tab" href="{{ url_for('data.data', pid=pid, expid=expid) }}"> Data</a> 
             <a class="nav-link" id="hyperparam-tab" href="{{ url_for('hyperparam.hyperparam', pid=pid, expid=expid) }}">Hyper Parameters</a> 
@@ -15,8 +15,8 @@
             <a class="nav-link" id="plots-tab" href="{{ url_for('plots.plots', pid=pid, expid=expid) }}">Plots</a> 
             <a class="nav-link" id="inference-tab" href="{{ url_for('inference.inference', pid=pid, expid=expid) }}">Inference</a> 
             <a class="nav-link" id="benchmark-tab" href="{{ url_for('benchmark.benchmark', pid=pid, expid=expid) }}">Benchmarking</a> 
-        </div> 
-    </nav>
+       </div> 
+   <!-- </nav>-->
     
     
 
