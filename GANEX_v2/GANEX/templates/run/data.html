@@ -2,18 +2,40 @@
 
 {% block script %}
 <!--Select the corresponding nav item-->
+
 <script>
-        $(document).ready(function(){
-          console.log("document is ready")
-          //$("#summary-tab").attr
-          $("#data-tab").addClass("active")
-        })
+
+  $(document).ready(function(){
+    
+
+    $("button").click(function(){
+      //$("#test").html("rw" )
+
+      $.ajax({
+        type: 'GET',
+        url: "{{ url_for('data.setDataFolder', pid=pid, expid=expid ) }}", //"/run/{{ pid }}/{{ expid }}/setDataFolder",
+        data: {"path": "/path/apath"},//JSON.stringify(5),
+        contentType: 'application/json',
+        success: function(data){
+          alert("success -" + data.x)
+        }
+      });
+    });
+ });
 </script>
+
 {% endblock %}
 
 {% block content %}
 
 
+<input type="text"  id="nameInput" placeholder="First Name">
+<button>Submit</button> 
+
+
+
+
+<div id="test">...</div>
 
 This is window for setup data.
 {% endblock %}
