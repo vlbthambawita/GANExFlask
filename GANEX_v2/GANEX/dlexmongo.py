@@ -21,3 +21,12 @@ def setExpState(db, expid, status):
     new_value = { "$set": { "status": status } }
 
     db["experiments"].update_one(query, new_value)
+
+
+def addGanTypes(db, name, classname):
+
+    col = db["gantypes"]
+    query = {"name": name, "run": classname}
+
+    x = col.insert_one(query)
+    print("Inserted GAN type", x.inserted_id)

@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
@@ -8,6 +8,8 @@ from flask_pymongo import ObjectId
 
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
+
+from GANEX.dlexmongo import addGanTypes
 
 # Blue print
 bp = Blueprint('projects', __name__)
@@ -63,3 +65,14 @@ def delete(pid):
     print(x.deleted_count)
 
     return redirect(url_for('projects.create'))
+
+
+@bp.route('/setGanTypes', methods=('GET',))
+def setGanTypes():
+    print('gan type clicked')
+    db = get_db()
+    addGanTypes(db, request.args.get('name'), request.args.get('run'))
+
+
+
+    return jsonify(x=request.args.get('name'))
