@@ -30,3 +30,17 @@ def addGanTypes(db, name, classname):
 
     x = col.insert_one(query)
     print("Inserted GAN type", x.inserted_id)
+
+def addInfoToExp(db, expId, fieldName, fieldValue):
+    query ={"_id":ObjectId(expId)}
+    new_field = {"$set": {fieldName: fieldValue}}
+    x = db["experiments"].update_one(query, new_field)
+
+    print("new field inserted.")
+
+def addInfoToHWSettings(db, expId, fieldName, fieldValue):
+    query ={"_id":ObjectId(expId)}
+    new_field = {"$set": {fieldName: fieldValue}}
+    x = db["experiments"].update_one(query, new_field)
+
+    print("New feild wad added to hardwaresettings table")

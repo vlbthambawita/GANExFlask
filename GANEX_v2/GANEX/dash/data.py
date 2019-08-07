@@ -8,6 +8,7 @@ from flask_pymongo import ObjectId
 
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
+from GANEX.dlexmongo import addInfoToExp
 
 # Blue print
 bp = Blueprint('data', __name__, url_prefix='/run')
@@ -23,5 +24,10 @@ def data(pid, expid):
 def setDataFolder(pid, expid):
     print("test")
     print(request.args.get('path'))
+
+    db = get_db()
+
+
+    addInfoToExp(db, expid, "expDataPath", request.args.get('path'))
     return jsonify(x=5)
 
