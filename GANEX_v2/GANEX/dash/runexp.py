@@ -34,20 +34,23 @@ def runexp(pid, expid):
         print("POST request received")
         if request.form["runexp_btn"] == "train":
 
-            # get the GAN class
-            (ganFile, ganClass) = getGANInfo(db, expid)
-            print("gan file=", ganFile)
-            print("gan class=", ganClass)
+            try:
+                # get the GAN class
+                (ganFile, ganClass) = getGANInfo(db, expid)
+                print("gan file=", ganFile)
+                print("gan class=", ganClass)
 
-            # import gan from gan file
-            my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
-            gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
-            gan.run()
+                # import gan from gan file
+                my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+                gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+                gan.run()
 
-            run(get_db(),pid, expid, status)
-            print("Training")
-            #setExpState(db, expid, "RETRAIN")
-            #status = getExpState(db, expid)
+                #run(get_db(),pid, expid, status)
+                print("Training")
+                #setExpState(db, expid, "RETRAIN")
+                #status = getExpState(db, expid)
+            except Exception as e:
+                flash(str(e))
 
 
 
@@ -73,6 +76,7 @@ def update(pid, expid):
         # print(info)
         while True:
             info ={"status": getExpState(db, expid)}
+            #print(info)
             info_json = json.dumps(info)
             yield f"data:{info_json}\n\n"
             time.sleep(0.5)

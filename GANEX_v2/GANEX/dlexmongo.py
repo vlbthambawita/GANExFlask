@@ -62,3 +62,21 @@ def getGANInfo(db, expid):
     print("GAN file:", ganFile)
 
     return (ganFile, ganClass)
+
+def getTrainStatsList(db, expid):
+    col = db.trainstats 
+    query = {"expid":expid}
+    x = col.find(query, {"_id": 0, "expid": 0 , "epoch": 0})
+
+    statList = []
+    for key in iter(x.next()):
+        statList.append(key)
+
+    print(statList)
+    return statList
+
+def addPlotStat(db, expid, plotstatName):
+    col = db.plotsetting
+
+    query ={"expid": expid, "plotstat":plotstatName }
+    x = col.insert_one(query)
