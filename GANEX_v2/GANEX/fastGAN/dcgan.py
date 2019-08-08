@@ -1,5 +1,7 @@
 
 from GANEX.dlexmongorecorder import DLExMongoRecorder
+import time
+
 
 class DCGAN():
 
@@ -20,6 +22,7 @@ class DCGAN():
             j= i*2
             self.recorder.recordEpochTrainStat(i, "test_value", j)
             self.recorder.recordEpochTrainStat(i, "test_value_2", i)
+            time.sleep(0.5)
 
         #self.recorder.setExpState("RETRAIN")
 

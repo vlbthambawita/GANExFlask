@@ -10,7 +10,7 @@ import json
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
 from GANEX.plots import training_plots
-from GANEX.dlexmongo import getTrainStatsList, addPlotStat
+from GANEX.dlexmongo import getTrainStatsList, addPlotStat, getPlotStats, addPlotStat
 
 # Blue print
 bp = Blueprint('plots', __name__, url_prefix='/run')
@@ -35,9 +35,12 @@ def updateplot(pid, expid):
 
     def generate():
         #x = 0
+        statlist = getPlotStats(db, expid)
+        print("getplotruning")
         
-        while True:
-            scat_plot = training_plots.trainLossPlot(db, expid, "test_value")
+        while len(statlist) > 0:
+            
+            scat_plot = training_plots.trainLossPlot(db, expid, statlist)
             #data = [] 
             #for r in db["trainstats"].find({"expid":expid},{"_id": 0, "value": 1}):
              #   data.append(r["value"])
@@ -59,7 +62,9 @@ def updateplot(pid, expid):
 def updatePlotStatType(pid, expid):
     db = get_db()
     print("update plot stat type")
-    print(request.args.get("statName"))
+    plot_stat_name= request.args.get("statName")
+    print(plot_stat_name)
+    addPlotStat(db, expid, plot_stat_name)
 
     # addPlotStat(db, expid)
     return jsonify(x=5)

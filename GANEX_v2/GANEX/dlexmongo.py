@@ -79,4 +79,21 @@ def addPlotStat(db, expid, plotstatName):
     col = db.plotsetting
 
     query ={"expid": expid, "plotstat":plotstatName }
-    x = col.insert_one(query)
+    newvalue ={"$set" : {"expid": expid, "plotstat": plotstatName}}
+    x = col.update(query, newvalue, upsert=True)
+
+def getPlotStats(db, expid):
+    col = db.plotsetting
+
+    query ={"expid": expid}
+
+    output = col.find(query, {"_id": 0, "expid":0})
+    plots = []
+
+    for r in output:
+        plots.append(r["plotstat"])
+
+    print(plots)
+    return plots
+
+
