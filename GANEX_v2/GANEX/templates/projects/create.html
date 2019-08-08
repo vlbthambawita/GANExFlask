@@ -10,7 +10,7 @@
                 $.ajax({
                     type: 'GET',
                     url: "{{ url_for('projects.setGanTypes') }}",
-                    data: {"name": $("#input_ganName").val(), "run": $("#input_ganClass").val()},
+                    data: {"name": $("#input_ganName").val(),"file": $("#input_ganFile").val(), "class": $("#input_ganClass").val()},
                     contentType: 'application/json',
                     success: function(data){
                         alert("success")
@@ -77,6 +77,9 @@
         <div class="tab-pane fade" id="list-gans" role="tabpanel" aria-labelledby="list-profile-list">
             <label>GAN Name:</label>
             <input type="text" name="gan_name" id="input_ganName" placeholder="GAN Name"> <br>
+
+            <label>GAN File Name:</label>
+            <input type="text" name="gan_file" id="input_ganFile" placeholder="GAN File Name (without .py)"> <br>
 
             <label>GAN Class Name (run):</label>
             <input type="text" name="gan_class" id="input_ganClass" placeholder="GAN Class Name"> <br>

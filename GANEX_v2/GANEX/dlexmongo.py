@@ -23,10 +23,10 @@ def setExpState(db, expid, status):
     db["experiments"].update_one(query, new_value)
 
 
-def addGanTypes(db, name, classname):
+def addGanTypes(db, name, filename, classname):
 
     col = db["gantypes"]
-    query = {"name": name, "run": classname}
+    query = {"name": name, "file":filename ,"class": classname}
 
     x = col.insert_one(query)
     print("Inserted GAN type", x.inserted_id)
@@ -44,3 +44,21 @@ def addInfoToHWSettings(db, expId, fieldName, fieldValue):
     x = db["experiments"].update_one(query, new_field)
 
     print("New feild wad added to hardwaresettings table")
+
+
+# get methods
+
+def getGANInfo(db, expid):
+    col = db.experiments
+    query = {"_id": ObjectId(expid)}
+
+    ganType =  col.find_one(query)["type"]
+
+    ganClass = db.gantypes.find_one({"name": ganType})["class"]
+
+    ganFile = db.gantypes.find_one({"name" : ganType})["file"]
+
+    print("GAN class:", ganClass)
+    print("GAN file:", ganFile)
+
+    return (ganFile, ganClass)

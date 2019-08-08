@@ -32,7 +32,7 @@ def create(pid):
     gan_types = []
 
     for g in col_gans:
-        gan_types.append((g["name"],g["run"]))
+        gan_types.append((g["name"],g["class"]))
         
     print(gan_types)
     exp_form.ganType.choices = gan_types

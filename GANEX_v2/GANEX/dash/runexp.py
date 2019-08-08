@@ -10,9 +10,10 @@ from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
 from GANEX.fastGAN.task import run
 
-from GANEX.dlexmongo import getExpState, setExpState
+from GANEX.dlexmongo import getExpState, setExpState, getGANInfo
 import time
 import json
+import importlib
 
 # Blue print
 bp = Blueprint('runexp', __name__, url_prefix='/run')
@@ -33,10 +34,21 @@ def runexp(pid, expid):
         print("POST request received")
         if request.form["runexp_btn"] == "train":
 
+            # get the GAN class
+            (ganFile, ganClass) = getGANInfo(db, expid)
+            print("gan file=", ganFile)
+            print("gan class=", ganClass)
+
+            # import gan from gan file
+            my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+            gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+            gan.run()
+
             run(get_db(),pid, expid, status)
             print("Training")
             #setExpState(db, expid, "RETRAIN")
             #status = getExpState(db, expid)
+
 
 
 
