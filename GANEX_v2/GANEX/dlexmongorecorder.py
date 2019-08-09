@@ -18,6 +18,14 @@ class DLExMongoRecorder():
         x =col.find(query)
         return x.next()[setting_name]
 
+    def getHyperParams(self):
+        print("started get hyper param")
+        col = self.db.hyperparam
+        query = {"expid": self.expid}
+        x = col.find(query, {"_id": 0, "expid": 0})
+        # print("xxx next=", x.next())
+        return x.next()
+
     
 
 

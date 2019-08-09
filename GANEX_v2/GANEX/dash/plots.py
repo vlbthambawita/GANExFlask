@@ -30,8 +30,13 @@ def plots(pid, expid):
 def updateplot(pid, expid):
 
     db = get_db()
+
+    pre_count = db.trainstats.count_documents({"expid": expid}) # to update late ()
+    print("pre count=", pre_count)
     # print("plot update method")
     # print("statItem===",request.args.get("statItem"))
+    #with db.trainstats.watch() as stream:
+     #   print(stream)
 
     def generate():
         #x = 0
@@ -39,6 +44,9 @@ def updateplot(pid, expid):
         print("getplotruning")
         
         while len(statlist) > 0:
+            #print("cursor update:", cursor.next()) #testing cursor
+            current_count = db.trainstats.count_documents({"expid": expid}) # to update later
+            print("current count:", current_count)
             
             scat_plot = training_plots.trainLossPlot(db, expid, statlist)
             #data = [] 
@@ -52,7 +60,7 @@ def updateplot(pid, expid):
             
 
             #x = x + 1
-            time.sleep(0.5)
+            time.sleep(2)
             #print(scat_plot)
 
     return Response(generate(), mimetype= 'text/event-stream')

@@ -10,7 +10,7 @@ from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
 from GANEX.fastGAN.task import run
 
-from GANEX.dlexmongo import getExpState, setExpState, getGANInfo
+from GANEX.dlexmongo import getExpState, setExpState, getGANInfo, delTrainStats
 import time
 import json
 import importlib
@@ -60,6 +60,7 @@ def runexp(pid, expid):
 
         elif request.form["runexp_btn"] == "reset":
             print("Reset")
+            delTrainStats(db, expid)
             setExpState(db, expid, "TRAIN")
             status = getExpState(db, expid)
 

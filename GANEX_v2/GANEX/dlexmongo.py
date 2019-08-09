@@ -79,6 +79,15 @@ def getTrainStatsList(db, expid):
     print(statList)
     return statList
 
+
+# get given train stat values as an array
+def getTrainStatAsList(db, expid, stat_name):
+    col = db.trainstats
+    query = {"expid": expid}
+    result = col.find(query, {stat_name: 1})
+    print(result)
+
+
 def addPlotStat(db, expid, plotstatName, plotid):
     col = db.plotsetting
 
@@ -99,6 +108,13 @@ def getPlotStats(db, expid):
 
     print(plots)
     return plots
+
+def delTrainStats(db, expid):
+    col = db.trainstats
+    query = {"expid": expid}
+    col.delete_many(query)
+    print("exp info deleted")
+
 
 
 # set hyperpaermeters to hyperparam table

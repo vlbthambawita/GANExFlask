@@ -1,6 +1,7 @@
 
 from GANEX.dlexmongorecorder import DLExMongoRecorder
 import time
+import numpy as np
 
 
 class DCGAN():
@@ -16,18 +17,20 @@ class DCGAN():
     def setsetting(self):
         self.dataroot = self.recorder.getSetting("expDataPath")
         print("data roor=", self.dataroot)
+        print("hyper param=", self.recorder.getHyperParams() ) #
 
     def run(self):
-        self.setsetting()
         print("running run method:", self.expid)
+        self.setsetting()
+       
         self.recorder.getSetting("expDataPath")
         self.recorder.setExpState("RETRAIN")
         for i in range(5):
             print(i)
-            j= i*2
-            self.recorder.recordEpochTrainStat(i, "test_value", j)
-            self.recorder.recordEpochTrainStat(i, "test_value_2", i)
-            time.sleep(0.5)
+           # j= i*2
+            self.recorder.recordEpochTrainStat(i, "test_value", np.random.rand(1)[0])
+            self.recorder.recordEpochTrainStat(i, "test_value_2", np.random.rand(1)[0])
+            time.sleep(2)
 
         #self.recorder.setExpState("RETRAIN")
 
