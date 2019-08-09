@@ -101,3 +101,14 @@ def getPlotStats(db, expid):
     return plots
 
 
+# set hyperpaermeters to hyperparam table
+
+def setHyperparamDict(db, expid, hyperparam_dict):
+    col = db.hyperparam
+
+    query = {"expid": expid}
+    values = {"$set": hyperparam_dict}
+    x = col.update(query, values, upsert=True)
+    print("updated hyperparameters")
+
+

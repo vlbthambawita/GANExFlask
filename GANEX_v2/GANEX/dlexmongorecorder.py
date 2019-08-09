@@ -16,7 +16,7 @@ class DLExMongoRecorder():
         # new_vlues = {"$set": {setting_name: setting_value}}
         # col.update_one(query, new_vlues, upsert=True)
         x =col.find(query)
-        print(x.next()[setting_name])
+        return x.next()[setting_name]
 
     
 

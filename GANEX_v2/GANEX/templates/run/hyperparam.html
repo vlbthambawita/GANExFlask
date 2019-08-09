@@ -8,13 +8,16 @@
           console.log("document is ready")
           //$("#summary-tab").attr
           $("#hyperparam-tab").addClass("active")
+
+          //btn_hyperparam_save click function
+
         })
 </script>
 
 {% endblock %}
 {% block content %}
 
-
+<div class="row"><br></div> <!-- Space between heading and below contents -->
 <div class="row">
     <div class="col-3">
       <div class="list-group" id="list-tab" role="tablist">
@@ -26,8 +29,8 @@
     </div>
     <div class="col-9">
       <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
-        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">{% include 'includes/hyperparam/general.html' %}</div>
+        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">{% include 'includes/test.html' %}</div>
         <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
       </div>

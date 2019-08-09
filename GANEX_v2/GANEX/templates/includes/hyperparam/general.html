@@ -1,0 +1,35 @@
+
+<form action="{{ url_for('hyperparam.saveparam', pid=pid, expid=expid) }}" method="POST">
+    <label>Image Size:</label>
+    <input name="image_size" type="number"> <br>
+
+    <label>Number of channels:</label>
+    <input name="nc" type="number"> <br>
+
+    <label>Size of z latent vector:</label>
+    <input name="nz" type="number"> <br>
+
+    <label>Size of feature maps in generator:</label>
+    <input name="ngf" type="number"> <br>
+
+    <label>Size of feature maps in discriminator:</label>
+    <input name="ndf" type="number"> <br>
+
+    <label>Number of training epochs:</label>
+    <input name="num_epochs" type="number" min="0"> <br>
+
+    <label>Learning rate for optimizers:</label>
+    <input name="lr" type="number" min="0" step="0.0001"> <br>
+
+    <label>Beta1 hyperparam for Adam optimizers:</label>
+    <input name="beta1" type="number" min="0" max="1" step="0.1"> <br>
+
+    <label>Number of GPUs available. Use 0 for CPU mode:</label>
+    <input name="ngpu" type="number" min="0" step="1"> <br>
+
+    <input type="submit" value="Save">
+
+</form>
+
+
+

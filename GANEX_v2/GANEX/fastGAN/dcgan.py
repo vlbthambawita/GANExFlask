@@ -13,7 +13,12 @@ class DCGAN():
         self.recorder = DLExMongoRecorder(self.db, self.pid, self.expid)
     
 
+    def setsetting(self):
+        self.dataroot = self.recorder.getSetting("expDataPath")
+        print("data roor=", self.dataroot)
+
     def run(self):
+        self.setsetting()
         print("running run method:", self.expid)
         self.recorder.getSetting("expDataPath")
         self.recorder.setExpState("RETRAIN")
