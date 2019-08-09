@@ -1,5 +1,6 @@
 from flask_pymongo import ObjectId
 
+
 # get the experiment state
 def getExpState(db, expid):
     
@@ -66,20 +67,23 @@ def getGANInfo(db, expid):
 def getTrainStatsList(db, expid):
     col = db.trainstats 
     query = {"expid":expid}
+    result_count = col.count_documents(query)
     x = col.find(query, {"_id": 0, "expid": 0 , "epoch": 0})
+    print("xxxx", result_count)
 
     statList = []
-    for key in iter(x.next()):
-        statList.append(key)
+    if result_count > 0:
+        for key in iter(x.next()):
+            statList.append(key)
 
     print(statList)
     return statList
 
-def addPlotStat(db, expid, plotstatName):
+def addPlotStat(db, expid, plotstatName, plotid):
     col = db.plotsetting
 
-    query ={"expid": expid, "plotstat":plotstatName }
-    newvalue ={"$set" : {"expid": expid, "plotstat": plotstatName}}
+    query ={"expid": expid, "plotstat":plotstatName , "plotid": plotid}
+    newvalue ={"$set" : {"expid": expid, "plotstat": plotstatName, "plotid": plotid}}
     x = col.update(query, newvalue, upsert=True)
 
 def getPlotStats(db, expid):
@@ -91,7 +95,7 @@ def getPlotStats(db, expid):
     plots = []
 
     for r in output:
-        plots.append(r["plotstat"])
+        plots.append((r["plotstat"], r["plotid"]))
 
     print(plots)
     return plots

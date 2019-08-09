@@ -63,8 +63,10 @@ def updatePlotStatType(pid, expid):
     db = get_db()
     print("update plot stat type")
     plot_stat_name= request.args.get("statName")
+    plot_id = request.args.get("plotid")
     print(plot_stat_name)
-    addPlotStat(db, expid, plot_stat_name)
+
+    addPlotStat(db, expid, plot_stat_name, plot_id)
 
     # addPlotStat(db, expid)
     return jsonify(x=5)

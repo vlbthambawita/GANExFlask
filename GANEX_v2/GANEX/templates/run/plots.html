@@ -21,21 +21,37 @@
 
                 $("#btn_add_plot").click(function(){
                         var statlist_elem = document.getElementById("plot_stat");
+                        var plotid_elem = document.getElementById("plot_id");
+
                         var statListItem_value  = statlist_elem.options[statlist_elem.selectedIndex].text;
+                        var plotid_value = plotid_elem.options[plotid_elem.selectedIndex].text;
                         // alert(statListItem_value)
                         $.ajax({
                                 type: 'GET',
                                 url: "{{ url_for('plots.updatePlotStatType', pid=pid, expid=expid) }}",
-                                data: {"statName": statListItem_value},
+                                data: {"statName": statListItem_value, "plotid": plotid_value},
                                 contentType: 'application/json',
                         success: function(data){
                                 alert("success")
+                                // initRealTimePlot()
                         }
 
+                        })      
                 })
-                        
-                        
-                })
+
+                // update plot id list
+                var sel = document.getElementById("plot_id");
+                var i;
+                
+                for (i=1; i < 21; i++){
+                        var opt = document.createElement('option');
+                        opt.text = i;
+                        opt.value = i;
+                        sel.add(opt);
+
+                }
+                
+               // document.getElementById("plot_id").innerHTML = "<option value='test'>test</option> <option value='test'>test</option>"
         })
 
         function initRealTimePlot(){
@@ -62,7 +78,7 @@
 {% block content %}
 
 
-
+<div class="row"><br></div> <!-- Space between heading and below contents -->
 <div class="row">
     <div class="col-3">
       <div class="list-group" id="list-tab" role="tablist">
@@ -89,6 +105,7 @@
                         {% endfor %}
 
                 </select>
+                <select id="plot_id"></select>
                 <button id="btn_add_plot">Add plot</button>
         </div>
         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>

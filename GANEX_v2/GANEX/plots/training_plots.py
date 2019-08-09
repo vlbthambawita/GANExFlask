@@ -17,8 +17,8 @@ def trainLossPlot(db, expid, statlist):
     # getPlotStats()
     for i in range(len(statlist)):
         data = [] 
-        for r in db["trainstats"].find({"expid":expid},{"_id": 0, statlist[i]: 1}):
-            data.append(r[statlist[i]])
+        for r in db["trainstats"].find({"expid":expid},{"_id": 0, statlist[i][0]: 1}):
+            data.append(r[statlist[i][0]])
 
     
         x = np.linspace(0, len(data), len(data))
@@ -26,20 +26,11 @@ def trainLossPlot(db, expid, statlist):
         df = pd.DataFrame({'x': x, 'y': y}) # creating a sample dataframe
 
     # fig = make_subplots(rows=1, cols=2)
-        fig.add_trace(go.Scatter(x=df['x'], y=df['y']), row=i +1, col=1)
+        fig.add_trace(go.Scatter(x=df['x'], y=df['y']), row=int(statlist[i][1]), col=1)
+
     # fig.add_trace(go.Scatter(x=df['x'], y=df['y']), row=1, col=2)
+    fig.update_layout(height=800)
 
-
-    data = [
-        go.Scatter(
-            x=df['x'], # assign x as the dataframe column 'x'
-            y=df['y']
-        ),
-        go.Scatter(
-            x=df['x'], # assign x as the dataframe column 'x'
-            y=df['y']
-        )
-    ]
 
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
