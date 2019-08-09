@@ -4,7 +4,8 @@ from flask import (
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
 
-
+import pymongo
+import os
 
 from GANEX.db import get_db
 from GANEX.forms import CreateExperiment_form
@@ -26,8 +27,9 @@ def create(pid):
     #
     col_gans = (db["gantypes"].find({},{"_id":0}))
     col_exp = db["experiments"] # experiments table
+    col_exp.create_index([("name", pymongo.ASCENDING)], unique=True) # name unique index
 
-    col_pro_exp = col_exp.find({"pid":pid})
+    all_exps = col_exp.find({"pid":pid})
 
     gan_types = []
 
@@ -50,17 +52,39 @@ def create(pid):
     #for p in all_projects:
      #   print(p)
 
+     
     if exp_form.validate_on_submit():
 
-        if error is None:
-            exp_dict = {"name":exp_form.expName.data, "type":exp_form.ganType.data, "pid": pid, "status": "TRAIN"}
+        try:
+            if error is None:
+                exp_name = exp_form.expName.data
+                exp_gan = exp_form.ganType.data
+                exp_pro_path = db.projects.find_one({"_id":ObjectId(pid)})["path"]
+                print(exp_pro_path)
 
-            x = col_exp.insert_one(exp_dict)
-            print(x.inserted_id) #out.inserted_id
-            # flash(x.inserted_id) # remove this one, if redirect the page
-            #return redirect(url_for('experiments.create'))
+                #paths
+                exp_path = os.path.join(exp_pro_path, exp_name)
+                exp_models_path = os.path.join(exp_pro_path, exp_name + "/models")
+                exp_output_path = os.path.join(exp_pro_path, exp_name + "/output")
 
-    return render_template('experiments/create.html', form=exp_form, pid=pid, exps=col_pro_exp)
+                os.mkdir(exp_path)
+                os.mkdir(exp_models_path)
+                os.mkdir(exp_output_path)
+
+
+                exp_dict = {"name":exp_name, "type":exp_gan, "pid": pid, "status": "TRAIN", 
+                            "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path }
+
+                x = col_exp.insert_one(exp_dict)
+                print(x.inserted_id) #out.inserted_id
+                # flash(x.inserted_id) # remove this one, if redirect the page
+                #return redirect(url_for('experiments.create'))
+
+        except Exception as e:
+            flash(e)
+
+    return render_template('experiments/create.html', form=exp_form, pid=pid, exps=all_exps)
+    
 
 @bp.route('/<pid>/<expid>/deleteExp', methods=('GET',))
 def deleteExp(pid, expid):
