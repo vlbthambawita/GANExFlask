@@ -127,4 +127,10 @@ def setHyperparamDict(db, expid, hyperparam_dict):
     x = col.update(query, values, upsert=True)
     print("updated hyperparameters")
 
+def getHyperparamDict(db, expid):
+    col = db.hyperparam
+    query = {"expid": expid}
+    output = col.find(query, {"_id":0, "expid":0})
+    return output.next()
+
 
