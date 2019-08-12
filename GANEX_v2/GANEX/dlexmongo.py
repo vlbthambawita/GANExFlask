@@ -39,6 +39,13 @@ def addInfoToExp(db, expId, fieldName, fieldValue):
 
     print("new field inserted.")
 
+# get given info from the Experiment 
+def getInfoExp(db, expId):
+    col = db.experiments
+    query = {"_id": ObjectId(expId)}
+    output = col.find_one(query)
+    return output
+
 def addInfoToHWSettings(db, expId, fieldName, fieldValue):
     query ={"_id":ObjectId(expId)}
     new_field = {"$set": {fieldName: fieldValue}}
@@ -134,3 +141,42 @@ def getHyperparamDict(db, expid):
     return output.next()
 
 
+
+# handling outputdata collection
+
+def addImage(db, expid, datatype): # type: INPUTDATA, GENDATA, --> return a path to image
+    
+    # get new id for new data
+    col = db.outputdata
+    query ={"expid": expid, "type": datatype}
+    x = col.insert_one(query) # x.inserted_id
+
+    col_exp = db.experiments
+    query_exp = {"_id": ObjectId(expid)}
+    exp_path = col_exp.find(query_exp, {"_id":0,"output_path":1})
+
+    # new image path 
+    imgpath = exp_path.next()["output_path"] + "/" + str(x.inserted_id) + ".png"
+
+    # update outputdata collection
+    new_value = {"$set": {"imgpath": imgpath}}
+    x1 = col.update(query, new_value, upsert=True)
+
+
+    print(x.inserted_id)
+   #  print(exp_path.next())
+    return imgpath
+
+def getImagePaths(db, expid, datatype):
+    col = db.outputdata
+    query = {"expid": expid,  "type": datatype}
+
+    output= col.find(query, {"_id":0, "imgpath": 1})
+    print(output)
+    img_path_list = []
+
+    for path in output:
+        print(path)
+        img_path_list.append(path["imgpath"])
+
+    return img_path_list

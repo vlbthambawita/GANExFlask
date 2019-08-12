@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        //load dataloader when the page load
+        $("#test-data-list").click(function(){
+            alert("test data list")
+            $.ajax({
+                type: 'GET',
+                url: "{{ url_for('data.testDataLoad', pid=pid, expid=expid) }}",
+                data : {},
+                contentType: 'application/json',
+                success: function(data){
+                    alert("success:" + data.x[0])
+                }
+            })
+        })
+
+        // do the task when the button click
+        $("#btn_testdata").click(function(){
+            $.ajax({
+                type: 'GET',
+                url: "{{ url_for('data.testData', pid=pid, expid=expid) }}",
+                data : {},
+                contentType: 'application/json',
+                success: function(data){
+                    alert("success:" + data.x)
+                }
+            })
+
+        })
+    })
+</script>
+
+<p>Test data page</p>
+
+
+<button id="btn_testdata">Generate Input Sample</button>

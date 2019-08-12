@@ -13,7 +13,7 @@
       $("#data-tab").addClass("active")
     })
 
-    $("button").click(function(){
+    $("#btn_save_datapath").click(function(){
       //$("#test").html("rw" )
 
       $.ajax({
@@ -22,7 +22,8 @@
         data: {"path": $("#inputPath").val()}, //JSON.stringify(5),
         contentType: 'application/json',
         success: function(data){
-          alert("success -" + data.x)
+          alert("success -" + data.current_path)
+          $("#lbl_current_path").text("Current Data Path:" + data.current_path)
         }
       });
     });
@@ -39,7 +40,7 @@
     <div class="col-3">
       <div class="list-group" id="list-tab" role="tablist">
         <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="Data path">Data Path</a>
-        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="Test Data">Test Data</a>
+        <a class="list-group-item list-group-item-action" id="test-data-list" data-toggle="list" href="#test-data" role="tab" aria-controls="Test Data">Test Data</a>
         <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="Analyse Data">Analyse Data</a>
         <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="Setup Data">Settings</a>
       </div>
@@ -49,12 +50,13 @@
         <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
             <label>Data Folder Path:</label>
             <input type="text"  id="inputPath" placeholder="/sample/Data/Folder/Path">
-            <button>Save</button> 
+            <button  id="btn_save_datapath">Save</button> 
+            <label id="lbl_current_path">Current Data Path: {{  infoDict["expDataPath"] }}</label>
             <div id="test">...</div>
           
             This is window for setup data.
         </div>
-        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
+        <div class="tab-pane fade" id="test-data" role="tabpanel" aria-labelledby="list-profile-list">{% include 'includes/data/testdata.html' %}</div>
         <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
       </div>
