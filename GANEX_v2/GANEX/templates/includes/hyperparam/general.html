@@ -1,37 +1,91 @@
+<script>
+    $(document).ready(function(){
+        
+    })
+</script>
+
 
 <form id="frm_hyperparam" action="{{ url_for('hyperparam.saveparam', pid=pid, expid=expid) }}" method="POST">
-    <label>Number of workers for dataloader:</label>
-    <input name="workers" type="number" min="1"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label" >Number of workers for dataloader:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="workers" type="number" min="1"> 
+        </div>
+    </div>
 
-    <label>Batch size during training:</label>
-    <input name="batch_size" type="number" min="1"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Batch size during training:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="batch_size" type="number" min="1"> 
+        </div>
+    </div>
 
-    <label>Image Size:</label>
-    <input name="image_size" type="number"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Image Size:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="image_size" type="number"> <br>
+        </div>
+    </div>
 
-    <label>Number of channels:</label>
-    <input name="nc" type="number"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Number of channels:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="nc" type="number"> <br>
+        </div>
+    </div>
 
-    <label>Size of z latent vector:</label>
-    <input name="nz" type="number"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Size of z latent vector:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="nz" type="number"> <br>
+        </div>
+        
+    </div>
 
-    <label>Size of feature maps in generator:</label>
-    <input name="ngf" type="number"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Size of feature maps in generator:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="ngf" type="number"> <br>
+        </div>
+        
+    </div>
 
-    <label>Size of feature maps in discriminator:</label>
-    <input name="ndf" type="number"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Size of feature maps in discriminator:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="ndf" type="number"> <br>
+        </div>     
+    </div>
 
-    <label>Number of training epochs:</label>
-    <input name="num_epochs" type="number" min="0"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Number of training epochs:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="num_epochs" type="number" min="0"> <br>
+        </div>
+    </div>
 
-    <label>Learning rate for optimizers:</label>
-    <input name="lr" type="number" min="0" step="0.0001"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Learning rate for optimizers:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="lr" type="number" min="0" step="0.0001"> <br>
+        </div>
+    </div>
 
-    <label>Beta1 hyperparam for Adam optimizers:</label>
-    <input name="beta1" type="number" min="0" max="1" step="0.1"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Beta1 hyperparam for Adam optimizers:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="beta1" type="number" min="0" max="1" step="0.1"> <br>
+        </div>
+        
+    </div>
 
-    <label>Number of GPUs available. Use 0 for CPU mode:</label>
-    <input name="ngpu" type="number" min="0" step="1"> <br>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Number of GPUs available. Use 0 for CPU mode:</label>
+        <div class="col-sm-8">
+            <input class="form-control" name="ngpu" type="number" min="0" step="1"> <br>
+        </div>
+        
+    </div>
 
     <input type="submit" value="Save">
 
