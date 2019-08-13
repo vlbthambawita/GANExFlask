@@ -63,16 +63,26 @@
     })
 </script>
 
+<!--
 <p>Test data page</p>
 <p id="p_image_list"></p>
 
-<ol id="ol_images">
-    
-</ol>
 
-<!-- <img src="{{ url_for('data.sendImage', pid=pid, expid=expid) }}" alt="test"> -->
+
+<img src="{{ url_for('data.sendImage', pid=pid, expid=expid) }}" alt="test"> 
 <div id="plt_image"></div>
-<div id="plt_image_selected"></div>
+
+-->
 
 
-<button id="btn_testdata">Generate Input Sample</button>
+
+<div class="row">
+    <div class="col-3">
+        <ol id="ol_images"></ol>
+        <button id="btn_testdata">Generate Input Sample</button>
+    </div>
+    <div class="col-9">
+        <div id="plt_image_selected"></div>
+    </div>
+</div>
+    
