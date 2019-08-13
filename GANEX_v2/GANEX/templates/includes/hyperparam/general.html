@@ -4,107 +4,110 @@
     })
 </script>
 
+<div class="row">
+    <div class="col-6">
+        <form id="frm_hyperparam" action="{{ url_for('hyperparam.saveparam', pid=pid, expid=expid) }}" method="POST">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label" >Number of workers for dataloader:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="workers" type="number" min="1"> 
+                </div>
+            </div>
 
-<form id="frm_hyperparam" action="{{ url_for('hyperparam.saveparam', pid=pid, expid=expid) }}" method="POST">
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label" >Number of workers for dataloader:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="workers" type="number" min="1"> 
-        </div>
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Batch size during training:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="batch_size" type="number" min="1"> 
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Image Size:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="image_size" type="number"> <br>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Number of channels:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="nc" type="number"> <br>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Size of z latent vector:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="nz" type="number"> <br>
+                </div>
+                
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Size of feature maps in generator:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="ngf" type="number"> <br>
+                </div>
+                
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Size of feature maps in discriminator:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="ndf" type="number"> <br>
+                </div>     
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Number of training epochs:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="num_epochs" type="number" min="0"> <br>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Learning rate for optimizers:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="lr" type="number" min="0" step="0.0001"> <br>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Beta1 hyperparam for Adam optimizers:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="beta1" type="number" min="0" max="1" step="0.1"> <br>
+                </div>
+                
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Number of GPUs available. Use 0 for CPU mode:</label>
+                <div class="col-sm-8">
+                    <input class="form-control" name="ngpu" type="number" min="0" step="1"> <br>
+                </div>
+                
+            </div>
+
+            <input type="submit" value="Save">
+
+        </form>
     </div>
+    <div class="col-6">
+        <table class="table">
+            <tr>
+                <th>Parameter Name (key):</th><th>Parameter Value</th>
+            </tr>
+            {% if hyperdict != None %}
+                {% for key, value in hyperdict.items() %}
+                    <tr> 
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
 
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Batch size during training:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="batch_size" type="number" min="1"> 
-        </div>
     </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Image Size:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="image_size" type="number"> <br>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Number of channels:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="nc" type="number"> <br>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Size of z latent vector:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="nz" type="number"> <br>
-        </div>
-        
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Size of feature maps in generator:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="ngf" type="number"> <br>
-        </div>
-        
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Size of feature maps in discriminator:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="ndf" type="number"> <br>
-        </div>     
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Number of training epochs:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="num_epochs" type="number" min="0"> <br>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Learning rate for optimizers:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="lr" type="number" min="0" step="0.0001"> <br>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Beta1 hyperparam for Adam optimizers:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="beta1" type="number" min="0" max="1" step="0.1"> <br>
-        </div>
-        
-    </div>
-
-    <div class="form-group row">
-        <label class="col-sm-4 col-form-label">Number of GPUs available. Use 0 for CPU mode:</label>
-        <div class="col-sm-8">
-            <input class="form-control" name="ngpu" type="number" min="0" step="1"> <br>
-        </div>
-        
-    </div>
-
-    <input type="submit" value="Save">
-
-</form>
-
-<div>
-    <table class="table">
-        <tr>
-            <th>Parameter Name (key):</th><th>Parameter Value</th>
-        </tr>
-        {% if hyperdict != None %}
-            {% for key, value in hyperdict.items() %}
-                <tr> 
-                    <td>{{ key }}</td>
-                    <td>{{ value }}</td>
-                </tr>
-            {% endfor %}
-        {% endif %}
-    </table>
 
 </div>
 

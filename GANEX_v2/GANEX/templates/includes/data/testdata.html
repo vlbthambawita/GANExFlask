@@ -1,13 +1,13 @@
 <script type="text/javascript">
     function clickimage(e){
-        alert("clicked" + e.getAttribute("value")) //textContent)
+        //alert("clicked" + e.getAttribute("value")) //textContent)
         $.ajax({
             type: 'GET',
             url: "{{ url_for('data.loadselectimage') }}",
             data:  {"selectedpath": e.getAttribute("value")},
             contentType: 'application/json',
             success: function(data){
-                alert("selected image")
+                //alert("selected image")
                 const graph = JSON.parse(data.plot)
                 Plotly.newPlot('plt_image_selected', graph,{})
 
@@ -19,7 +19,7 @@
 
         //load dataloader when the page load
         $("#test-data-list").click(function(){
-            alert("test data list")
+           // alert("test data list")
             $.ajax({
                 type: 'GET',
                 url: "{{ url_for('data.testDataLoad', pid=pid, expid=expid) }}",
@@ -52,7 +52,7 @@
                 data : {},
                 contentType: 'application/json',
                 success: function(data){
-                    alert("success:" + data.imgpath)
+                    //alert("success:" + data.imgpath)
                     $("#p_image_list").html(data.imgpath)
                     $("#ol_images").append("<li onclick=clickimage(this) value=" + data.imgpath + "> Image </li>")
                     

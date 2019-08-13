@@ -4,10 +4,12 @@ import torch
 import torch.nn as nn
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
+import torch.optim as optim
 
 
 #fastGAN
-from GANEX.fastGAN.ganNets.ganNets import DCGenerator
+from GANEX.fastGAN.ganNets.ganNets import DCGenerator, DCDiscriminator
+from GANEX.fastGAN.ganTrainer.ganTrainer import GanTrainer
 
 from GANEX.dlexmongorecorder import DLExMongoRecorder
 import time
@@ -47,11 +49,14 @@ class DCGAN():
                                             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                                         ]))
 
+        # get data set sample only for testing
+        self.dataset_sample = torch.utils.data.Subset(self.dataset, [i for i in range(500)])
+
         print("Dataset is OK", self.dataset)
         print("Batch size:", self.hyperparams["batch_size"])
         print("workers:", self.hyperparams["workers"])
 
-        self.dataloader = torch.utils.data.DataLoader(self.dataset, 
+        self.dataloader = torch.utils.data.DataLoader(self.dataset_sample, 
                                                     batch_size=int(self.hyperparams["batch_size"]),
                                                 shuffle=True, 
                                                 num_workers=int(self.hyperparams["workers"]))
@@ -79,6 +84,33 @@ class DCGAN():
                                 int(self.hyperparams["ngf"]), 
                                 int(self.hyperparams["nc"]))
 
+        self.netD = DCDiscriminator(int(self.hyperparams["ngpu"]),
+                                    int(self.hyperparams["nc"]),
+                                    int(self.hyperparams["ndf"])
+                                    )
+
+        self.netG.to(self.device)
+        self.netD.to(self.device)
+
+        self.netG.apply(self.weight_init)
+        self.netD.apply(self.weight_init)
+
+    def initCriterion(self):
+        self.criterion = nn.BCELoss()
+
+    def initNoiseAndLabels(self):
+        self.fixed_noise = torch.randn(64, int(self.hyperparams["nz"]), 1, 1, device=self.device)
+        self.real_label = 1
+        self.fake_label = 0
+
+    def initOptimizers(self):
+        self.optimizerD = optim.Adam(self.netD.parameters(), lr=float(self.hyperparams["lr"]), 
+                                    betas=(float(self.hyperparams["beta1"]), 0.999)
+                                    )
+        self.optimizerG = optim.Adam(self.netG.parameters(), lr=float(self.hyperparams["lr"]), 
+                                    betas=(float(self.hyperparams["beta1"]), 0.999)
+        )
+
     def run(self):
         print("running run method:", self.expid)
         self.setsettings()
@@ -90,17 +122,30 @@ class DCGAN():
         print("Set device is finished")
         self.initNets()
         print("Init Nets finished")
+        self.initCriterion()
+        print("initialize criterion")
+        self.initNoiseAndLabels()
+        print("initialized noise and labels")
+        self.initOptimizers()
+        print("inittialize optimizers")
+
+        self.gt = GanTrainer(self)
+        print("initialized gan trainer")
+
+        self.gt.train(1)
+        print("gan trainer is working")
        
         self.recorder.getSetting("expDataPath")
         self.recorder.setExpState("RETRAIN")
-        for i in range(5):
-            print(i)
+        #for i in range(5):
+          #  print(i)
            # j= i*2
-            self.recorder.recordEpochTrainStat(i, "test_value", np.random.rand(1)[0])
-            self.recorder.recordEpochTrainStat(i, "test_value_2", np.random.rand(1)[0])
-            time.sleep(1)
+            #self.recorder.recordEpochTrainStat(i, "test_value", np.random.rand(1)[0])
+            # self.recorder.recordEpochTrainStat(i, "test_value_2", np.random.rand(1)[0])
+          #  time.sleep(1)
 
         #self.recorder.setExpState("RETRAIN")
+        print("Finished........!!!!!!!!!!!!!!!")
 
 
 

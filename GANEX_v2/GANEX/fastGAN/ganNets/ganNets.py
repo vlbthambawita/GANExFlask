@@ -88,7 +88,7 @@ class DCGenerator(nn.Module):
 
 # Descriminator code
 class DCDiscriminator(nn.Module):
-    def __init__(self, ngpu,  nc, ndf):
+    def __init__(self, ngpu:int,  nc:int, ndf:int):
         super(DCDiscriminator, self).__init__()
         self.ngpu = ngpu
         self.main = nn.Sequential(
