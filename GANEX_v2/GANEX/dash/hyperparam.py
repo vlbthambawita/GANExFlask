@@ -33,10 +33,15 @@ def saveparam(pid, expid):
         form_data_dict = request.form.to_dict()
         current_dict = getHyperparamDict(db, expid)
 
-        updated_current_dict = getDifferenceDict(current_dict, form_data_dict)
+        if current_dict != None:
+            updated_current_dict = getDifferenceDict(current_dict, form_data_dict)
 
 
-        setHyperparamDict(db, expid, updated_current_dict)
+            setHyperparamDict(db, expid, updated_current_dict)
+
+        else:
+            updated_current_dict = form_data_dict
+            setHyperparamDict(db, expid, updated_current_dict)
         
         #for k, v in request.form:
         #    print(k)

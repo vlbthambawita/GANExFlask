@@ -1,5 +1,5 @@
 
-<form action="{{ url_for('hyperparam.saveparam', pid=pid, expid=expid) }}" method="POST">
+<form id="frm_hyperparam" action="{{ url_for('hyperparam.saveparam', pid=pid, expid=expid) }}" method="POST">
     <label>Number of workers for dataloader:</label>
     <input name="workers" type="number" min="1"> <br>
 
@@ -42,13 +42,14 @@
         <tr>
             <th>Parameter Name (key):</th><th>Parameter Value</th>
         </tr>
-        
-        {% for key, value in hyperdict.items() %}
-            <tr> 
-                <td>{{ key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-        {% endfor %}
+        {% if hyperdict != None %}
+            {% for key, value in hyperdict.items() %}
+                <tr> 
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
     </table>
 
 </div>

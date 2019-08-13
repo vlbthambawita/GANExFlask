@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, session
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, session, send_from_directory
 )
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
@@ -10,6 +10,7 @@ from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
 from GANEX.dlexmongo import addInfoToExp, getInfoExp, addImage, getImagePaths
 from GANEX.fastGAN.ganInit.ganInit import createDataLoader, initDevice, generateInputImageGrid
+from GANEX.plots import imageplot
 
 # Blue print
 bp = Blueprint('data', __name__, url_prefix='/run')
@@ -39,20 +40,22 @@ def setDataFolder(pid, expid):
     infoDict = getInfoExp(db, expid)
     return jsonify(current_path = infoDict["expDataPath"])
 
-
+# when load test data section
 @bp.route('/<pid>/<expid>/testDataLoad', methods=('GET', 'POST'))
 def testDataLoad(pid, expid):
     db =get_db()
     img_path_list  = getImagePaths(db, expid, "INPUTDATA")
+
+    # plot = imageplot.createImagePlot()
     
     print("test data load")
     print(img_path_list)
     
-    return jsonify(x=img_path_list)
+    return jsonify(imgpathlist=img_path_list)
 
 
-@bp.route('/<pid>/<expid>/testData', methods=('GET', 'POST'))
-def testData(pid, expid):
+@bp.route('/<pid>/<expid>/generateTestData', methods=('GET', 'POST'))
+def generateTestData(pid, expid):
     db =get_db()
 
     try:
@@ -73,7 +76,22 @@ def testData(pid, expid):
         flash(e)
 
     img_path_list  = getImagePaths(db, expid, "INPUTDATA")
+    print("image path list:", img_path_list)
 
     
-    return jsonify(imgpaths=img_path_list)
+    return jsonify(imgpath=imgpath)
+
+
+@bp.route('/loadselectimage/', methods=('GET',))
+def loadselectimage():
+    print("image selected")
+    selected_img_path = request.args.get("selectedpath")
+    print(selected_img_path)
+    plot = imageplot.createImagePlot(selected_img_path)
+    return jsonify(x=7878, plot=plot )
+
+
+@bp.route('/<pid>/<expid>/sendImage', methods=('GET', 'POST'))
+def sendImage(pid, expid):
+    return send_from_directory("/home/vajira/DL/ganexprojects/p3/DCGAN ex1/output", "5d5179b3cc4f4a7e4c4c9860.png")
 

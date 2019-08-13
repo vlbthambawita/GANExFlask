@@ -137,8 +137,8 @@ def setHyperparamDict(db, expid, hyperparam_dict):
 def getHyperparamDict(db, expid):
     col = db.hyperparam
     query = {"expid": expid}
-    output = col.find(query, {"_id":0, "expid":0})
-    return output.next()
+    output = col.find_one(query, {"_id":0, "expid":0})
+    return output
 
 
 
