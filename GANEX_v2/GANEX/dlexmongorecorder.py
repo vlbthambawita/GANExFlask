@@ -9,7 +9,7 @@ class DLExMongoRecorder():
         self.pid = pid
         self.expid = expid
 
-    def getSetting(self, setting_name):
+    def get_exp_info(self, setting_name):
 
         col = self.db.experiments
         query = {"_id":ObjectId(self.expid)}
@@ -18,7 +18,7 @@ class DLExMongoRecorder():
         x =col.find(query)
         return x.next()[setting_name]
 
-    def getHyperParams(self):
+    def get_hyper_params(self):
         print("started get hyper param")
         col = self.db.hyperparam
         query = {"expid": self.expid}
@@ -35,7 +35,7 @@ class DLExMongoRecorder():
         new_values = {"$set": {stat_name: stat_value}}
         col.update_one(query, new_values, upsert=True)
 
-    def setExpState(self, status):
+    def set_exp_state(self, status):
         col = self.db.experiments
         query = {"_id":ObjectId(self.expid)}
         new_value = { "$set": { "status": status } }

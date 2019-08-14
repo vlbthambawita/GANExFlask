@@ -28,7 +28,7 @@ class GanTrainer():
                 errD_real.backward()
                 D_x = output.mean().item()
                 print("gan trainer:", D_x)
-                self.gan.recorder.recordEpochTrainStat(i, "D_x", D_x)
+                self.gan.recorder.recordEpochTrainStat(epoch, "D_x", D_x)
 
 
                 ## Train with all-fake batch
@@ -49,8 +49,8 @@ class GanTrainer():
                 # Update D
                 self.gan.optimizerD.step()
                 print("error D:", errD.item())
-                self.gan.recorder.recordEpochTrainStat(i, "D_G_z1", D_G_z1)
-                self.gan.recorder.recordEpochTrainStat(i, "errD", errD.item())
+                self.gan.recorder.recordEpochTrainStat(epoch, "D_G_z1", D_G_z1)
+                self.gan.recorder.recordEpochTrainStat(epoch, "errD", errD.item())
 
 
                 ############################
@@ -69,7 +69,7 @@ class GanTrainer():
                 self.gan.optimizerG.step()
 
                 print("D_G_z2:", D_G_z2)
-                self.gan.recorder.recordEpochTrainStat(i, "D_G_z2", D_G_z2)
+                self.gan.recorder.recordEpochTrainStat(epoch, "D_G_z2", D_G_z2)
 
 
 

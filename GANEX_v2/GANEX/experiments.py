@@ -73,7 +73,8 @@ def create(pid):
 
 
                 exp_dict = {"name":exp_name, "type":exp_gan, "pid": pid, "status": "TRAIN", 
-                            "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path }
+                            "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path , "iters": 0,
+                            "current_epoch": 0}
 
                 x = col_exp.insert_one(exp_dict)
                 print(x.inserted_id) #out.inserted_id

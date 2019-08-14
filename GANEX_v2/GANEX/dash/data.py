@@ -58,25 +58,26 @@ def testDataLoad(pid, expid):
 def generateTestData(pid, expid):
     db =get_db()
 
-    try:
-        dataloader = createDataLoader(db, pid, expid)
-        device = initDevice(db, pid, expid)
-        print(device)
-        print(dataloader)
-        imgpath = addImage(db, expid, "INPUTDATA")
-        print(imgpath)
+    #try:
+    dataloader = createDataLoader(db, pid, expid)
+    device = initDevice(db, pid, expid)
+    print(device)
+    print(dataloader)
+    imgpath = addImage(db, expid, "INPUTDATA")
+    print(imgpath)
 
-        generateInputImageGrid(dataloader, imgpath, device)
+    generateInputImageGrid(dataloader, imgpath, device)
 
-        print("test data")
+    print("test data")
+    #return jsonify(imgpath=imgpath)
         
 
 
-    except Exception as e:
-        flash(e)
+    #except Exception as e:
+     #   flash(e)
 
-    img_path_list  = getImagePaths(db, expid, "INPUTDATA")
-    print("image path list:", img_path_list)
+   # img_path_list  = getImagePaths(db, expid, "INPUTDATA")
+   # print("image path list:", img_path_list)
 
     
     return jsonify(imgpath=imgpath)

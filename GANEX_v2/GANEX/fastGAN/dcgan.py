@@ -27,10 +27,10 @@ class DCGAN():
     
 
     def setsettings(self):
-        self.dataroot = self.recorder.getSetting("expDataPath")
-        self.hyperparams = self.recorder.getHyperParams()
+        self.dataroot = self.recorder.get_exp_info("expDataPath")
+        self.hyperparams = self.recorder.get_hyper_params()
         print("data roor=", self.dataroot)
-        print("hyper param=", self.recorder.getHyperParams() ) #
+        print("hyper param=", self.recorder.get_hyper_params() ) #
 
         # self.workers = 
 
@@ -40,11 +40,13 @@ class DCGAN():
         # Create the dataset
         print("data root:", self.dataroot)
         print("Imgae size:", self.hyperparams["image_size"])
+        hyperparams = self.recorder.get_hyper_params()
+        dataroot = self.recorder.get_exp_info("expDataPath")
 
-        self.dataset = dset.ImageFolder(root=self.dataroot,
+        self.dataset = dset.ImageFolder(root=dataroot,
                                         transform = transforms.Compose([
-                                            transforms.Resize(int(self.hyperparams["image_size"])),
-                                            transforms.CenterCrop(int(self.hyperparams["image_size"])),
+                                            transforms.Resize(int(hyperparams["image_size"])),
+                                            transforms.CenterCrop(int(hyperparams["image_size"])),
                                             transforms.ToTensor(),
                                             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                                         ]))
@@ -53,13 +55,13 @@ class DCGAN():
         self.dataset_sample = torch.utils.data.Subset(self.dataset, [i for i in range(500)])
 
         print("Dataset is OK", self.dataset)
-        print("Batch size:", self.hyperparams["batch_size"])
-        print("workers:", self.hyperparams["workers"])
+        print("Batch size:", hyperparams["batch_size"])
+        print("workers:", hyperparams["workers"])
 
         self.dataloader = torch.utils.data.DataLoader(self.dataset_sample, 
-                                                    batch_size=int(self.hyperparams["batch_size"]),
+                                                    batch_size=int(hyperparams["batch_size"]),
                                                 shuffle=True, 
-                                                num_workers=int(self.hyperparams["workers"]))
+                                                num_workers=int(hyperparams["workers"]))
 
         
 
@@ -67,8 +69,9 @@ class DCGAN():
                                     
     # setup device 
     def setDevice(self):
+        hyperparams = self.recorder.get_hyper_params()
         self.device = torch.device("cuda:0" if (torch.cuda.is_available() and 
-                                                int(self.hyperparams["ngpu"]) > 0) else "cpu")
+                                                int(hyperparams["ngpu"]) > 0) else "cpu")
 
     def weight_init(self, m):
         classname = m.__class__.__name__
@@ -79,14 +82,16 @@ class DCGAN():
             nn.init.constant_(m.bias.data, 0)
 
     def initNets(self):
-        self.netG = DCGenerator(int(self.hyperparams["ngpu"]), 
-                                int(self.hyperparams["nz"]), 
-                                int(self.hyperparams["ngf"]), 
-                                int(self.hyperparams["nc"]))
+        hyperparams = self.recorder.get_hyper_params()
 
-        self.netD = DCDiscriminator(int(self.hyperparams["ngpu"]),
-                                    int(self.hyperparams["nc"]),
-                                    int(self.hyperparams["ndf"])
+        self.netG = DCGenerator(int(hyperparams["ngpu"]), 
+                                int(hyperparams["nz"]), 
+                                int(hyperparams["ngf"]), 
+                                int(hyperparams["nc"]))
+
+        self.netD = DCDiscriminator(int(hyperparams["ngpu"]),
+                                    int(hyperparams["nc"]),
+                                    int(hyperparams["ndf"])
                                     )
 
         self.netG.to(self.device)
@@ -99,19 +104,23 @@ class DCGAN():
         self.criterion = nn.BCELoss()
 
     def initNoiseAndLabels(self):
-        self.fixed_noise = torch.randn(64, int(self.hyperparams["nz"]), 1, 1, device=self.device)
+        hyperparams = self.recorder.get_hyper_params()
+        self.fixed_noise = torch.randn(64, int(hyperparams["nz"]), 1, 1, device=self.device)
         self.real_label = 1
         self.fake_label = 0
 
     def initOptimizers(self):
-        self.optimizerD = optim.Adam(self.netD.parameters(), lr=float(self.hyperparams["lr"]), 
-                                    betas=(float(self.hyperparams["beta1"]), 0.999)
+        hyperparams = self.recorder.get_hyper_params()
+        self.optimizerD = optim.Adam(self.netD.parameters(), lr=float(hyperparams["lr"]), 
+                                    betas=(float(hyperparams["beta1"]), 0.999)
                                     )
-        self.optimizerG = optim.Adam(self.netG.parameters(), lr=float(self.hyperparams["lr"]), 
-                                    betas=(float(self.hyperparams["beta1"]), 0.999)
+        self.optimizerG = optim.Adam(self.netG.parameters(), lr=float(hyperparams["lr"]), 
+                                    betas=(float(hyperparams["beta1"]), 0.999)
         )
 
     def run(self):
+        hyperparams = self.recorder.get_hyper_params()
+
         print("running run method:", self.expid)
         self.setsettings()
 
@@ -132,11 +141,11 @@ class DCGAN():
         self.gt = GanTrainer(self)
         print("initialized gan trainer")
 
-        self.gt.train(1)
+        self.gt.train(int(hyperparams["num_epochs"]))
         print("gan trainer is working")
        
-        self.recorder.getSetting("expDataPath")
-        self.recorder.setExpState("RETRAIN")
+       # self.recorder.getSetting("expDataPath")
+        self.recorder.set_exp_state("RETRAIN")
         #for i in range(5):
           #  print(i)
            # j= i*2
