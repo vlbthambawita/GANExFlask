@@ -1,0 +1,88 @@
+<script type="text/javascript">
+    function clickimage(e){
+        //alert("clicked" + e.getAttribute("value")) //textContent)
+        $.ajax({
+            type: 'GET',
+            url: "{{ url_for('data.loadselectimage') }}",
+            data:  {"selectedpath": e.getAttribute("value")},
+            contentType: 'application/json',
+            success: function(data){
+                //alert("selected image")
+                const graph = JSON.parse(data.plot)
+                Plotly.newPlot('plt_image_selected', graph,{})
+
+            }
+        })
+    }
+
+    $(document).ready(function(){
+
+        //load dataloader when the page load
+        $("#test-data-list").click(function(){
+           // alert("test data list")
+            $.ajax({
+                type: 'GET',
+                url: "{{ url_for('data.testDataLoad', pid=pid, expid=expid) }}",
+                data : {},
+                contentType: 'application/json',
+                success: function(data){
+                  //  alert("load data:" + data.plot)
+                  //  const graph = JSON.parse(data.plot)
+                   // Plotly.newPlot('plt_image', graph,{})
+
+                    // clear html
+
+                    $("#ol_images").html("")
+                    // load image path list
+                    var i;
+                    for (i=0; i < data.imgpathlist.length ; i++){
+                        item = data.imgpathlist[i]
+                        $("#ol_images").append("<li onclick=clickimage(this) value=" + item + "> Image </li>")
+                    }
+
+                }
+            })
+        })
+
+        // do the task when the button click
+        $("#btn_testdata").click(function(){
+            $.ajax({
+                type: 'GET',
+                url: "{{ url_for('data.generateTestData', pid=pid, expid=expid) }}",
+                data : {},
+                contentType: 'application/json',
+                success: function(data){
+                    //alert("success:" + data.imgpath)
+                    $("#p_image_list").html(data.imgpath)
+                    $("#ol_images").append("<li onclick=clickimage(this) value=" + data.imgpath + "> Image </li>")
+                    
+                }
+            })
+
+        })
+    })
+</script>
+
+<!--
+<p>Test data page</p>
+<p id="p_image_list"></p>
+
+
+
+<img src="{{ url_for('data.sendImage', pid=pid, expid=expid) }}" alt="test"> 
+<div id="plt_image"></div>
+
+-->
+
+
+
+<div class="row">
+    <div class="col-3">
+        <ol id="ol_images"></ol>
+        <button id="btn_testdata">Generate Input Sample</button>
+    </div>
+    <div class="col-9">
+        <div id="plt_image_selected"></div>
+    </div>
+</div>
+    

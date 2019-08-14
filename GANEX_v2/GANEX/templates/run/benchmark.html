@@ -1,16 +1,50 @@
 {% extends 'run/base.html' %}
 
 
+{% block script %}
+<!--Select the corresponding nav item-->
+<script>
+        $(document).ready(function(){
+          console.log("document is ready")
+          //$("#summary-tab").attr
+          $("#benchmark-tab").addClass("active")
+
+
+          
+        var source = new EventSource("{{ url_for('benchmark.progress') }}");
+        source.onmessage = function(event){
+          $("#Results").append('<li>'+ event.data +'</li>');
+        }
+
+
+        })
+</script>
+{% endblock %}
 
 {% block content %}
 This is the page for Benchmarking..!
-<script>
-    var source = new EventSource("{{ url_for('benchmark.progress') }}");
-    source.onmessage = function(event){
-        $("#Results").append('<li>'+ event.data +'</li>');
-    }
-</script>
 
-<div id="Results">...</div>
+
+<div class="row"><br></div> <!-- Space between heading and below contents -->
+<div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+            <div id="Results">...</div>
+        </div>
+        <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
+        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+      </div>
+    </div>
+</div>
 
 {% endblock %}

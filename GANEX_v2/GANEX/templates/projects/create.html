@@ -1,27 +1,64 @@
 {% extends 'base.html' %}
 
-{% block head %}Project Main Window{% endblock %}
+{% block headding %} Main Window {% endblock %}
+
+{% block script %}
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#btn_gan_add").click(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ url_for('projects.setGanTypes') }}",
+                    data: {"name": $("#input_ganName").val(),"file": $("#input_ganFile").val(), "class": $("#input_ganClass").val()},
+                    contentType: 'application/json',
+                    success: function(data){
+                        alert("success")
+                    }
+                })
+                // clear input feilds
+            })
+        })
+    </script>
+
+{% endblock %}
 
 {% block content %}
 
-    <form action="" method="POST" novalidate>
-        {{ form.hidden_tag() }}
+    
+    <div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-gans" role="tab" aria-controls="gans">Update GAN Types</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+      </div>
+    </div>
 
-        <p>
-            {{ form.projectName.label }} <br>
-            {{ form.projectName(size=32) }}
-        </p>
 
-        <p>
-            {{ form.projectPath.label }} <br>
-            {{ form.projectPath(size=32) }}
-        </p>
+    <div class="col-9">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+            
+            <form action="" method="POST" novalidate>
+                {{ form.hidden_tag() }}
 
-        <p>
-            {{ form.submit() }}
-        </p>
+                <p>
+                    {{ form.projectName.label }} <br>
+                    {{ form.projectName(size=32) }}
+                </p>
 
-    </form>
+                <p>
+                    {{ form.projectPath.label }} <br>
+                    {{ form.projectPath(size=32) }}
+                </p>
+
+                <p>
+                    {{ form.submit() }}
+                </p>
+
+            </form>
 
     <div>
         <h2>Projects</h2>
@@ -33,6 +70,28 @@
             
         {% endfor %}
     </div>
+
+        </div>
+
+
+        <div class="tab-pane fade" id="list-gans" role="tabpanel" aria-labelledby="list-profile-list">
+            <label>GAN Name:</label>
+            <input type="text" name="gan_name" id="input_ganName" placeholder="GAN Name"> <br>
+
+            <label>GAN File Name:</label>
+            <input type="text" name="gan_file" id="input_ganFile" placeholder="GAN File Name (without .py)"> <br>
+
+            <label>GAN Class Name (run):</label>
+            <input type="text" name="gan_class" id="input_ganClass" placeholder="GAN Class Name"> <br>
+
+            <button id="btn_gan_add">Add</button>
+        
+        </div>
+        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+      </div>
+    </div>
+</div>
 
     
 {% endblock %}
