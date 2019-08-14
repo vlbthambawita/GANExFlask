@@ -1,0 +1,32 @@
+<form action="" method="POST" novalidate>
+    {{ form.hidden_tag() }}
+
+    
+    <p>
+        {{ form.expName.label }}
+        {{ form.expName(size=32) }}
+
+    </p>
+
+    <p>
+            {{ form.ganType.label }}
+            {{ form.ganType }}
+
+        </p>
+
+    <p>
+        {{ form.submit() }}
+    </p>
+
+</form>
+
+<div>
+    <h2>Experiments</h2>
+    {% for exp in exps %}
+        <p>
+            {{ exp["_id"] }} - <a href="{{ url_for('summary.summary', pid=exp['pid'], expid=exp['_id']) }}" target='_blank'>{{ exp["name"] }}</a>
+            <a href="{{ url_for('experiments.deleteExp', pid=exp['pid'], expid=exp['_id']) }}">Delete</a>
+        </p>
+    {% endfor %}
+    
+</div>

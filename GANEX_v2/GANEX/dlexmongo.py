@@ -199,3 +199,21 @@ def get_train_settings(db, expid):
 
     output = col.find_one(query, {"_id": 0, "expid": 0})
     return output
+
+# set and get default hyper parametersf
+
+def set_default_hyperparam(db, pid, param_name, param_key, param_value):
+    col = db.default_hyperparams
+    query = {"pid": pid, "para_key": param_key}
+    new_value ={"$set": {"pid": pid, "para_name":param_name, 
+                "para_key":param_key, "para_value": param_value}}
+    
+    x = col.update(query, new_value, upsert=True )
+    print("Default settings updated")
+
+def get_default_hyperparams(db, pid):
+    col = db.default_hyperparams
+    query = {"pid": pid}
+
+    output = col.find(query, {"_id": 0, "pid": 0})
+    return output

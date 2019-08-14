@@ -119,7 +119,7 @@ class DCGAN():
         )
 
     def run(self):
-        hyperparams = self.recorder.get_hyper_params()
+        train_settings = self.recorder.get_train_settings()
 
         print("running run method:", self.expid)
         self.setsettings()
@@ -141,7 +141,7 @@ class DCGAN():
         self.gt = GanTrainer(self)
         print("initialized gan trainer")
 
-        self.gt.train(int(hyperparams["num_epochs"]))
+        self.gt.train(int(train_settings["num_epochs"]))
         print("gan trainer is working")
        
        # self.recorder.getSetting("expDataPath")

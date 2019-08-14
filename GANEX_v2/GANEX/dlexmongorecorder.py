@@ -26,6 +26,12 @@ class DLExMongoRecorder():
         # print("xxx next=", x.next())
         return x.next()
 
+    def get_train_settings(self):
+        col = self.db.train_settings
+        query = {"expid": self.expid}
+        output = col.find_one(query, {"_id": 0, "expid": 0})
+        return output
+
     
 
 

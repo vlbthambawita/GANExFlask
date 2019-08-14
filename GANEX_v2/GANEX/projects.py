@@ -28,6 +28,10 @@ def create():
     db = get_db()
 
     col = db["projects"] # projects table
+
+    #initialize default_hyperparam_table
+    col_default_hyperparams = db.default_hyperparams
+    col_default_hyperparams.create_index([("pid", pymongo.ASCENDING), ("para_key", pymongo.ASCENDING)], unique=True)
     
     #project name make as unique index
     col.create_index([("name", pymongo.ASCENDING)], unique=True)
@@ -61,6 +65,9 @@ def create():
                 x = col.insert_one(pdict)
                 print(x.inserted_id) #out.inserted_id
                 # flash(x.inserted_id) # remove this one, if redirect the page
+
+                # insert empty project default dictionary
+                #set_default_hyperparams(db, str(x.inserted_id), {})
                 
                 return redirect(url_for('projects.create'))
                 
