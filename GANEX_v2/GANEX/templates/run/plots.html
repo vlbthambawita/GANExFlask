@@ -84,7 +84,7 @@
       <div class="list-group" id="list-tab" role="tablist">
         <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
         <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Plot settings</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#plot-settings" role="tab" aria-controls="messages">Plot settings</a>
         <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
       </div>
     </div>
@@ -98,15 +98,8 @@
                 
         </div>
         <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...profile</div>
-        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                <select id="plot_stat" >
-                        {% for l in statlist %}
-                                <option value="{{ l }}">{{ l }}</option>
-                        {% endfor %}
-
-                </select>
-                <select id="plot_id"></select>
-                <button id="btn_add_plot">Add plot</button>
+        <div class="tab-pane fade" id="plot-settings" role="tabpanel" aria-labelledby="list-messages-list">
+                {% include 'includes/plots/plot_settings.html' %}
         </div>
         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
       </div>

@@ -180,3 +180,22 @@ def getImagePaths(db, expid, datatype):
         img_path_list.append(path["imgpath"])
 
     return img_path_list
+
+# methods for trainsettings
+
+def set_train_settings(db, expid, dict_settings):
+    col = db.train_settings
+    query = {"expid": expid}
+    new_dict = {"expid": expid}
+    new_dict.update(dict_settings)
+    print("New dict:", new_dict)
+    new_values = {"$set": new_dict}
+    x = col.update(query, new_values, upsert=True)
+    print("inserted settings:", x)
+
+def get_train_settings(db, expid):
+    col = db.train_settings
+    query = {"expid": expid}
+
+    output = col.find_one(query, {"_id": 0, "expid": 0})
+    return output

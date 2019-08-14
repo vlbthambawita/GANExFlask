@@ -9,6 +9,7 @@ import os
 
 from GANEX.db import get_db
 from GANEX.forms import CreateExperiment_form
+from GANEX.dlexmongo import set_train_settings
 
 # Blue print
 bp = Blueprint('experiments', __name__)
@@ -77,6 +78,11 @@ def create(pid):
                             "current_epoch": 0}
 
                 x = col_exp.insert_one(exp_dict)
+
+                # initialize train settings
+                dict_settings = {"num_epochs": 0, "checkpoint_interval": 0, "checkpoint_type":"EPOCH"}
+                set_train_settings(db, str(x.inserted_id), dict_settings)
+
                 print(x.inserted_id) #out.inserted_id
                 # flash(x.inserted_id) # remove this one, if redirect the page
                 #return redirect(url_for('experiments.create'))
