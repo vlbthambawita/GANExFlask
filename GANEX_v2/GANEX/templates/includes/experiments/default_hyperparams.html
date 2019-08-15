@@ -1,5 +1,14 @@
 <script>
+    
     $(document).ready(function(){
+
+        var socket = io('/experiments');
+        
+        socket.emit('my test', {data: {"para_name": $("#para_name").val(), 
+                            "para_key": $("#para_key").val(),
+                            "para_value": $("#para_value").val()}});
+  
+
         $("#frm_default_hyperpara").submit(function(e){
             e.preventDefault();
             

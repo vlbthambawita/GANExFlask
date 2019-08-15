@@ -15,7 +15,7 @@ from GANEX.dlexmongo import set_train_settings, set_default_hyperparam, get_defa
 # Blue print
 bp = Blueprint('experiments', __name__)
 
-
+# socketio = g.socket
 @bp.route('/<pid>/index')
 def index(pid):
     return render_template('experiments/index.html', pid=pid)
@@ -134,9 +134,14 @@ def default_hyperparams(pid):
     # all_hyperparams = json.dumps(all_hyperparams)
     return jsonify(x= all_hyperparams)
 
+
+
+
 @bp.route('/delete_default_para/')
 def delete_default_para():
     
     pass
+
+# data usind socketio
 
 
