@@ -56,7 +56,7 @@ def init_events(socketio):
         set_default_hyperparam(db, pid, data["para_name"], data["para_key"], data["para_value"])
         all_hyperparams = list(get_default_hyperparams(db, pid))
 
-        emit('get_default_hyperparams', all_hyperparams)
+        emit('get_default_hyperparams', all_hyperparams, namespace='/experiments')
 
     
     @socketio.on("default_param_del", namespace='/experiments')
@@ -68,13 +68,14 @@ def init_events(socketio):
 
         all_hyperparams = list(get_default_hyperparams(db, pid))
 
-        emit('get_default_hyperparams', all_hyperparams)
+        emit('get_default_hyperparams', all_hyperparams, namespace='/experiments')
 
     @socketio.on("get_initial_default_params", namespace='/experiments')
     def get_initial_params(pid):
         db = get_db()
         all_hyperparams = list(get_default_hyperparams(db, pid))
-        emit('get_default_hyperparams', all_hyperparams)
+        print("initial all hyperparams", all_hyperparams)
+        emit('get_default_hyperparams', all_hyperparams , namespace='/experiments')
 
 
     #def testEmit():

@@ -30,7 +30,7 @@ def create(pid):
     #
     col_gans = (db["gantypes"].find({},{"_id":0}))
     col_exp = db["experiments"] # experiments table
-    col_exp.create_index([("name", pymongo.ASCENDING)], unique=True) # name unique index
+    col_exp.create_index([("name", pymongo.ASCENDING), ("pid", pymongo.ASCENDING)], unique=True) # name unique index
 
     all_exps = col_exp.find({"pid":pid})
 

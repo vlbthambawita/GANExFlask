@@ -216,6 +216,7 @@ def get_default_hyperparams(db, pid):
     query = {"pid": pid}
 
     output = col.find(query, {"_id": 0, "pid": 0})
+    print("output:", output)
     return output
 
 def del_default_hyperpram(db, pid, para_key):

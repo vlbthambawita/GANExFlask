@@ -15,38 +15,42 @@ function set_socket_to_js_file(socket){
 
 function init_load(){
   //  alert("inti load")
-    socket.emit("get_initial_default_params", pid= pid)
 
     socket.on('get_default_hyperparams', function(data){
         alert("get default hyper param initializations")
         update_table(data)
-    })
+        alert("data" + data)
+    })  
+
+    socket.emit("get_initial_default_params", pid= pid)
+
+    
 }
 
 function btn_del_click(value){
     alert("btn clicked" + value)
     socket.emit("default_param_del", key=value, pid=pid)
 
-    socket.on('get_default_hyperparams', function(data){
-        alert("get default hyper param")
-        update_table(data)
-    })
+    //socket.on('get_default_hyperparams', function(data){
+     //   alert("get default hyper param btn del clicked")
+      //  update_table(data)
+    //})
 }
 
 function btnAddClick(){
-    //alert("btn add clicked")
+    alert("btn add clicked")
     socket.emit('default_param_add', {"para_name": $("#para_name").val(), 
                         "para_key": $("#para_key").val(),
                         "para_value": $("#para_value").val()}, pid=pid);
 
-    socket.on('get_default_hyperparams', function(data){
-        alert("get default hyper param")
-        update_table(data)
-    })
+    //socket.on('get_default_hyperparams', function(data){
+     //   alert("get default hyper param btn add click")
+      //  update_table(data)
+    //})
 }
 
 function update_table(para_list){
-    //alert(para_list.para_name)
+    
     var tbl = document.getElementById("tbl_params")
     tbl.innerHTML = ""
 
@@ -63,8 +67,9 @@ function update_table(para_list){
     cell2.innerHTML = "Parameter Default Value"
 
     var i ;
-    for (i= 1; i < para_list.length; i++){
-        var row = tbl.insertRow(i);
+    for (i= 0; i < para_list.length; i++){
+
+        var row = tbl.insertRow(i+1);
 
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
@@ -86,5 +91,5 @@ function update_table(para_list){
 
     }
     
-
+    alert("table updated")
 }
