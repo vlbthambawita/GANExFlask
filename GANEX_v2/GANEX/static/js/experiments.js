@@ -17,9 +17,9 @@ function init_load(){
   //  alert("inti load")
 
     socket.on('get_default_hyperparams', function(data){
-        alert("get default hyper param initializations")
+      //  alert("get default hyper param initializations")
         update_table(data)
-        alert("data" + data)
+      //  alert("data" + data)
     })  
 
     socket.emit("get_initial_default_params", pid= pid)
@@ -28,7 +28,7 @@ function init_load(){
 }
 
 function btn_del_click(value){
-    alert("btn clicked" + value)
+    //alert("btn clicked" + value)
     socket.emit("default_param_del", key=value, pid=pid)
 
     //socket.on('get_default_hyperparams', function(data){
@@ -38,10 +38,14 @@ function btn_del_click(value){
 }
 
 function btnAddClick(){
-    alert("btn add clicked")
+    //alert("btn add clicked")
     socket.emit('default_param_add', {"para_name": $("#para_name").val(), 
                         "para_key": $("#para_key").val(),
                         "para_value": $("#para_value").val()}, pid=pid);
+
+    document.getElementById("para_name").value ="";
+    document.getElementById("para_key").value ="";
+    document.getElementById("para_value").value ="";
 
     //socket.on('get_default_hyperparams', function(data){
      //   alert("get default hyper param btn add click")
@@ -91,5 +95,5 @@ function update_table(para_list){
 
     }
     
-    alert("table updated")
+    // alert("table updated")
 }
