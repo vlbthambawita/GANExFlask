@@ -8,7 +8,7 @@ from GANEX.fastGAN.task import randnumber
 from GANEX.updates import updateplot
 from GANEX.db import get_db
 
-from GANEX.dlexmongo import set_train_settings, set_default_hyperparam, get_default_hyperparams
+from GANEX.dlexmongo import set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram
 
 import threading
 
@@ -41,10 +41,13 @@ def init_events(socketio):
             #    x.start()
             
 
+##############################################################################
+# 
+###############################################################################
     
     # Experiments window handlings           
-    @socketio.on('my test', namespace='/experiments')
-    def my_test(data, pid):
+    @socketio.on('default_param_add', namespace='/experiments')
+    def add_default_param(data, pid):
         db = get_db()
         print("arg1", data)
         print("pid:", pid)
@@ -56,6 +59,23 @@ def init_events(socketio):
         emit('get_default_hyperparams', all_hyperparams)
 
     
+    @socketio.on("default_param_del", namespace='/experiments')
+    def del_default_param(key,pid):
+        print("key", key)
+        print("pid", pid)
+        db =get_db()
+        del_default_hyperpram(db, pid, key)
+
+        all_hyperparams = list(get_default_hyperparams(db, pid))
+
+        emit('get_default_hyperparams', all_hyperparams)
+
+    @socketio.on("get_initial_default_params", namespace='/experiments')
+    def get_initial_params(pid):
+        db = get_db()
+        all_hyperparams = list(get_default_hyperparams(db, pid))
+        emit('get_default_hyperparams', all_hyperparams)
+
 
     #def testEmit():
     # socketio.emit('test', {'msg': 'socket emit working'}, namespace='/chat')

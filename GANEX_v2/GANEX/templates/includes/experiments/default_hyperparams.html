@@ -4,8 +4,15 @@
    
     $(document).ready(function(){
 
-        var socket = io('/experiments');
+       // var socket = io('/experiments');
 
+        //set_pid_to_js_file("{{ pid }}");
+       // set_socket_to_js_file(socket);
+       window.pid = "{{ pid }}"
+       //alert("PID" + window.pid)
+       init_load()
+
+       /*
         $("#frm_default_hyperpara").submit(function(e){
             e.preventDefault();
     
@@ -14,11 +21,11 @@
                         "para_value": $("#para_value").val()}, pid="{{ pid }}");
 
             socket.on('get_default_hyperparams', function(data){
-                alert(data)
+                alert("get default hyper param")
                 update_table(data)
             })
    
-        })
+        }) */
         
     })
 
@@ -34,7 +41,7 @@
     <label>Default Value:</label>
     <input id="para_value" type="text" required>
 
-    <input type="submit" value="Add">
+    <input type="button" onclick="btnAddClick()" value="Add">
 
 </form>
 

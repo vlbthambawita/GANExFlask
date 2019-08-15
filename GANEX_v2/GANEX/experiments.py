@@ -3,6 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
+from flask_socketio import emit
 
 import pymongo
 import os
@@ -44,6 +45,9 @@ def create(pid):
     #all_projects = col.find({})
 
     # load default hyper params
+    all_hyperparams = list(get_default_hyperparams(db, pid))
+
+    
     default_para_list = list(get_default_hyperparams(db, pid))
 
     #print(all_projects)
@@ -96,7 +100,7 @@ def create(pid):
         except Exception as e:
             flash(e)
 
-    return render_template('experiments/create.html', form=exp_form, pid=pid, exps=all_exps, default_para_list=default_para_list)
+    return render_template('experiments/create.html', form=exp_form, pid=pid, exps=all_exps)
     
 
 @bp.route('/<pid>/<expid>/deleteExp', methods=('GET',))

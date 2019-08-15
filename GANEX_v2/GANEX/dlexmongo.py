@@ -217,3 +217,9 @@ def get_default_hyperparams(db, pid):
 
     output = col.find(query, {"_id": 0, "pid": 0})
     return output
+
+def del_default_hyperpram(db, pid, para_key):
+    col = db.default_hyperparams
+    query ={"pid": pid, "para_key": para_key}
+    col.delete_one(query)
+    print("successfullyu deleted")
