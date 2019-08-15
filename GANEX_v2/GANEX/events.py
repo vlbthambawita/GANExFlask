@@ -8,6 +8,8 @@ from GANEX.fastGAN.task import randnumber
 from GANEX.updates import updateplot
 from GANEX.db import get_db
 
+from GANEX.dlexmongo import set_train_settings, set_default_hyperparam, get_default_hyperparams
+
 import threading
 
 # from . import socketio
@@ -15,7 +17,7 @@ import threading
 def init_events(socketio):
 
     # global socketio
-    
+   # db = get_db()
 
     @socketio.on('joined', namespace='/chat')
     def joined(message):
@@ -38,15 +40,22 @@ def init_events(socketio):
             #    print("plot tab connected")
             #    x.start()
             
-                
-    @socketio.on('my test', namespace='/experiments')
-    def my_test(arg1):
-        print("arg1", arg1)
 
-    @socketio.on('my event')
-    def handle_my_custom_event(json):
-        print('received json: ' + str(json))
-       
+    
+    # Experiments window handlings           
+    @socketio.on('my test', namespace='/experiments')
+    def my_test(data, pid):
+        db = get_db()
+        print("arg1", data)
+        print("pid:", pid)
+
+        # update db
+        set_default_hyperparam(db, pid, data["para_name"], data["para_key"], data["para_value"])
+        all_hyperparams = list(get_default_hyperparams(db, pid))
+
+        emit('get_default_hyperparams', all_hyperparams)
+
+    
 
     #def testEmit():
     # socketio.emit('test', {'msg': 'socket emit working'}, namespace='/chat')
