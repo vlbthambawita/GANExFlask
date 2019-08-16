@@ -10,7 +10,7 @@ from GANEX.db import get_db
 
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
-                                getPlotStats
+                                getPlotStats, addPlotStat
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -154,6 +154,15 @@ def init_events(socketio):
 
         emit("plot-get-plots-data", plots ,namespace="/plot")
         print("plot emited")
+
+    @socketio.on("plot-update-plot-settings", namespace="/plot")
+    def update_plot_settings(expid, plot_stat_name, plot_id):
+        db = get_db()
+
+        addPlotStat(db, expid, plot_stat_name, plot_id)
+        print("plot settings updated")
+
+
 
 
 

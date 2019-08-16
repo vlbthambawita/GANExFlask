@@ -6,11 +6,13 @@
         window.expid = "{{ expid }}"
         window.socket = io('/plot')
 
-        test()
+       // test()
+        update_plot_id_list()
         init_socket_ons()
         window.plot_timer = setInterval( update_plots_repeat, 1000)
     };
 </script>
 
+<button onclick="reset_interval()">Start</button>
 <button onclick="clearInterval(window.plot_timer)">Stop</button>
 <div id="plots_2"></div>

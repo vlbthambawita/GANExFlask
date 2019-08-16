@@ -9,69 +9,15 @@
 
                 $("#plots-tab").addClass("active")
 
-                //initRealTimePlot() // init real time updates
-
-                //$("#btn_plt_pause").click(function() {
-                 //       alert("Stopped")
-                  //      source.close()
-                
-               // })
-
-                $("#btn_plt_play").click(function() {
-                     //   initRealTimePlot()
-                
-                })
-
-                $("#btn_add_plot").click(function(){
-                        var statlist_elem = document.getElementById("plot_stat");
-                        var plotid_elem = document.getElementById("plot_id");
-
-                        var statListItem_value  = statlist_elem.options[statlist_elem.selectedIndex].text;
-                        var plotid_value = plotid_elem.options[plotid_elem.selectedIndex].text;
-                        // alert(statListItem_value)
-                        $.ajax({
-                                type: 'GET',
-                                url: "{{ url_for('plots.updatePlotStatType', pid=pid, expid=expid) }}",
-                                data: {"statName": statListItem_value, "plotid": plotid_value},
-                                contentType: 'application/json',
-                        success: function(data){
-                                alert("success")
-                                // initRealTimePlot()
-                        }
-
-                        })      
-                })
+               
 
                 // update plot id list
-                var sel = document.getElementById("plot_id");
-                var i;
                 
-                for (i=1; i < 21; i++){
-                        var opt = document.createElement('option');
-                        opt.text = i;
-                        opt.value = i;
-                        sel.add(opt);
-
-                }
                 
                // document.getElementById("plot_id").innerHTML = "<option value='test'>test</option> <option value='test'>test</option>"
         })
 
-        function initRealTimePlot(){
-                //var statlist_elem = document.getElementById("plot_stat");
-               // var statListItem_value  = statlist_elem.options[statlist_elem.selectedIndex].text;
-               // alert(statListItem_value)
-               // var x = 1
-                source = new EventSource("{{ url_for('plots.updateplot', pid=pid, expid=expid) }}");
-                source.onmessage = function(event){
-                        //$("#Results").append('<li>'+ event.data +'</li>');
-                        const graphs = JSON.parse(event.data) //| safe;
-                       
-                        Plotly.newPlot('plots',graphs,{});
-                       // Plotly.newPlot('scatterplot',graphs1,{});
-                }
-        }
-
+        
         
 </script>
         
@@ -95,11 +41,6 @@
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
                {% include 'includes/plots/plots_window.html'%}
-                <button id="btn_plt_play">Play</button>
-                <button id="btn_plt_pause">Pause</button>
-                
-                <div id="plotsss"></div>
-                
         </div>
         <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...profile</div>
         <div class="tab-pane fade" id="plot-settings" role="tabpanel" aria-labelledby="list-messages-list">
