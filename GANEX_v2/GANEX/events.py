@@ -8,9 +8,14 @@ from GANEX.fastGAN.task import randnumber
 from GANEX.updates import updateplot
 from GANEX.db import get_db
 
-from GANEX.dlexmongo import set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram
+from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
+                                getImagePaths, delImgPath, addImage, getGANInfo
+                            )
+
+from GANEX.plots import imageplot
 
 import threading
+import importlib
 
 # from . import socketio
 
@@ -42,7 +47,7 @@ def init_events(socketio):
             
 
 ##############################################################################
-# 
+# Experiments window handlings 
 ###############################################################################
     
     # Experiments window handlings           
@@ -77,8 +82,70 @@ def init_events(socketio):
         print("initial all hyperparams", all_hyperparams)
         emit('get_default_hyperparams', all_hyperparams , namespace='/experiments')
 
+##############################################################
+# Data window handlings
+##############################################################
 
-    #def testEmit():
+    @socketio.on("data-delete-img", namespace='/data')
+    def del_img_path(pid, expid, path):
+        db = get_db()
+        print("pid:", pid)
+        print("EXPID:", expid)
+        print("path:", path)
+        delImgPath(db,expid, path)
+        img_path_list  = getImagePaths(db, expid, "INPUTDATA")
+        emit('data-get-img-paths', img_path_list, namespace='/data')
+        print("Emitted")
+
+
+    @socketio.on("data-load-imgs", namespace='/data')
+    def load_img_paths(pid, expid):
+        print("data load imgs")
+        db = get_db()
+        img_path_list  = getImagePaths(db, expid, "INPUTDATA")
+        emit('data-get-img-paths', img_path_list, namespace='/data')
+        print("Emitted dataload imgs")
+
+    @socketio.on("data-gen-img", namespace='/data')
+    def generate_sample_img(pid, expid):
+        db =get_db()
+        # add image path to db
+        # generateInputImageGrid(dataloader, imgpath, device)
+    
+        #===============================================
+        # Use selected GAN image grid generate function
+        #===============================================
+        (ganFile, ganClass) = getGANInfo(db, expid)
+        # import gan from gan file
+        my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+        gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+        gan.setDevice()
+        gan.prepareData()
+
+        imgpath = addImage(db, expid, "INPUTDATA")
+
+        gan.generate_input_image_grid(imgpath)
+
+        img_path_list  = getImagePaths(db, expid, "INPUTDATA")
+        emit('data-get-img-paths', img_path_list, namespace='/data')
+
+
+
+    @socketio.on("data-show-img", namespace='/data')
+    def show_img(path):
+
+        plot = imageplot.createImagePlot(path)
+        emit('data-get-img-plot', plot, namespace='/data')
+
+
+
+
+
+
+
+
+
+       #def testEmit():
     # socketio.emit('test', {'msg': 'socket emit working'}, namespace='/chat')
 # Blue print
 #bp = Blueprint('events', __name__)

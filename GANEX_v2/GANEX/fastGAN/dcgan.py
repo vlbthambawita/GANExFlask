@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
+import torchvision.utils as vutils
 import torch.optim as optim
 
 
@@ -37,9 +38,10 @@ class DCGAN():
     # parepare data
     def prepareData(self):
         
+        #hyperparams = self.recorder.get_hyper_params()
         # Create the dataset
-        print("data root:", self.dataroot)
-        print("Imgae size:", self.hyperparams["image_size"])
+       # print("data root:", self.recorder.get_exp_info("expDataPath"))
+       # print("Imgae size:", hyperparams["image_size"])
         hyperparams = self.recorder.get_hyper_params()
         dataroot = self.recorder.get_exp_info("expDataPath")
 
@@ -65,7 +67,12 @@ class DCGAN():
 
         
 
-            
+    # save image grid
+    def generate_input_image_grid(self, path):
+        real_data_batch = next(iter(self.dataloader))
+        vutils.save_image(real_data_batch[0].to(self.device)[:64], path, nrow=8, padding=2)
+
+
                                     
     # setup device 
     def setDevice(self):

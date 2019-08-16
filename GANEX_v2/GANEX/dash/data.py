@@ -3,12 +3,13 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
+import importlib
 
 
 
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
-from GANEX.dlexmongo import addInfoToExp, getInfoExp, addImage, getImagePaths
+from GANEX.dlexmongo import addInfoToExp, getInfoExp, addImage, getImagePaths, getGANInfo
 from GANEX.fastGAN.ganInit.ganInit import createDataLoader, initDevice, generateInputImageGrid
 from GANEX.plots import imageplot
 
@@ -66,7 +67,20 @@ def generateTestData(pid, expid):
     imgpath = addImage(db, expid, "INPUTDATA")
     print(imgpath)
 
-    generateInputImageGrid(dataloader, imgpath, device)
+
+    # generateInputImageGrid(dataloader, imgpath, device)
+    
+    #===============================================
+    # Use selected GAN image grid generate function
+    #===============================================
+    (ganFile, ganClass) = getGANInfo(db, expid)
+     # import gan from gan file
+    my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+    gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+    gan.setDevice()
+    gan.prepareData()
+    gan.generate_input_image_grid(imgpath)
+
 
     print("test data")
     #return jsonify(imgpath=imgpath)

@@ -181,6 +181,12 @@ def getImagePaths(db, expid, datatype):
 
     return img_path_list
 
+def delImgPath(db, expid, path):
+    col = db.outputdata
+
+    query ={"expid": expid, "imgpath": path}
+    col.delete_one(query)
+
 # methods for trainsettings
 
 def set_train_settings(db, expid, dict_settings):
