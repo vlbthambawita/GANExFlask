@@ -1,21 +1,24 @@
 {% extends 'run/base.html' %}
 
 {% block script %}
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/plots.js') }}"></script>
 <script>
         var source;
         $(function(){ // on load function
+                //test()
+
                 $("#plots-tab").addClass("active")
 
-                initRealTimePlot() // init real time updates
+                //initRealTimePlot() // init real time updates
 
-                $("#btn_plt_pause").click(function() {
-                        alert("Stopped")
-                        source.close()
+                //$("#btn_plt_pause").click(function() {
+                 //       alert("Stopped")
+                  //      source.close()
                 
-                })
+               // })
 
                 $("#btn_plt_play").click(function() {
-                        initRealTimePlot()
+                     //   initRealTimePlot()
                 
                 })
 
@@ -91,10 +94,11 @@
     <div class="col-9">
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+               {% include 'includes/plots/plots_window.html'%}
                 <button id="btn_plt_play">Play</button>
                 <button id="btn_plt_pause">Pause</button>
                 
-                <div id="plots"></div>
+                <div id="plotsss"></div>
                 
         </div>
         <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...profile</div>

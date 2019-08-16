@@ -1,0 +1,16 @@
+
+<script>
+    window.onload = (event) => {
+        console.log('page is fully loaded');
+        window.pid = "{{ pid }}"
+        window.expid = "{{ expid }}"
+        window.socket = io('/plot')
+
+        test()
+        init_socket_ons()
+        window.plot_timer = setInterval( update_plots_repeat, 1000)
+    };
+</script>
+
+<button onclick="clearInterval(window.plot_timer)">Stop</button>
+<div id="plots_2"></div>

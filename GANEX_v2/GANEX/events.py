@@ -9,10 +9,11 @@ from GANEX.updates import updateplot
 from GANEX.db import get_db
 
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
-                                getImagePaths, delImgPath, addImage, getGANInfo
+                                getImagePaths, delImgPath, addImage, getGANInfo,
+                                getPlotStats
                             )
 
-from GANEX.plots import imageplot
+from GANEX.plots import imageplot, training_plots
 
 import threading
 import importlib
@@ -22,7 +23,7 @@ import importlib
 def init_events(socketio):
 
     # global socketio
-   # db = get_db()
+   # db = get_db() # this is not working, some context problem
 
     @socketio.on('joined', namespace='/chat')
     def joined(message):
@@ -138,25 +139,24 @@ def init_events(socketio):
         emit('data-get-img-plot', plot, namespace='/data')
 
 
+##########################################################################
+# Plot window handling
+###########################################################################
+
+
+    @socketio.on("plot-update-plots", namespace="/plot")
+    def update_plots(expid):
+        print("expid -",expid)
+
+        db = get_db()
+        statlist = getPlotStats(db, expid)
+        plots = training_plots.trainLossPlot(db, expid, statlist)
+
+        emit("plot-get-plots-data", plots ,namespace="/plot")
+        print("plot emited")
 
 
 
 
 
-
-
-       #def testEmit():
-    # socketio.emit('test', {'msg': 'socket emit working'}, namespace='/chat')
-# Blue print
-#bp = Blueprint('events', __name__)
-
-# Inference
-#@bp.route('/events/', methods=('GET',))
-#def inference():
-#    return render_template('run/events.html')
-
-#@socketio.on('connect', namespace='/test')
-#def test_connect():
-    # need visibility of the global thread object
-    # global thread
-#    print('Client connected')
+       
