@@ -12,40 +12,35 @@
 
 {% block content %}
 
+
+
+<div class="row"><br></div> <!-- Space between heading and below contents -->
+<div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-hyperparam" role="tab" aria-controls="profile">Default Hyperparameters</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+            <div>{% include 'includes/experiments/create.html' %}</div>
+        </div>
+        <div class="tab-pane fade" id="list-hyperparam" role="tabpanel" aria-labelledby="list-profile-list">
+            {% include 'includes/experiments/default_hyperparams.html' %}
+        </div>
+        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+      </div>
+    </div>
+</div>
+
     
 
-    <form action="" method="POST" novalidate>
-        {{ form.hidden_tag() }}
-
-        
-        <p>
-            {{ form.expName.label }}
-            {{ form.expName(size=32) }}
-
-        </p>
-
-        <p>
-                {{ form.ganType.label }}
-                {{ form.ganType }}
-
-            </p>
-
-        <p>
-            {{ form.submit() }}
-        </p>
-
-    </form>
-
-    <div>
-        <h2>Experiments</h2>
-        {% for exp in exps %}
-            <p>
-                {{ exp["_id"] }} - <a href="{{ url_for('summary.summary', pid=exp['pid'], expid=exp['_id']) }}" target='_blank'>{{ exp["name"] }}</a>
-                <a href="{{ url_for('experiments.deleteExp', pid=exp['pid'], expid=exp['_id']) }}">Delete</a>
-            </p>
-        {% endfor %}
-        
-    </div>
+    
 
     
 {% endblock %}

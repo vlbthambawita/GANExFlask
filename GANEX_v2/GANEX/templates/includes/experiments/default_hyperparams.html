@@ -1,0 +1,52 @@
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/experiments.js') }}"></script> 
+    
+<script>
+   
+    $(document).ready(function(){
+
+       // var socket = io('/experiments');
+
+        //set_pid_to_js_file("{{ pid }}");
+       // set_socket_to_js_file(socket);
+       window.pid = "{{ pid }}"
+       //alert("PID" + window.pid)
+       init_load()
+
+       /*
+        $("#frm_default_hyperpara").submit(function(e){
+            e.preventDefault();
+    
+            socket.emit('my test', {"para_name": $("#para_name").val(), 
+                        "para_key": $("#para_key").val(),
+                        "para_value": $("#para_value").val()}, pid="{{ pid }}");
+
+            socket.on('get_default_hyperparams', function(data){
+                alert("get default hyper param")
+                update_table(data)
+            })
+   
+        }) */
+        
+    })
+
+</script>
+
+<form id="frm_default_hyperpara" >
+    <label>Parameter Name:</label>
+    <input id="para_name" type="text" required>
+
+    <label>Parameter Key:</label>
+    <input id="para_key" type="text" required>
+
+    <label>Default Value:</label>
+    <input id="para_value" type="text" required>
+
+    <input type="button" onclick="btnAddClick()" value="Add">
+
+</form>
+
+{{ default_para_list }}
+
+<table class="table" id="tbl_params">
+    
+</table>

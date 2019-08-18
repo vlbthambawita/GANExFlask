@@ -1,0 +1,20 @@
+<form id="frm_train_settings" action="{{ url_for('trainsettings.save_general_settings', pid=pid, expid=expid) }}" method="GET">
+    <label>Number of Epochs:</label>
+    <input name="num_epochs" type="number" value="{{ current_settings['num_epochs'] }}">
+
+    <label>Checkpoint Interval:</label>
+    <input name="checkpoint_interval" type="number" value="{{ current_settings['checkpoint_interval'] }}">
+
+    <label>Checkpoint Interval Type:</label>
+   
+    {% if current_settings['checkpoint_type'] == "EPOCH" %}
+        <input name="checkpoint_type" type="radio" value="EPOCH" checked>Epoch
+        <input name="checkpoint_type" type="radio" value="BATCH">Batch
+
+    {% else %}
+        <input name="checkpoint_type" type="radio" value="EPOCH" >Epoch
+        <input name="checkpoint_type" type="radio" value="BATCH" checked>Batch
+    {% endif %}
+
+    <input type="submit" value="Save">
+</form>

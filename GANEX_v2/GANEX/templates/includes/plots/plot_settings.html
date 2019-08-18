@@ -1,0 +1,8 @@
+<select id="plot_stat" >
+    {% for l in statlist %}
+            <option value="{{ l }}">{{ l }}</option>
+    {% endfor %}
+
+</select>
+<select id="plot_id"></select>
+<button id="btn_add_plot" onclick="update_plot_settings()">Add plot</button>

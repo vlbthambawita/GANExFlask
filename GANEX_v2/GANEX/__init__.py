@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, g
 
 from dash import Dash
 import dash_html_components as html
@@ -16,6 +16,7 @@ from GANEX.dash import summary,data, hyperparam, trainsettings, runexp, plots, i
 
 from . import config
 from .events import init_events
+#from . import events
 
 # from GANEX.plots import dashplot
 
@@ -78,6 +79,9 @@ def create_app(debug=False):
 
     socketio.init_app(app)
     init_events(socketio)
+
+    # add socket to app context
+    #g.socket = socketio
     
     
     #register_dashapps(app)

@@ -1,18 +1,22 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
+from flask_socketio import emit
 
-
+import pymongo
+import os
+import json
 
 from GANEX.db import get_db
 from GANEX.forms import CreateExperiment_form
+from GANEX.dlexmongo import set_train_settings, set_default_hyperparam, get_default_hyperparams
 
 # Blue print
 bp = Blueprint('experiments', __name__)
 
-
+# socketio = g.socket
 @bp.route('/<pid>/index')
 def index(pid):
     return render_template('experiments/index.html', pid=pid)
@@ -26,18 +30,25 @@ def create(pid):
     #
     col_gans = (db["gantypes"].find({},{"_id":0}))
     col_exp = db["experiments"] # experiments table
+    col_exp.create_index([("name", pymongo.ASCENDING), ("pid", pymongo.ASCENDING)], unique=True) # name unique index
 
-    col_pro_exp = col_exp.find({"pid":pid})
+    all_exps = col_exp.find({"pid":pid})
 
     gan_types = []
 
     for g in col_gans:
-        gan_types.append((g["name"],g["run"]))
+        gan_types.append((g["name"],g["class"]))
         
     print(gan_types)
     exp_form.ganType.choices = gan_types
     error = None
     #all_projects = col.find({})
+
+    # load default hyper params
+    all_hyperparams = list(get_default_hyperparams(db, pid))
+
+    
+    default_para_list = list(get_default_hyperparams(db, pid))
 
     #print(all_projects)
 
@@ -50,17 +61,47 @@ def create(pid):
     #for p in all_projects:
      #   print(p)
 
+     
     if exp_form.validate_on_submit():
 
-        if error is None:
-            exp_dict = {"name":exp_form.expName.data, "type":exp_form.ganType.data, "pid": pid, "status": "TRAIN"}
+        try:
+            if error is None:
+                exp_name = exp_form.expName.data
+                exp_gan = exp_form.ganType.data
+                exp_pro_path = db.projects.find_one({"_id":ObjectId(pid)})["path"]
+                print(exp_pro_path)
 
-            x = col_exp.insert_one(exp_dict)
-            print(x.inserted_id) #out.inserted_id
-            # flash(x.inserted_id) # remove this one, if redirect the page
-            #return redirect(url_for('experiments.create'))
+                #paths
+                exp_path = os.path.join(exp_pro_path, exp_name)
+                exp_models_path = os.path.join(exp_pro_path, exp_name + "/models")
+                exp_output_path = os.path.join(exp_pro_path, exp_name + "/output")
 
-    return render_template('experiments/create.html', form=exp_form, pid=pid, exps=col_pro_exp)
+                os.mkdir(exp_path)
+                os.mkdir(exp_models_path)
+                os.mkdir(exp_output_path)
+
+
+                exp_dict = {"name":exp_name, "type":exp_gan, "pid": pid, "status": "TRAIN", 
+                            "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path , "iters": 0,
+                            "current_epoch": 0}
+
+                x = col_exp.insert_one(exp_dict)
+
+                # initialize train settings
+                dict_settings = {"num_epochs": 0, "checkpoint_interval": 0, "checkpoint_type":"EPOCH"}
+                set_train_settings(db, str(x.inserted_id), dict_settings)
+
+                print(x.inserted_id) #out.inserted_id
+                # flash(x.inserted_id) # remove this one, if redirect the page
+                #return redirect(url_for('experiments.create'))
+
+
+
+        except Exception as e:
+            flash(e)
+
+    return render_template('experiments/create.html', form=exp_form, pid=pid, exps=all_exps)
+    
 
 @bp.route('/<pid>/<expid>/deleteExp', methods=('GET',))
 def deleteExp(pid, expid):
@@ -79,3 +120,32 @@ def deleteExp(pid, expid):
     print(x.deleted_count)
 
     return redirect(url_for('experiments.create', pid=pid))
+
+
+
+
+@bp.route('/<pid>/default_hyperparams/')
+def default_hyperparams(pid):
+    db = get_db()
+    print("para name:", request.args.get("para_name"))
+    para_name = request.args.get("para_name")
+    para_key = request.args.get("para_key")
+    para_value = request.args.get("para_value")
+
+    set_default_hyperparam(db, pid, para_name, para_key, para_value)
+    all_hyperparams = list(get_default_hyperparams(db, pid))
+    print(all_hyperparams)
+    # all_hyperparams = json.dumps(all_hyperparams)
+    return jsonify(x= all_hyperparams)
+
+
+
+
+@bp.route('/delete_default_para/')
+def delete_default_para():
+    
+    pass
+
+# data usind socketio
+
+
