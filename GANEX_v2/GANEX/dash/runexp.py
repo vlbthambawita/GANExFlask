@@ -66,7 +66,7 @@ def runexp(pid, expid):
 
     return render_template('run/runexp.html', pid=pid, expid=expid, status=status)
 
-
+'''
 @bp.route('/<pid>/<expid>/update')
 def update(pid, expid):
 
@@ -84,5 +84,7 @@ def update(pid, expid):
             
 
     return Response(updatestatus(), mimetype= 'text/event-stream')
+
+    '''
 
 

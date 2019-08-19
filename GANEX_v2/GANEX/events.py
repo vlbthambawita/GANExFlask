@@ -10,7 +10,7 @@ from GANEX.db import get_db
 
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
-                                getPlotStats, addPlotStat
+                                getPlotStats, addPlotStat, getExpState
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -137,6 +137,28 @@ def init_events(socketio):
 
         plot = imageplot.createImagePlot(path)
         emit('data-get-img-plot', plot, namespace='/data')
+
+
+
+#######################################################################
+# RUN Experiment window handling
+#######################################################################
+
+    @socketio.on("runexp-request-info", namespace='/runexp')
+    def request_runexp_info(pid, expid):
+
+        db = get_db()
+        status = getExpState(db, expid)
+        info_dict = {"current_status": status}
+        emit('runexp-get-current-state-info', info_dict, namespace='/runexp')
+        print("emitted to runexp")
+
+
+
+
+
+
+
 
 
 ##########################################################################
