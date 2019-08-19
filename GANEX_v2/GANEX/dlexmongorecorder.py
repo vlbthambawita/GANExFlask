@@ -42,6 +42,15 @@ class DLExMongoRecorder():
         new_values = {"$set": {stat_name: stat_value}}
         col.update_one(query, new_values, upsert=True)
 
+
+    # record information about experiment (to track progress of the experiment)
+    def record_exp_info(self, info_name, info_value):
+        col = self.db.experiments
+        query = {"_id":ObjectId(self.expid) }
+        new_value = {"$set": {info_name: info_value}}
+        col.update_one(query, new_value, upsert=True)
+
+
     def set_exp_state(self, status):
         col = self.db.experiments
         query = {"_id":ObjectId(self.expid)}

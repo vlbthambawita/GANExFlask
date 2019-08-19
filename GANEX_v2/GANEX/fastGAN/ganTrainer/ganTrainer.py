@@ -11,6 +11,8 @@ class GanTrainer():
        # iters = 0
 
         for epoch in range(num_epochs):
+            
+            self.gan.recorder.record_exp_info("current_epoch", epoch +1) #update current epoch
 
             for i, data in enumerate(self.gan.dataloader, 0):
 
@@ -81,6 +83,8 @@ class GanTrainer():
                 self.iters += 1 
             
             self.save_checkpoint(epoch, "EPOCH")
+           
+        self.gan.recorder.record_exp_info("current_epoch", 0) # reset current epoch to 0
 
 
 

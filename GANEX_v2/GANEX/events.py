@@ -10,7 +10,8 @@ from GANEX.db import get_db
 
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
-                                getPlotStats, addPlotStat, getExpState
+                                getPlotStats, addPlotStat, getExpState, getInfoExp,
+                                get_train_settings
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -149,7 +150,22 @@ def init_events(socketio):
 
         db = get_db()
         status = getExpState(db, expid)
-        info_dict = {"current_status": status}
+
+        exp_info = getInfoExp(db, expid)
+        current_epoch = exp_info["current_epoch"]
+        print("current epoch", current_epoch)
+
+        # get total epochs to run
+        train_settings = get_train_settings(db, expid)
+        total_epochs_to_run = train_settings["num_epochs"]
+        print("total epoch to run", total_epochs_to_run)
+        
+        print("trainsettings:", train_settings)
+
+        info_dict = {"current_status": status, "total_epochs_to_run": total_epochs_to_run, 
+                    "current_epoch": current_epoch }
+
+                    
         emit('runexp-get-current-state-info', info_dict, namespace='/runexp')
         print("emitted to runexp")
 

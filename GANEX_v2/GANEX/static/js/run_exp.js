@@ -3,6 +3,18 @@ function init_sockets_ons(){
             console.log(info_data)
             var status = info_data.current_status
 
+            var total_epochs_to_run = info_data.total_epochs_to_run
+            var current_epoch = info_data.current_epoch
+
+            var curren_progress = (Number(current_epoch) / Number(total_epochs_to_run)) * 100
+            console.log(curren_progress)
+
+            var pg_bar = document.getElementById("pg_bar_epoch")
+            // set current progerss
+            pg_bar.setAttribute("style", "width: "+ curren_progress + "%")
+            
+
+
             var btn_train = document.getElementById("btnTrain")
             var btn_retrain = document.getElementById("btnRetrain")
             var btn_reset = document.getElementById("btnReset")
