@@ -9,11 +9,13 @@ class GanTrainer():
 
     def train(self, num_epochs):
        # iters = 0
-       # total_epochs = 
+        total_epochs = self.gan.recorder.get_exp_info("total_epochs")
+     
 
         for epoch in range(num_epochs):
             
             self.gan.recorder.record_exp_info("current_epoch", epoch +1) #update current epoch
+            self.gan.recorder.record_exp_info("total_epochs", total_epochs + epoch +1)  # update total epoch
 
             for i, data in enumerate(self.gan.dataloader, 0):
 
@@ -83,12 +85,16 @@ class GanTrainer():
                 
                 self.iters += 1 
             
-            self.save_checkpoint(epoch, "EPOCH")
+            self.save_checkpoint(self.gan.recorder.get_exp_info("total_epochs"), "EPOCH")
            
         self.gan.recorder.record_exp_info("current_epoch", 0) # reset current epoch to 0
 
+   
+    def retrain(self, num_epochs):
+        total_epochs = self.gan.recorder.get_exp_info("total_epochs")
 
 
+    
     def save_checkpoint(self, checkpoint_iter, checkpoint_type):
         model_path = self.gan.recorder.generate_checkpoint_path(checkpoint_iter, checkpoint_type)
         torch.save({
@@ -100,6 +106,9 @@ class GanTrainer():
 
 
         print("Model path:", model_path)
+
+    def load_checkpoint(self, checkpoint_iter, checkpoint_type):
+        pass
 
 
 

@@ -87,5 +87,8 @@ class DLExMongoRecorder():
 
         return model_path
 
+    def load_checkpoint_path(self, checkpoint_iter, checkpoint_type):
+        pass
+
     
         
