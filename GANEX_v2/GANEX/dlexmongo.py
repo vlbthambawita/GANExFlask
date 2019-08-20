@@ -42,6 +42,14 @@ def getInfoExp(db, expId):
     output = col.find_one(query)
     return output
 
+def get_exp_default_para_info(db, expid):
+    col = db.experiments
+    query ={"_id":ObjectId(expid)}
+    output = col.find_one(query, {"_id": 0})
+    print("outputttt", output)
+    return output
+
+
 
 def addInfoToHWSettings(db, expId, fieldName, fieldValue):
     query ={"_id":ObjectId(expId)}
@@ -80,16 +88,7 @@ def del_default_exp_para(db, pid, para_key):
 
 
 
-###########################################################
-# Exp para collection
-###########################################################
 
-def get_exp_para_info(db, expid):
-    col = db.exp_para
-    query ={"expid":expid}
-    output = col.find_one(query)
-    print("outputttt", output)
-    return output
 
 
 

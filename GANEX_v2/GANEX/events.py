@@ -11,9 +11,9 @@ from GANEX.db import get_db
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
                                 getPlotStats, addPlotStat, getExpState, getInfoExp,
-                                get_train_settings, get_exp_para_info,
+                                get_train_settings, 
                                 set_default_exp_para, get_default_exp_para,
-                                del_default_exp_para
+                                del_default_exp_para, get_exp_default_para_info
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -119,7 +119,7 @@ def init_events(socketio):
     @socketio.on("summary-request-editable", namespace='/summary')
     def summary_request_editable(pid, expid):
         db = get_db()
-        output_dict = get_exp_para_info(db, expid)
+        output_dict = get_exp_default_para_info(db, expid)
         print(output_dict)
         emit("summary-get-exp-info", output_dict, namespace='/summary')
         print("emited editable summary")
@@ -233,10 +233,11 @@ def init_events(socketio):
 
         db = get_db()
         statlist = getPlotStats(db, expid)
-        plots = training_plots.trainLossPlot(db, expid, statlist)
-
-        emit("plot-get-plots-data", plots ,namespace="/plot")
-        print("plot emited")
+        
+        if len(statlist) > 0:
+            plots = training_plots.trainLossPlot(db, expid, statlist)
+            emit("plot-get-plots-data", plots ,namespace="/plot")
+            print("plot emited")
 
     @socketio.on("plot-update-plot-settings", namespace="/plot")
     def update_plot_settings(expid, plot_stat_name, plot_id):

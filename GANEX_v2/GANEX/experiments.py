@@ -12,7 +12,7 @@ import json
 from GANEX.db import get_db
 from GANEX.forms import CreateExperiment_form
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams,
-                                addInfoToExp
+                                addInfoToExp, get_default_exp_para
                             )
 
 # Blue print
@@ -88,6 +88,15 @@ def create(pid):
                             "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path , "iters": 0,
                             "current_epoch": 0}
 
+                # modify exp_dict with default parameters
+                exp_para_list = get_default_exp_para(db, pid)
+                print("exp para list=", exp_para_list)
+
+                for exp_para in exp_para_list:
+                    print("exp para000=====", exp_para) 
+                    exp_dict.update({exp_para["para_key"]: exp_para["para_value"]})
+
+                # insert exp dict
                 x = col_exp.insert_one(exp_dict)
 
                 # add additional data to experiments collection
