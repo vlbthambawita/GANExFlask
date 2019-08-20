@@ -88,7 +88,15 @@ class DLExMongoRecorder():
         return model_path
 
     def load_checkpoint_path(self, checkpoint_iter, checkpoint_type):
-        pass
+
+        col = self.db.models
+        query = {"pid": self.pid, "expid": self.expid, "iter": checkpoint_iter,  "type": checkpoint_type }
+
+        out_dict = col.find_one(query)
+        print("chekpoint path =", out_dict["path"])
+        return out_dict["path"]
+
+
 
     
         

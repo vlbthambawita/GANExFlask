@@ -49,6 +49,14 @@ def get_exp_default_para_info(db, expid):
     print("outputttt", output)
     return output
 
+def update_exp_info(db, expid, new_dict):
+    col = db.experiments
+    query ={"_id":ObjectId(expid)}
+    new_value = {"$set": new_dict}
+    col.update_one(query, new_value, upsert=True)
+    print("updated exp info")
+
+
 
 
 def addInfoToHWSettings(db, expId, fieldName, fieldValue):
@@ -315,6 +323,9 @@ def generate_checkpoint_path(db, pid, expid, checkpoint_iter, checkpoint_type):
     print(model_path)
 
     return model_path
+
+
+
 
 
 

@@ -79,6 +79,7 @@ class DCGAN():
         hyperparams = self.recorder.get_hyper_params()
         self.device = torch.device("cuda:0" if (torch.cuda.is_available() and 
                                                 int(hyperparams["ngpu"]) > 0) else "cpu")
+        print("device:", self.device)
 
     def weight_init(self, m):
         classname = m.__class__.__name__
@@ -149,11 +150,13 @@ class DCGAN():
         print("initialized gan trainer")
 
         if btn_value=="BTN_TRAIN":
+            print("gan trainer started")
             self.gt.train(int(train_settings["num_epochs"]))
             print("gan trainer is working")
 
         elif btn_value == "BTN_RETRAIN":
             print("BTN RETRAIN CLICKED")
+            self.gt.retrain(int(train_settings["num_epochs"]))
        
        # self.recorder.getSetting("expDataPath")
         self.recorder.set_exp_state("RETRAIN")

@@ -9,13 +9,14 @@ class GanTrainer():
 
     def train(self, num_epochs):
        # iters = 0
-        total_epochs = self.gan.recorder.get_exp_info("total_epochs")
+        total_epochs = int(self.gan.recorder.get_exp_info("total_epochs")) + 1
+
      
 
         for epoch in range(num_epochs):
             
             self.gan.recorder.record_exp_info("current_epoch", epoch +1) #update current epoch
-            self.gan.recorder.record_exp_info("total_epochs", total_epochs + epoch +1)  # update total epoch
+            #self.gan.recorder.record_exp_info("total_epochs", int(total_epochs) + epoch +1)  # update total epoch
 
             for i, data in enumerate(self.gan.dataloader, 0):
 
@@ -78,20 +79,28 @@ class GanTrainer():
                 print("D_G_z2:", D_G_z2)
 
                 # save stat records
-                self.gan.recorder.record_train_stat(self.iters, "D_x", D_x)
-                self.gan.recorder.record_train_stat(self.iters, "D_G_z1", D_G_z1)
-                self.gan.recorder.record_train_stat(self.iters, "errD", errD.item())
-                self.gan.recorder.record_train_stat(self.iters, "D_G_z2", D_G_z2)
+            self.gan.recorder.record_train_stat(total_epochs, "D_x", D_x)
+            self.gan.recorder.record_train_stat(total_epochs, "D_G_z1", D_G_z1)
+            self.gan.recorder.record_train_stat(total_epochs, "errD", errD.item())
+            self.gan.recorder.record_train_stat(total_epochs, "D_G_z2", D_G_z2)
                 
-                self.iters += 1 
             
-            self.save_checkpoint(self.gan.recorder.get_exp_info("total_epochs"), "EPOCH")
+            
+            self.save_checkpoint(total_epochs, "EPOCH")
+
+            
+            self.gan.recorder.record_exp_info("total_epochs", int(total_epochs))  # update total epoch 
+            total_epochs = total_epochs + 1 
            
         self.gan.recorder.record_exp_info("current_epoch", 0) # reset current epoch to 0
 
    
     def retrain(self, num_epochs):
-        total_epochs = self.gan.recorder.get_exp_info("total_epochs")
+        total_epochs = int(self.gan.recorder.get_exp_info("total_epochs")) 
+        self.load_checkpoint(total_epochs, "EPOCH")
+        print("Retraining started")
+        self.train(num_epochs)
+        print("Retainign stopeeds")
 
 
     
@@ -108,7 +117,15 @@ class GanTrainer():
         print("Model path:", model_path)
 
     def load_checkpoint(self, checkpoint_iter, checkpoint_type):
-        pass
+        checkpoint_path_to_load = self.gan.recorder.load_checkpoint_path(checkpoint_iter, checkpoint_type)
+        checkpoint = torch.load(checkpoint_path_to_load)
+
+        self.gan.netG.load_state_dict(checkpoint['G_state_dict'])
+        self.gan.netD.load_state_dict(checkpoint['D_state_dict'])
+        self.gan.optimizerG.load_state_dict(checkpoint['optimizerG_state_dict'])
+        self.gan.optimizerD.load_state_dict(checkpoint['optimizerD_state_dict'])
+
+        print("path to load:", checkpoint_path_to_load)
 
 
 

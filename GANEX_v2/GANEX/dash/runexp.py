@@ -10,7 +10,7 @@ from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
 from GANEX.fastGAN.task import run
 
-from GANEX.dlexmongo import getExpState, setExpState, getGANInfo, delTrainStats
+from GANEX.dlexmongo import getExpState, setExpState, getGANInfo, delTrainStats, get_default_exp_para, update_exp_info
 import time
 import json
 import importlib
@@ -77,10 +77,19 @@ def runexp(pid, expid):
             print("Retraining")
 
         elif request.form["runexp_btn"] == "reset":
+
             print("Reset")
             delTrainStats(db, expid)
             setExpState(db, expid, "TRAIN")
             status = getExpState(db, expid)
+
+            # reset default exp para
+            exp_para_list = get_default_exp_para(db, pid)
+            for exp_para in exp_para_list:
+                temp_dict = {exp_para["para_key"]: exp_para["para_value"]}
+                update_exp_info(db, expid, temp_dict)
+                print("exp para :", exp_para )
+
 
     return render_template('run/runexp.html', pid=pid, expid=expid, status=status)
 
