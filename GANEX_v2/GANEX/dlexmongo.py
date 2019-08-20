@@ -1,5 +1,9 @@
 from flask_pymongo import ObjectId
+import os
 
+#######################################
+# Experiments collection handling
+#######################################
 
 # get the experiment state
 def getExpState(db, expid):
@@ -23,6 +27,79 @@ def setExpState(db, expid, status):
 
     db["experiments"].update_one(query, new_value)
 
+def addInfoToExp(db, expId, fieldName, fieldValue):
+    query ={"_id":ObjectId(expId)}
+    new_field = {"$set": {fieldName: fieldValue}}
+    x = db["experiments"].update_one(query, new_field)
+
+    print("new field inserted.")
+
+
+# get given info from the Experiment 
+def getInfoExp(db, expId):
+    col = db.experiments
+    query = {"_id": ObjectId(expId)}
+    output = col.find_one(query)
+    return output
+
+def get_exp_default_para_info(db, expid):
+    col = db.experiments
+    query ={"_id":ObjectId(expid)}
+    output = col.find_one(query, {"_id": 0})
+    print("outputttt", output)
+    return output
+
+
+
+def addInfoToHWSettings(db, expId, fieldName, fieldValue):
+    query ={"_id":ObjectId(expId)}
+    new_field = {"$set": {fieldName: fieldValue}}
+    x = db["experiments"].update_one(query, new_field)
+
+    print("New feild wad added to hardwaresettings table")
+
+
+##########################################################
+# Default exp para collection
+##########################################################
+
+def get_default_exp_para(db, pid):
+    col = db.default_exp_para
+    query = {"pid": pid}
+    list_output =  list(col.find(query, {"_id":0}))
+    return list_output
+
+def set_default_exp_para(db, pid, para_name, para_key, para_value):
+    
+    col = db.default_exp_para
+
+    query = {"pid": pid, "para_key": para_key}
+    new_value ={"$set": {"pid": pid, "para_name":para_name, 
+                "para_key":para_key, "para_value": para_value}}
+    
+    x = col.update(query, new_value, upsert=True )
+
+    
+def del_default_exp_para(db, pid, para_key):
+    col = db.default_exp_para
+    query ={"pid": pid, "para_key": para_key}
+    col.delete_one(query)
+    print("successfullyu deleted")
+
+
+
+
+
+
+
+
+
+
+#####################################################
+# gantypes collection handling
+######################################################
+
+
 
 def addGanTypes(db, name, filename, classname):
 
@@ -32,26 +109,8 @@ def addGanTypes(db, name, filename, classname):
     x = col.insert_one(query)
     print("Inserted GAN type", x.inserted_id)
 
-def addInfoToExp(db, expId, fieldName, fieldValue):
-    query ={"_id":ObjectId(expId)}
-    new_field = {"$set": {fieldName: fieldValue}}
-    x = db["experiments"].update_one(query, new_field)
 
-    print("new field inserted.")
 
-# get given info from the Experiment 
-def getInfoExp(db, expId):
-    col = db.experiments
-    query = {"_id": ObjectId(expId)}
-    output = col.find_one(query)
-    return output
-
-def addInfoToHWSettings(db, expId, fieldName, fieldValue):
-    query ={"_id":ObjectId(expId)}
-    new_field = {"$set": {fieldName: fieldValue}}
-    x = db["experiments"].update_one(query, new_field)
-
-    print("New feild wad added to hardwaresettings table")
 
 
 # get methods
@@ -230,3 +289,34 @@ def del_default_hyperpram(db, pid, para_key):
     query ={"pid": pid, "para_key": para_key}
     col.delete_one(query)
     print("successfullyu deleted")
+
+
+    # handling checkpoints
+
+def generate_checkpoint_path(db, pid, expid, checkpoint_iter, checkpoint_type):
+
+    col = db.models
+    # checkpoint_type: "BATCH", "EPOCH".. etc.
+    query = {"pid": pid, "expid": expid, "iter": checkpoint_iter,  "type": checkpoint_type }
+    x = col.insert_one(query)
+
+    col_exp = db.experiments
+    query_exp = {"pid": pid, "expid": expid}
+    model_dir_path = col_exp.find_one(query_exp)["models_path"]
+
+    # new model path 
+    model_path = os.path.join(model_dir_path, str(x.inserted_id) + ".tar")
+
+    # update models table back
+    new_value = {"$set": {"path": model_path}}
+
+    x1 = col.update(query, new_value, upsert=True)
+
+    print(model_path)
+
+    return model_path
+
+
+
+
+

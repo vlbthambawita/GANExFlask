@@ -10,7 +10,10 @@ from GANEX.db import get_db
 
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
-                                getPlotStats, addPlotStat
+                                getPlotStats, addPlotStat, getExpState, getInfoExp,
+                                get_train_settings, 
+                                set_default_exp_para, get_default_exp_para,
+                                del_default_exp_para, get_exp_default_para_info
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -83,6 +86,49 @@ def init_events(socketio):
         print("initial all hyperparams", all_hyperparams)
         emit('get_default_hyperparams', all_hyperparams , namespace='/experiments')
 
+
+    # Exp para add
+    @socketio.on("default-exp-para-add", namespace='/experiments')
+    def default_exp_para_add(pid, para_name, para_key, para_value):
+        db = get_db()
+
+        set_default_exp_para(db, pid, para_name, para_key, para_value)
+        default_exp_para_list = get_default_exp_para(db, pid)
+        emit("get-exp-default-para", default_exp_para_list, namespace='/experiments')
+
+    @socketio.on("request_default_exp_para", namespace='/experiments')
+    def request_default_exp_para(pid):
+        db = get_db()
+        default_exp_para_list = get_default_exp_para(db, pid)
+        emit("get-exp-default-para", default_exp_para_list, namespace='/experiments')
+
+    @socketio.on("request-del-default-para", namespace='/experiments')
+    def request_del_default_para(pid, key):
+        db = get_db()
+        del_default_exp_para(db, pid, key)
+        default_exp_para_list = get_default_exp_para(db, pid)
+        emit("get-exp-default-para", default_exp_para_list, namespace='/experiments')
+
+
+
+
+
+###############################################################
+# Summary tab handling
+###############################################################
+    @socketio.on("summary-request-editable", namespace='/summary')
+    def summary_request_editable(pid, expid):
+        db = get_db()
+        output_dict = get_exp_default_para_info(db, expid)
+        print(output_dict)
+        emit("summary-get-exp-info", output_dict, namespace='/summary')
+        print("emited editable summary")
+
+
+
+
+
+
 ##############################################################
 # Data window handlings
 ##############################################################
@@ -139,6 +185,43 @@ def init_events(socketio):
         emit('data-get-img-plot', plot, namespace='/data')
 
 
+
+#######################################################################
+# RUN Experiment window handling
+#######################################################################
+
+    @socketio.on("runexp-request-info", namespace='/runexp')
+    def request_runexp_info(pid, expid):
+
+        db = get_db()
+        status = getExpState(db, expid)
+
+        exp_info = getInfoExp(db, expid)
+        current_epoch = exp_info["current_epoch"]
+        print("current epoch", current_epoch)
+
+        # get total epochs to run
+        train_settings = get_train_settings(db, expid)
+        total_epochs_to_run = train_settings["num_epochs"]
+        print("total epoch to run", total_epochs_to_run)
+        
+        print("trainsettings:", train_settings)
+
+        info_dict = {"current_status": status, "total_epochs_to_run": total_epochs_to_run, 
+                    "current_epoch": current_epoch }
+
+                    
+        emit('runexp-get-current-state-info', info_dict, namespace='/runexp')
+        print("emitted to runexp")
+
+
+
+
+
+
+
+
+
 ##########################################################################
 # Plot window handling
 ###########################################################################
@@ -150,10 +233,11 @@ def init_events(socketio):
 
         db = get_db()
         statlist = getPlotStats(db, expid)
-        plots = training_plots.trainLossPlot(db, expid, statlist)
-
-        emit("plot-get-plots-data", plots ,namespace="/plot")
-        print("plot emited")
+        
+        if len(statlist) > 0:
+            plots = training_plots.trainLossPlot(db, expid, statlist)
+            emit("plot-get-plots-data", plots ,namespace="/plot")
+            print("plot emited")
 
     @socketio.on("plot-update-plot-settings", namespace="/plot")
     def update_plot_settings(expid, plot_stat_name, plot_id):

@@ -125,7 +125,7 @@ class DCGAN():
                                     betas=(float(hyperparams["beta1"]), 0.999)
         )
 
-    def run(self):
+    def run(self, btn_value):
         train_settings = self.recorder.get_train_settings()
 
         print("running run method:", self.expid)
@@ -148,8 +148,12 @@ class DCGAN():
         self.gt = GanTrainer(self)
         print("initialized gan trainer")
 
-        self.gt.train(int(train_settings["num_epochs"]))
-        print("gan trainer is working")
+        if btn_value=="BTN_TRAIN":
+            self.gt.train(int(train_settings["num_epochs"]))
+            print("gan trainer is working")
+
+        elif btn_value == "BTN_RETRAIN":
+            print("BTN RETRAIN CLICKED")
        
        # self.recorder.getSetting("expDataPath")
         self.recorder.set_exp_state("RETRAIN")

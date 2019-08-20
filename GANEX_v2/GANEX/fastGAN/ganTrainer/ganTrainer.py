@@ -3,11 +3,19 @@ class GanTrainer():
 
     def __init__(self, gan):
         self.gan = gan
+        self.iters = 0
+        self.epoch = 0
 
 
     def train(self, num_epochs):
+       # iters = 0
+        total_epochs = self.gan.recorder.get_exp_info("total_epochs")
+     
 
         for epoch in range(num_epochs):
+            
+            self.gan.recorder.record_exp_info("current_epoch", epoch +1) #update current epoch
+            self.gan.recorder.record_exp_info("total_epochs", total_epochs + epoch +1)  # update total epoch
 
             for i, data in enumerate(self.gan.dataloader, 0):
 
@@ -28,7 +36,7 @@ class GanTrainer():
                 errD_real.backward()
                 D_x = output.mean().item()
                 print("gan trainer:", D_x)
-                self.gan.recorder.recordEpochTrainStat(epoch, "D_x", D_x)
+                
 
 
                 ## Train with all-fake batch
@@ -49,8 +57,7 @@ class GanTrainer():
                 # Update D
                 self.gan.optimizerD.step()
                 print("error D:", errD.item())
-                self.gan.recorder.recordEpochTrainStat(epoch, "D_G_z1", D_G_z1)
-                self.gan.recorder.recordEpochTrainStat(epoch, "errD", errD.item())
+                
 
 
                 ############################
@@ -69,7 +76,40 @@ class GanTrainer():
                 self.gan.optimizerG.step()
 
                 print("D_G_z2:", D_G_z2)
-                self.gan.recorder.recordEpochTrainStat(epoch, "D_G_z2", D_G_z2)
+
+                # save stat records
+                self.gan.recorder.record_train_stat(self.iters, "D_x", D_x)
+                self.gan.recorder.record_train_stat(self.iters, "D_G_z1", D_G_z1)
+                self.gan.recorder.record_train_stat(self.iters, "errD", errD.item())
+                self.gan.recorder.record_train_stat(self.iters, "D_G_z2", D_G_z2)
+                
+                self.iters += 1 
+            
+            self.save_checkpoint(self.gan.recorder.get_exp_info("total_epochs"), "EPOCH")
+           
+        self.gan.recorder.record_exp_info("current_epoch", 0) # reset current epoch to 0
+
+   
+    def retrain(self, num_epochs):
+        total_epochs = self.gan.recorder.get_exp_info("total_epochs")
+
+
+    
+    def save_checkpoint(self, checkpoint_iter, checkpoint_type):
+        model_path = self.gan.recorder.generate_checkpoint_path(checkpoint_iter, checkpoint_type)
+        torch.save({
+            'G_state_dict': self.gan.netG.state_dict(),
+            'D_state_dict': self.gan.netD.state_dict(),
+            'optimizerG_state_dict': self.gan.optimizerG.state_dict(),
+            'optimizerD_state_dict': self.gan.optimizerD.state_dict()
+        }, model_path)
+
+
+        print("Model path:", model_path)
+
+    def load_checkpoint(self, checkpoint_iter, checkpoint_type):
+        pass
+
 
 
 

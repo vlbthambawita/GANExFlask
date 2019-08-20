@@ -2,11 +2,21 @@
 
 {% block script %}
 <!--Select the corresponding nav item-->
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/run_exp.js') }}"></script>
 <script>
         $(document).ready(function(){
           console.log("document is ready")
           //$("#summary-tab").attr
           $("#runexp-tab").addClass("active")
+
+        // set window parameters
+            window.pid = "{{ pid }}"
+            window.expid = "{{ expid }}"
+            window.socket = io('/runexp')
+
+            init_sockets_ons();
+            setInterval(request_current_info, 1000);
+
         })
 </script>
 {% endblock %}
@@ -15,7 +25,7 @@
 This is the page for train, re-train and reset experiments..!
 
 <div class="progress">
-        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+        <div id="pg_bar_epoch" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
 
 <form method="POST" action="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">
@@ -25,32 +35,7 @@ This is the page for train, re-train and reset experiments..!
         <button id="btnReset" name="runexp_btn" value="reset">Reset</button>
 </form>
 
-<script>
-    var source = new EventSource("{{ url_for('runexp.update', pid=pid, expid=expid) }}")
-    source.onmessage = function(event){
-                var values = JSON.parse(event.data)
-                var status = values.status
-                $("#Results").html('<li>'+ status +'</li>'); 
 
-                if (status == "TRAIN"){
-                    $("#btnTrain").attr("disabled", false)
-                    $("#btnRetrain").attr("disabled", true) 
-                    $("#btnReset").attr("disabled", true)
-                }
-
-                else if (status == "RUNNING"){
-                    $("#btnTrain").attr("disabled", true) 
-                    $("#btnRetrain").attr("disabled", true) 
-                    $("#btnReset").attr("disabled", true)
-                }
-
-                else if (status == "RETRAIN"){
-                    $("#btnTrain").attr("disabled", true)
-                    $("#btnRetrain").attr("disabled", false) 
-                    $("#btnReset").attr("disabled", false) 
-                }   
-    }
-</script>
 
 <div id="Results">...</div>   
   

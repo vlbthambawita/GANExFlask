@@ -8,7 +8,7 @@ import click
 
 def get_db():
     if 'db' not in g:
-        current_app.config["MONGO_URI"] = "mongodb://localhost:27017/GANEXdb"
+        current_app.config["MONGO_URI"] = "mongodb+srv://test:GANEX2018@cluster0-uv3hx.mongodb.net/test?retryWrites=true&w=majority" #"mongodb://localhost:27017/GANEXdb"
         mongo = PyMongo(current_app)
         g.db = mongo.db
 
