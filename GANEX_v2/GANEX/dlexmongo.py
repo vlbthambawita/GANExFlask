@@ -58,7 +58,7 @@ def addInfoToHWSettings(db, expId, fieldName, fieldValue):
 def get_default_exp_para(db, pid):
     col = db.default_exp_para
     query = {"pid": pid}
-    list_output =  list(col.find(query))
+    list_output =  list(col.find(query, {"_id":0}))
     return list_output
 
 def set_default_exp_para(db, pid, para_name, para_key, para_value):
@@ -72,7 +72,11 @@ def set_default_exp_para(db, pid, para_name, para_key, para_value):
     x = col.update(query, new_value, upsert=True )
 
     
-
+def del_default_exp_para(db, pid, para_key):
+    col = db.default_exp_para
+    query ={"pid": pid, "para_key": para_key}
+    col.delete_one(query)
+    print("successfullyu deleted")
 
 
 

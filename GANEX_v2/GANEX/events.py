@@ -12,7 +12,8 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                                 getImagePaths, delImgPath, addImage, getGANInfo,
                                 getPlotStats, addPlotStat, getExpState, getInfoExp,
                                 get_train_settings, get_exp_para_info,
-                                set_default_exp_para, get_default_exp_para
+                                set_default_exp_para, get_default_exp_para,
+                                del_default_exp_para
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -100,6 +101,14 @@ def init_events(socketio):
         db = get_db()
         default_exp_para_list = get_default_exp_para(db, pid)
         emit("get-exp-default-para", default_exp_para_list, namespace='/experiments')
+
+    @socketio.on("request-del-default-para", namespace='/experiments')
+    def request_del_default_para(pid, key):
+        db = get_db()
+        del_default_exp_para(db, pid, key)
+        default_exp_para_list = get_default_exp_para(db, pid)
+        emit("get-exp-default-para", default_exp_para_list, namespace='/experiments')
+
 
 
 
