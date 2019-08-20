@@ -9,6 +9,7 @@ class GanTrainer():
 
     def train(self, num_epochs):
        # iters = 0
+       # total_epochs = 
 
         for epoch in range(num_epochs):
             

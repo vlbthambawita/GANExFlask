@@ -11,7 +11,8 @@ from GANEX.db import get_db
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
                                 getPlotStats, addPlotStat, getExpState, getInfoExp,
-                                get_train_settings
+                                get_train_settings, get_exp_para_info,
+                                set_default_exp_para, get_default_exp_para
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -83,6 +84,41 @@ def init_events(socketio):
         all_hyperparams = list(get_default_hyperparams(db, pid))
         print("initial all hyperparams", all_hyperparams)
         emit('get_default_hyperparams', all_hyperparams , namespace='/experiments')
+
+
+    # Exp para add
+    @socketio.on("default-exp-para-add", namespace='/experiments')
+    def default_exp_para_add(pid, para_name, para_key, para_value):
+        db = get_db()
+
+        set_default_exp_para(db, pid, para_name, para_key, para_value)
+        default_exp_para_list = get_default_exp_para(db, pid)
+        emit("get-exp-default-para", default_exp_para_list, namespace='/experiments')
+
+    @socketio.on("request_default_exp_para", namespace='/experiments')
+    def request_default_exp_para(pid):
+        db = get_db()
+        default_exp_para_list = get_default_exp_para(db, pid)
+        emit("get-exp-default-para", default_exp_para_list, namespace='/experiments')
+
+
+
+
+###############################################################
+# Summary tab handling
+###############################################################
+    @socketio.on("summary-request-editable", namespace='/summary')
+    def summary_request_editable(pid, expid):
+        db = get_db()
+        output_dict = get_exp_para_info(db, expid)
+        print(output_dict)
+        emit("summary-get-exp-info", output_dict, namespace='/summary')
+        print("emited editable summary")
+
+
+
+
+
 
 ##############################################################
 # Data window handlings

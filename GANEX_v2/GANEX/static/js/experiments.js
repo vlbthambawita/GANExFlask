@@ -1,35 +1,34 @@
-var socket = io('/experiments');
-var pid = window.pid;
+// var socket = io('/experiments');
+// var pid = window.pid;
 
-function test(pid){
-    alert(pid);
-}
 
-function set_pid_to_js_file(pid){
-    pid = pid
-}
 
-function set_socket_to_js_file(socket){
-    socket = socket;
-}
+
+
 
 function init_load(){
   //  alert("inti load")
 
-    socket.on('get_default_hyperparams', function(data){
+    window.socket.on('get_default_hyperparams', function(data){
       //  alert("get default hyper param initializations")
         update_table(data)
       //  alert("data" + data)
     })  
 
-    socket.emit("get_initial_default_params", pid= pid)
+    window.socket.on('get-exp-default-para', function(data){
+      console.log(data)
+    })
+
+    window.socket.emit("get_initial_default_params", pid= window.pid)
+
+    window.socket.emit("request_default_exp_para", window.pid)
 
     
 }
 
 function btn_del_click(value){
     //alert("btn clicked" + value)
-    socket.emit("default_param_del", key=value, pid=pid)
+    window.socket.emit("default_param_del", key=value, pid=window.pid)
 
     //socket.on('get_default_hyperparams', function(data){
      //   alert("get default hyper param btn del clicked")
@@ -39,9 +38,9 @@ function btn_del_click(value){
 
 function btnAddClick(){
     //alert("btn add clicked")
-    socket.emit('default_param_add', {"para_name": $("#para_name").val(), 
+    window.socket.emit('default_param_add', {"para_name": $("#para_name").val(), 
                         "para_key": $("#para_key").val(),
-                        "para_value": $("#para_value").val()}, pid=pid);
+                        "para_value": $("#para_value").val()}, pid=window.pid);
 
     document.getElementById("para_name").value ="";
     document.getElementById("para_key").value ="";
@@ -96,4 +95,18 @@ function update_table(para_list){
     }
     
     // alert("table updated")
+}
+
+/////////// Exp para add /////////////////////
+
+function btn_exp_para_add(){
+
+  window.socket.emit('default-exp-para-add', {"para_name": $("#para_name").val(), 
+                        "para_key": $("#para_key").val(),
+                        "para_value": $("#para_value").val()}, pid=window.pid);
+
+    document.getElementById("para_name").value ="";
+    document.getElementById("para_key").value ="";
+    document.getElementById("para_value").value ="";
+
 }

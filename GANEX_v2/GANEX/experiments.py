@@ -11,7 +11,9 @@ import json
 
 from GANEX.db import get_db
 from GANEX.forms import CreateExperiment_form
-from GANEX.dlexmongo import set_train_settings, set_default_hyperparam, get_default_hyperparams
+from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams,
+                                addInfoToExp
+                            )
 
 # Blue print
 bp = Blueprint('experiments', __name__)
@@ -81,11 +83,16 @@ def create(pid):
                 os.mkdir(exp_output_path)
 
 
+                # initialize exp inforamtion
                 exp_dict = {"name":exp_name, "type":exp_gan, "pid": pid, "status": "TRAIN", 
                             "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path , "iters": 0,
                             "current_epoch": 0}
 
                 x = col_exp.insert_one(exp_dict)
+
+                # add additional data to experiments collection
+
+                #addInfoToExp
 
                 # initialize train settings
                 dict_settings = {"num_epochs": 0, "checkpoint_interval": 0, "checkpoint_type":"EPOCH"}
