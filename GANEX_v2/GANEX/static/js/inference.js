@@ -27,6 +27,7 @@ function request_available_inferenced_imgs(){
 
 function del_model(){
     console.log("Delete models")
+    window.socket.emit("inf-rqst-del-model", window.pid, window.expid, this.value)
 }
 
 function del_img(){

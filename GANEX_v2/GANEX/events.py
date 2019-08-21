@@ -17,7 +17,7 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                                 get_output_imgs
                             )
 # second import list from sama location
-from GANEX.dlexmongo import (get_models)
+from GANEX.dlexmongo import (get_models, del_model)
 
 from GANEX.plots import imageplot, training_plots
 
@@ -329,6 +329,13 @@ def init_events(socketio):
         plot = imageplot.createImagePlot(path)
         emit('inf-get-img-plt', plot, namespace='/inference')
 
+    
+    @socketio.on("inf-rqst-del-model", namespace='/inference')
+    def rqst_del_model(pid, expid, model_path):
+        db = get_db()
+        del_model(db, pid, expid, model_path)
+        model_data_list  = get_models(db, pid, expid)
+        emit("inference-get-available-models", model_data_list, namespace='/inference')
 
 
 

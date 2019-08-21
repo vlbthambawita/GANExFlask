@@ -350,6 +350,11 @@ def get_models(db, pid, expid):
     outputs = col.find(query, {"_id": 0})
     return list(outputs)
 
+def del_model(db, pid, expid, model_path):
+    col = db.models
+    query = {"pid": pid, "expid": expid, "path": model_path}
+    col.delete_one(query)
+    os.remove(model_path)
 
 
 
