@@ -153,13 +153,15 @@ class DCGAN():
             print("gan trainer started")
             self.gt.train(int(train_settings["num_epochs"]))
             print("gan trainer is working")
+            self.recorder.set_exp_state("RETRAIN")
 
         elif btn_value == "BTN_RETRAIN":
             print("BTN RETRAIN CLICKED")
             self.gt.retrain(int(train_settings["num_epochs"]))
+            self.recorder.set_exp_state("RETRAIN")
        
        # self.recorder.getSetting("expDataPath")
-        self.recorder.set_exp_state("RETRAIN")
+        
         #for i in range(5):
           #  print(i)
            # j= i*2

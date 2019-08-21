@@ -211,7 +211,7 @@ def getHyperparamDict(db, expid):
 
 # handling outputdata collection
 
-def addImage(db, expid, datatype): # type: INPUTDATA, GENDATA, --> return a path to image
+def addImage(db, expid, datatype): # type: INPUTDATA, GENDATA, INFERENCED --> return a path to image
     
     # get new id for new data
     col = db.outputdata
@@ -311,7 +311,14 @@ def del_default_hyperpram(db, pid, para_key):
     print("successfullyu deleted")
 
 
-    # handling checkpoints
+    
+
+
+
+
+############################################################
+# Handling model collection
+############################################################
 
 def generate_checkpoint_path(db, pid, expid, checkpoint_iter, checkpoint_type):
 
@@ -336,6 +343,12 @@ def generate_checkpoint_path(db, pid, expid, checkpoint_iter, checkpoint_type):
 
     return model_path
 
+# get available models data as list
+def get_models(db, pid, expid):
+    col = db.models
+    query = {"pid": pid, "expid": expid}
+    outputs = col.find(query, {"_id": 0})
+    return list(outputs)
 
 
 

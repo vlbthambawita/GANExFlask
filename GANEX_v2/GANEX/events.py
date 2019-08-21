@@ -16,6 +16,8 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                                 del_default_exp_para, get_exp_default_para_info,
                                 get_output_imgs
                             )
+# second import list from sama location
+from GANEX.dlexmongo import (get_models)
 
 from GANEX.plots import imageplot, training_plots
 
@@ -276,6 +278,18 @@ def init_events(socketio):
         addPlotStat(db, expid, plot_stat_name, plot_id)
         print("plot settings updated")
 
+
+
+#################################################################################
+# Inference window handling
+#################################################################################
+
+    @socketio.on("inference-request-available-models", namespace="/inference")
+    def request_available_models(pid, expid):
+        db = get_db()
+        model_data_list  = get_models(db, pid, expid)
+        emit("inference-get-available-models", model_data_list, namespace='/inference')
+    
 
 
 
