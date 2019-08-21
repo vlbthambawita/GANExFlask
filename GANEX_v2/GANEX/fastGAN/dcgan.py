@@ -25,6 +25,7 @@ class DCGAN():
         self.pid = pid
         self.expid = expid
         self.recorder = DLExMongoRecorder(self.db, self.pid, self.expid)
+        self.gt = GanTrainer(self)
     
 
     def setsettings(self):
@@ -146,7 +147,7 @@ class DCGAN():
         self.initOptimizers()
         print("inittialize optimizers")
 
-        self.gt = GanTrainer(self)
+        #self.gt = GanTrainer(self)
         print("initialized gan trainer")
 
         if btn_value=="BTN_TRAIN":
@@ -160,6 +161,18 @@ class DCGAN():
             self.gt.retrain(int(train_settings["num_epochs"]))
             self.recorder.set_exp_state("RETRAIN")
        
+    def inference(self, model_path):
+        self.setsettings()
+        self.setDevice()
+        self.initNets()
+        self.initOptimizers()
+        self.initNoiseAndLabels()
+        self.gt.load_checkpoint(model_path)
+        self.gt.save_inference_output(self.gt.total_epochs)
+
+        #imgpath = self.gan.recorder.add_image("INFERENCED", iter=self.gt.total_epochs)
+        print("Running gan inference")
+
        # self.recorder.getSetting("expDataPath")
         
         #for i in range(5):

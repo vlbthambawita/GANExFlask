@@ -289,7 +289,47 @@ def init_events(socketio):
         db = get_db()
         model_data_list  = get_models(db, pid, expid)
         emit("inference-get-available-models", model_data_list, namespace='/inference')
+
+    @socketio.on("inference-request-available-inferenced-imgs", namespace="/inference")
+    def request_available_inferenced_imgs(pid, expid):
+        db = get_db()
+        img_list = get_output_imgs(db, expid, "INFERENCED")
+
+        emit("inference-get-inferenced-imgs", img_list, namespace='/inference' )
+
     
+    @socketio.on("inference-request-inference-generate", namespace="/inference")
+    def request_inference_generate(pid, expid, model_path):
+        
+        print("Request received to make inference plot")
+        db =get_db()
+
+        (ganFile, ganClass) = getGANInfo(db, expid)
+        my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+        gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+        gan.inference(model_path)
+
+        img_list = get_output_imgs(db, expid, "INFERENCED")
+
+        emit("inference-get-inferenced-imgs", img_list, namespace='/inference' )
+        print(img_list)
+
+
+    @socketio.on("inference-rqst-del-img", namespace='/inference')
+    def rqst_del_img(expid, path):
+        db = get_db()
+        delImgPath(db,expid, path) 
+        img_list = get_output_imgs(db, expid, "INFERENCED")
+
+        emit("inference-get-inferenced-imgs", img_list, namespace='/inference' )
+
+    
+    @socketio.on("inf-rqst-show-img", namespace='/inference')
+    def rqst_show_img(path):
+        plot = imageplot.createImagePlot(path)
+        emit('inf-get-img-plt', plot, namespace='/inference')
+
+
 
 
 
