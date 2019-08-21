@@ -97,6 +97,35 @@ class DLExMongoRecorder():
         return out_dict["path"]
 
 
+    # handlign img paths
+
+    def add_image(self,  datatype, **kw): # type: INPUTDATA, GENDATA, --> return a path to image
+    
+        # get new id for new data
+        col = self.db.outputdata
+        query ={"expid": self.expid, "type": datatype}
+        query.update(kw)
+        print("add image updated query:", query)
+        x = col.insert_one(query) # x.inserted_id
+
+        col_exp = self.db.experiments
+        query_exp = {"_id": ObjectId(self.expid)}
+        exp_path = col_exp.find(query_exp, {"_id":0,"output_path":1})
+
+        # new image path 
+        imgpath = exp_path.next()["output_path"] + "/" + str(x.inserted_id) + ".png"
+
+        # update outputdata collection
+        new_value = {"$set": {"imgpath": imgpath}}
+        x1 = col.update(query, new_value, upsert=True)
+
+
+        print(x.inserted_id)
+        #  print(exp_path.next())
+        return imgpath
+
+
+
 
     
         

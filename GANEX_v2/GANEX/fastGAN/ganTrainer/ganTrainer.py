@@ -1,4 +1,7 @@
 import torch
+import torchvision.utils as vutils
+
+
 class GanTrainer():
 
     def __init__(self, gan):
@@ -83,6 +86,9 @@ class GanTrainer():
             self.gan.recorder.record_train_stat(total_epochs, "D_G_z1", D_G_z1)
             self.gan.recorder.record_train_stat(total_epochs, "errD", errD.item())
             self.gan.recorder.record_train_stat(total_epochs, "D_G_z2", D_G_z2)
+
+            # save epoch progress
+            self.save_generator_progress(total_epochs)
                 
             
             
@@ -126,6 +132,16 @@ class GanTrainer():
         self.gan.optimizerD.load_state_dict(checkpoint['optimizerD_state_dict'])
 
         print("path to load:", checkpoint_path_to_load)
+
+    def save_generator_progress(self, iter):
+        imgpath = self.gan.recorder.add_image("GENDATA", iter=iter) # can add any number of keywork args
+        
+        with torch.no_grad():
+            fake = self.gan.netG(self.gan.fixed_noise).detach().cpu()
+
+        vutils.save_image(fake, imgpath, nrow=8, padding=2)
+        print("generator progress saved")
+
 
 
 
