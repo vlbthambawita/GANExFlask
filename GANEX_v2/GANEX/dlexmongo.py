@@ -248,11 +248,23 @@ def getImagePaths(db, expid, datatype):
 
     return img_path_list
 
+def get_output_imgs(db, expid, datatype):
+    col = db.outputdata
+    query = {"expid": expid,  "type": datatype}
+    output= col.find(query, {"_id":0 })
+
+    return list(output)
+
+# del img path - old method
 def delImgPath(db, expid, path):
     col = db.outputdata
 
     query ={"expid": expid, "imgpath": path}
     col.delete_one(query)
+    os.remove(path)
+
+
+
 
 # methods for trainsettings
 

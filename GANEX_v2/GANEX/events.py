@@ -13,7 +13,8 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                                 getPlotStats, addPlotStat, getExpState, getInfoExp,
                                 get_train_settings, 
                                 set_default_exp_para, get_default_exp_para,
-                                del_default_exp_para, get_exp_default_para_info
+                                del_default_exp_para, get_exp_default_para_info,
+                                get_output_imgs
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -139,10 +140,23 @@ def init_events(socketio):
         print("pid:", pid)
         print("EXPID:", expid)
         print("path:", path)
-        delImgPath(db,expid, path)
+        delImgPath(db,expid, path) # old method
+        # del_img_path(db, expid, path) # new method
         img_path_list  = getImagePaths(db, expid, "INPUTDATA")
         emit('data-get-img-paths', img_path_list, namespace='/data')
+        
         print("Emitted")
+
+    
+    @socketio.on("data-delete-gen-img", namespace='/data')
+    def del_gen_img_path(pid, expid, path):
+        
+        db = get_db()
+        delImgPath(db, expid, path)
+        img_gen_list  = get_output_imgs(db, expid, "GENDATA")
+        emit('data-get-gen-images', img_gen_list, namespace='/data')
+        
+        print("Emitted to data-get-gen-images")
 
 
     @socketio.on("data-load-imgs", namespace='/data')
@@ -183,6 +197,22 @@ def init_events(socketio):
 
         plot = imageplot.createImagePlot(path)
         emit('data-get-img-plot', plot, namespace='/data')
+
+
+    @socketio.on("data-show-gen-img", namespace='/data')
+    def show_gen_img(path):
+
+        plot = imageplot.createImagePlot(path)
+        emit('data-get-gen-img-plot', plot, namespace='/data')
+
+
+
+    @socketio.on('data-request-gan-gen-images', namespace='/data')
+    def data_request_gan_gen_images(pid, expid):
+        db =get_db()
+        img_list  = get_output_imgs(db, expid, "GENDATA")
+        emit('data-get-gen-images', img_list , namespace='/data')
+
 
 
 
