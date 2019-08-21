@@ -55,16 +55,19 @@ class DCGAN():
                                         ]))
 
         # get data set sample only for testing
-        self.dataset_sample = torch.utils.data.Subset(self.dataset, [i for i in range(500)])
+        #self.dataset_sample = torch.utils.data.Subset(self.dataset, [i for i in range(500)])
 
         print("Dataset is OK", self.dataset)
         print("Batch size:", hyperparams["batch_size"])
         print("workers:", hyperparams["workers"])
 
-        self.dataloader = torch.utils.data.DataLoader(self.dataset_sample, 
+        self.dataloader = torch.utils.data.DataLoader(self.dataset, 
                                                     batch_size=int(hyperparams["batch_size"]),
                                                 shuffle=True, 
                                                 num_workers=int(hyperparams["workers"]))
+
+        # record dataloader size
+        self.recorder.record_exp_info("dataloader_size", len(self.dataloader))
 
         
 

@@ -19,7 +19,7 @@ class GanTrainer():
 
         for epoch in range(num_epochs):
             
-            self.gan.recorder.record_exp_info("current_epoch", epoch +1) #update current epoch
+            
             #self.gan.recorder.record_exp_info("total_epochs", int(total_epochs) + epoch +1)  # update total epoch
 
             for i, data in enumerate(self.gan.dataloader, 0):
@@ -81,6 +81,13 @@ class GanTrainer():
                 self.gan.optimizerG.step()
 
                 print("D_G_z2:", D_G_z2)
+
+                # update current iter
+                self.gan.recorder.record_exp_info("iters", i +1)
+
+               
+            self.gan.recorder.record_exp_info("current_epoch", epoch +1) #update current epoch
+            self.gan.recorder.record_exp_info("iters", 0) # reset iters
 
                 # save stat records
             self.gan.recorder.record_train_stat(self.total_epochs, "D_x", D_x)

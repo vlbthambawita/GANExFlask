@@ -240,7 +240,8 @@ def init_events(socketio):
         print("trainsettings:", train_settings)
 
         info_dict = {"current_status": status, "total_epochs_to_run": total_epochs_to_run, 
-                    "current_epoch": current_epoch }
+                    "current_epoch": current_epoch, "current_iter": exp_info["iters"],
+                    "dataloader_size": exp_info["dataloader_size"] }
 
                     
         emit('runexp-get-current-state-info', info_dict, namespace='/runexp')

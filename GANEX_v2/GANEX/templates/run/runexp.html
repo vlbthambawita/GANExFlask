@@ -26,6 +26,11 @@ This is the page for train, re-train and reset experiments..!
 
 <div class="progress">
         <div id="pg_bar_epoch" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+ </div>
+
+<div class="progress">
+        
+        <div id="pg_bar_iters" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
 
 <form method="POST" action="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">
