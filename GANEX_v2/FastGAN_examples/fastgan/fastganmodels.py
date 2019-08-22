@@ -1,7 +1,7 @@
 from GANEX.dlexmongorecorder import DLExMongoRecorder
 from GANEX.fastGAN.ganTrainer.ganTrainer import GanTrainer
 
-class FastGAN():
+class FastGANBaseModel():
 
     def __init__(self, db, pid, expid):
 
@@ -20,19 +20,24 @@ class FastGAN():
             self.dataloader
             self.recorder.record --> dataloader_size
         """
+        pass
 
     def generate_input_image_grid(self, path):
         """
         Generate imput image grid using self.dataloader and save to path
         """
+        pass
 
     
     def setDevice(self):
         """
         Set self.device here.
         """
+        pass
 
     def weight_init(self, m):
         """
         Define initial weight initialization method here.
         """
+        pass
+
