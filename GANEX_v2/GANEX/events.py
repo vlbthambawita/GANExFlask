@@ -17,7 +17,7 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                                 get_output_imgs
                             )
 # second import list from sama location
-from GANEX.dlexmongo import (get_models, del_model)
+from GANEX.dlexmongo import (get_models, del_model, del_plt_stat)
 
 from GANEX.plots import imageplot, training_plots
 
@@ -31,6 +31,10 @@ def init_events(socketio):
     # global socketio
    # db = get_db() # this is not working, some context problem
 
+##################################################################
+## Test caseses
+#####################################################################
+
     @socketio.on('joined', namespace='/chat')
     def joined(message):
         """Sent by clients when they enter a room.
@@ -41,10 +45,9 @@ def init_events(socketio):
         x = threading.Thread(target=randnumber, args=(socketio,))
         x.start()
 
-    # plot sta handle - near real time
-    @socketio.on('plotting', namespace='/plot')
-    def plotting(msg):
-        updateplot(socketio, get_db())
+
+
+    
 
             # x = threading.Thread(target=updateplot, args=(socketio,get_db()))
             
@@ -259,6 +262,11 @@ def init_events(socketio):
 # Plot window handling
 ###########################################################################
 
+    # plot sta handle - near real time
+    @socketio.on('plotting', namespace='/plot')
+    def plotting(msg):
+        updateplot(socketio, get_db())
+
 
     @socketio.on("plot-update-plots", namespace="/plot")
     def update_plots(expid):
@@ -277,7 +285,26 @@ def init_events(socketio):
         db = get_db()
 
         addPlotStat(db, expid, plot_stat_name, plot_id)
+        plt_settings_list = getPlotStats(db, expid)
+        emit("plt-get-plt-settings",plt_settings_list,  namespace="/plot")
         print("plot settings updated")
+
+
+
+    @socketio.on("plt-rqst-plt-setttings", namespace="/plot")
+    def plt_rqst_plt_settings(pid, expid):
+        db = get_db()
+        plt_settings_list = getPlotStats(db, expid)
+        print("plt settings list ", plt_settings_list)
+        emit("plt-get-plt-settings",plt_settings_list,  namespace="/plot")
+
+    
+    @socketio.on("plt-rqst-del-plt-setting", namespace="/plot")
+    def rqst_del_plt_setting(pid, expid, plt_values):  # plt_values = [plt_stat_name, plt_id]
+        db = get_db()
+        del_plt_stat(db, expid, plt_values[0], plt_values[1] )
+        plt_settings_list = getPlotStats(db, expid)
+        emit("plt-get-plt-settings",plt_settings_list,  namespace="/plot")
 
 
 

@@ -162,6 +162,18 @@ def getTrainStatAsList(db, expid, stat_name):
     print(result)
 
 
+def delTrainStats(db, expid):
+    col = db.trainstats
+    query = {"expid": expid}
+    col.delete_many(query)
+    print("exp info deleted")
+
+
+
+###############################################
+# plotsettins collection
+##################################################
+
 def addPlotStat(db, expid, plotstatName, plotid):
     col = db.plotsetting
 
@@ -183,15 +195,20 @@ def getPlotStats(db, expid):
     print(plots)
     return plots
 
-def delTrainStats(db, expid):
-    col = db.trainstats
-    query = {"expid": expid}
-    col.delete_many(query)
-    print("exp info deleted")
+
+def del_plt_stat(db, expid, plt_stat_name, plt_id):
+    col = db.plotsetting
+
+    query = {"expid": expid, "plotstat":plt_stat_name , "plotid": plt_id}
+    col.delete_one(query)
 
 
 
-# set hyperpaermeters to hyperparam table
+
+
+##################################################
+# hyperparam collection handling
+##################################################
 
 def setHyperparamDict(db, expid, hyperparam_dict):
     col = db.hyperparam
@@ -208,8 +225,9 @@ def getHyperparamDict(db, expid):
     return output
 
 
-
-# handling outputdata collection
+#############################################
+# outputdata collection
+###############################################
 
 def addImage(db, expid, datatype): # type: INPUTDATA, GENDATA, INFERENCED --> return a path to image
     
