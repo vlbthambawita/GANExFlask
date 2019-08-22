@@ -17,7 +17,9 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                                 get_output_imgs
                             )
 # second import list from sama location
-from GANEX.dlexmongo import (get_models, del_model, del_plt_stat, get_gan_types)
+from GANEX.dlexmongo import (get_models, del_model, del_plt_stat, get_gan_types,
+                                del_gan_type
+                            )
 
 from GANEX.plots import imageplot, training_plots
 
@@ -63,6 +65,16 @@ def init_events(socketio):
         db = get_db()
         ganlist = get_gan_types(db)
         emit("projects-get-gans", ganlist, namespace="/projects")
+
+
+    @socketio.on("projects-rqst-del-gantype", namespace='/projects')
+    def rqst_del_gantype(gan_name):
+        db = get_db()
+        del_gan_type(db, gan_name)
+        ganlist = get_gan_types(db)
+        emit("projects-get-gans", ganlist, namespace="/projects")
+
+
 
 
     

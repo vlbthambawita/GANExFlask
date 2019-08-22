@@ -123,6 +123,11 @@ def get_gan_types(db):
     output = col.find({}, {"_id":0})
     return list(output)
 
+def del_gan_type(db, gan_name):
+    col = db.gantypes
+    query = {"name": gan_name}
+    col.delete_one(query)
+
 
 
 # get methods

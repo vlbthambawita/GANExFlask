@@ -8,6 +8,7 @@ from flask_socketio import emit
 import pymongo
 import os
 import json
+import shutil
 
 from GANEX.db import get_db
 from GANEX.forms import CreateExperiment_form
@@ -127,7 +128,10 @@ def deleteExp(pid, expid):
     exp_col = db['experiments']
     query = {"_id":ObjectId(expid)} # need this Object ID
     
-    
+    exp_path = exp_col.find_one(query, {"_id":0, "path": 1})
+
+    print("exp  path", exp_path)
+    shutil.rmtree(exp_path["path"]) # remove exp directoty
 
     x =exp_col.delete_one(query) # delete given expid
 

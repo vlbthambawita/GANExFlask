@@ -7,12 +7,13 @@ function init_socket_ons(){
 
 
 function rqst_gan_types(){
-    alert("Request")
+   // alert("Request")
     window.socket.emit("projects-rqst-gan-types")
 }
 
 function del_gan_type(){
     console.log(this.value)
+    window.socket.emit("projects-rqst-del-gantype", this.value)
 }
 
 
