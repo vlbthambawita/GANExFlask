@@ -205,7 +205,7 @@ def init_events(socketio):
         #===============================================
         # Use selected GAN image grid generate function
         #===============================================
-        (ganFile, ganClass) = getGANInfo(db, expid)
+        (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
         # import gan from gan file
         my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
         gan = eval("my_module.{}(db, pid, expid)".format(ganClass))

@@ -59,7 +59,7 @@ def runexp(pid, expid):
         elif request.form["runexp_btn"] == "re-train":
             try:
                 # get the GAN class
-                (ganFile, ganClass) = getGANInfo(db, expid)
+                (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
                 print("gan file=", ganFile)
                 print("gan class=", ganClass)
 
