@@ -44,3 +44,10 @@ class FastGANBaseModel():
         """
         pass
 
+
+    def run(self):
+        """
+        Main compulsory method for training the model
+        """
+        pass
+

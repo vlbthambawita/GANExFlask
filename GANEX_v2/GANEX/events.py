@@ -7,6 +7,7 @@ from GANEX.fastGAN.task import randnumber
 # socketio = get_socket()
 from GANEX.updates import updateplot
 from GANEX.db import get_db
+from GANEX.utils import create_gan_object
 
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
@@ -356,9 +357,10 @@ def init_events(socketio):
         print("Request received to make inference plot")
         db =get_db()
 
-        (ganFile, ganClass) = getGANInfo(db, expid)
-        my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
-        gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+        (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
+       # my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+       # gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+        gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
         gan.inference(model_path)
 
         img_list = get_output_imgs(db, expid, "INFERENCED")

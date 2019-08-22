@@ -89,7 +89,7 @@ def create(pid):
                 # initialize exp inforamtion
                 exp_dict = {"name":exp_name, "type":exp_gan, "pid": pid, "status": "TRAIN", 
                             "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path , "iters": 0,
-                            "current_epoch": 0}
+                            "current_epoch": 0, "dataloader_size": 0}
 
                 # modify exp_dict with default parameters
                 exp_para_list = get_default_exp_para(db, pid)

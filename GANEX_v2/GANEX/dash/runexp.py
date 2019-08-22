@@ -7,6 +7,7 @@ from flask_pymongo import ObjectId
 
 
 from GANEX.db import get_db
+from GANEX.utils import create_gan_object
 from GANEX.forms import CreateProject_form
 from GANEX.fastGAN.task import run
 
@@ -48,7 +49,8 @@ def runexp(pid, expid):
                 #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
                 #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
                 gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
-                gan.run("BTN_TRAIN")
+                # gan.run("BTN_TRAIN")
+                gan.run()
 
                 #run(get_db(),pid, expid, status)
                 print("Training")
@@ -71,7 +73,8 @@ def runexp(pid, expid):
                 #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
                 #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
                 gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
-                gan.run("BTN_RETRAIN")
+                # * gan.run("BTN_RETRAIN")
+                gan.rerun()
 
                 #run(get_db(),pid, expid, status)
                 print("Training")
@@ -98,42 +101,4 @@ def runexp(pid, expid):
 
 
     return render_template('run/runexp.html', pid=pid, expid=expid, status=status)
-
-
-
-def create_gan_object(db, pid, expid, gan_dir, gan_file, gan_class):
-    """
-    The method to create gan object from given dir, file and class
-    """
-    sys.path.append(gan_dir)
-    my_module = importlib.import_module(gan_file)
-    gan = eval("my_module.{}(db, pid, expid)".format(gan_class))
-
-    return gan
-    
-    
-
-
-
-'''
-@bp.route('/<pid>/<expid>/update')
-def update(pid, expid):
-
-    db = get_db()
-    def updatestatus():
-        #x = 0
-        
-        # print(info)
-        while True:
-            info ={"status": getExpState(db, expid)}
-            #print(info)
-            info_json = json.dumps(info)
-            yield f"data:{info_json}\n\n"
-            time.sleep(0.5)
-            
-
-    return Response(updatestatus(), mimetype= 'text/event-stream')
-
-    '''
-
 

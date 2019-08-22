@@ -130,7 +130,7 @@ class DCGAN():
                                     betas=(float(hyperparams["beta1"]), 0.999)
         )
 
-    def run(self, btn_value):
+    def run(self):
         train_settings = self.recorder.get_train_settings()
 
         print("running run method:", self.expid)
@@ -153,16 +153,41 @@ class DCGAN():
         #self.gt = GanTrainer(self)
         print("initialized gan trainer")
 
-        if btn_value=="BTN_TRAIN":
-            print("gan trainer started")
-            self.gt.train(int(train_settings["num_epochs"]))
-            print("gan trainer is working")
-            self.recorder.set_exp_state("RETRAIN")
+        #if btn_value=="BTN_TRAIN":
+        print("gan trainer started")
+        self.gt.train(int(train_settings["num_epochs"]))
+        print("gan trainer is working")
+        self.recorder.set_exp_state("RETRAIN")
 
-        elif btn_value == "BTN_RETRAIN":
-            print("BTN RETRAIN CLICKED")
-            self.gt.retrain(int(train_settings["num_epochs"]))
-            self.recorder.set_exp_state("RETRAIN")
+       # elif btn_value == "BTN_RETRAIN":
+       #     print("BTN RETRAIN CLICKED")
+        #    self.gt.retrain(int(train_settings["num_epochs"]))
+        #    self.recorder.set_exp_state("RETRAIN")
+
+    def rerun(self):
+        train_settings = self.recorder.get_train_settings()
+
+        print("running run method:", self.expid)
+        self.setsettings()
+
+        print("prepare data")
+        self.prepareData()
+        print("Data preparation finished")
+        self.setDevice()
+        print("Set device is finished")
+        self.initNets()
+        print("Init Nets finished")
+        self.initCriterion()
+        print("initialize criterion")
+        self.initNoiseAndLabels()
+        print("initialized noise and labels")
+        self.initOptimizers()
+        print("inittialize optimizers")
+
+        self.gt.retrain(int(train_settings["num_epochs"]))
+        self.recorder.set_exp_state("RETRAIN")
+
+
        
     def inference(self, model_path):
         self.setsettings()
