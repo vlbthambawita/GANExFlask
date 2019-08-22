@@ -1,7 +1,7 @@
 #from GANEX.dlexmongorecorder import DLExMongoRecorder
 #from GANEX.fastGAN.ganTrainer.ganTrainer import GanTrainer
-from fastgantrainer import FastGANTrainer
-from delexrecorder.dlexmongorecorder import DLExMongoRecorder
+from .fastgantrainer import FastGANTrainer
+from .delexrecorder.dlexmongorecorder import DLExMongoRecorder
 
 
 class FastGANBaseModel():
@@ -48,6 +48,19 @@ class FastGANBaseModel():
     def run(self):
         """
         Main compulsory method for training the model
+        """
+        pass
+
+    def rerun(self):
+        """
+        Main compulsory method to rerun models
+        """
+        print("====Rerun method is runing from base model========")
+        pass
+
+    def inference(self):
+        """
+        Main method to do inference form a pre trained model
         """
         pass
 
