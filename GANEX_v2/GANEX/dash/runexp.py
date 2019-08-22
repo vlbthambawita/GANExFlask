@@ -11,9 +11,12 @@ from GANEX.forms import CreateProject_form
 from GANEX.fastGAN.task import run
 
 from GANEX.dlexmongo import getExpState, setExpState, getGANInfo, delTrainStats, get_default_exp_para, update_exp_info
+
 import time
 import json
 import importlib
+import os
+import sys
 
 # Blue print
 bp = Blueprint('runexp', __name__, url_prefix='/run')
@@ -42,8 +45,9 @@ def runexp(pid, expid):
                 print("gan class=", ganClass)
 
                 # import gan from gan file
-                my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
-                gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+                #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+                #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+                gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
                 gan.run("BTN_TRAIN")
 
                 #run(get_db(),pid, expid, status)
@@ -64,8 +68,9 @@ def runexp(pid, expid):
                 print("gan class=", ganClass)
 
                 # import gan from gan file
-                my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
-                gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+                #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+                #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+                gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
                 gan.run("BTN_RETRAIN")
 
                 #run(get_db(),pid, expid, status)
@@ -93,6 +98,22 @@ def runexp(pid, expid):
 
 
     return render_template('run/runexp.html', pid=pid, expid=expid, status=status)
+
+
+
+def create_gan_object(db, pid, expid, gan_dir, gan_file, gan_class):
+    """
+    The method to create gan object from given dir, file and class
+    """
+    sys.path.append(gan_dir)
+    my_module = importlib.import_module(gan_file)
+    gan = eval("my_module.{}(db, pid, expid)".format(gan_class))
+
+    return gan
+    
+    
+
+
 
 '''
 @bp.route('/<pid>/<expid>/update')

@@ -4,7 +4,7 @@ from flask import (
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
 import importlib
-
+import sys
 
 
 from GANEX.db import get_db
@@ -73,10 +73,11 @@ def generateTestData(pid, expid):
     #===============================================
     # Use selected GAN image grid generate function
     #===============================================
-    (ganFile, ganClass) = getGANInfo(db, expid)
+    (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
      # import gan from gan file
-    my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
-    gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+    #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+    #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+    gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
     gan.setDevice()
     gan.prepareData()
     gan.generate_input_image_grid(imgpath)
@@ -109,4 +110,16 @@ def loadselectimage():
 @bp.route('/<pid>/<expid>/sendImage', methods=('GET', 'POST'))
 def sendImage(pid, expid):
     return send_from_directory("/home/vajira/DL/ganexprojects/p3/DCGAN ex1/output", "5d5179b3cc4f4a7e4c4c9860.png")
+
+
+def create_gan_object(db, pid, expid, gan_dir, gan_file, gan_class):
+    """
+    The method to create gan object from given dir, file and class
+    """
+    sys.path.append(gan_dir)
+    my_module = importlib.import_module(gan_file)
+    gan = eval("my_module.{}(db, pid, expid)".format(gan_class))
+
+    return gan
+    
 
