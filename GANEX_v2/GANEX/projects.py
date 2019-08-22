@@ -109,7 +109,7 @@ def delete(pid):
 def setGanTypes():
     print('gan type clicked')
     db = get_db()
-    addGanTypes(db, request.args.get('name'), request.args.get('file'), request.args.get('class'))
+    addGanTypes(db, request.args.get('name'), request.args.get('dir'), request.args.get('file'), request.args.get('class'))
 
 
 

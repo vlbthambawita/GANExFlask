@@ -17,7 +17,7 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                                 get_output_imgs
                             )
 # second import list from sama location
-from GANEX.dlexmongo import (get_models, del_model, del_plt_stat)
+from GANEX.dlexmongo import (get_models, del_model, del_plt_stat, get_gan_types)
 
 from GANEX.plots import imageplot, training_plots
 
@@ -54,7 +54,19 @@ def init_events(socketio):
             #if (msg["status"] == "connected") and (x.is_alive() != True):
             #    print("plot tab connected")
             #    x.start()
-            
+
+##########################################################################
+# Projects window handling
+##########################################################################
+    @socketio.on("projects-rqst-gan-types", namespace='/projects')
+    def rqst_gan_types():
+        db = get_db()
+        ganlist = get_gan_types(db)
+        emit("projects-get-gans", ganlist, namespace="/projects")
+
+
+    
+
 
 ##############################################################################
 # Experiments window handlings 

@@ -109,15 +109,19 @@ def del_default_exp_para(db, pid, para_key):
 
 
 
-def addGanTypes(db, name, filename, classname):
+def addGanTypes(db, name, directory,  filename, classname):
 
     col = db["gantypes"]
-    query = {"name": name, "file":filename ,"class": classname}
+    query = {"name":name, "dir":directory,  "file":filename ,"class": classname}
 
     x = col.insert_one(query)
     print("Inserted GAN type", x.inserted_id)
 
 
+def get_gan_types(db):
+    col = db.gantypes
+    output = col.find({}, {"_id":0})
+    return list(output)
 
 
 
@@ -133,10 +137,13 @@ def getGANInfo(db, expid):
 
     ganFile = db.gantypes.find_one({"name" : ganType})["file"]
 
+    ganDir = db.gantypes.find_one({"name" : ganType})["dir"]
+
     print("GAN class:", ganClass)
     print("GAN file:", ganFile)
+    print("GAN Dir:", ganDir)
 
-    return (ganFile, ganClass)
+    return (ganDir, ganFile, ganClass)
 
 def getTrainStatsList(db, expid):
     col = db.trainstats 

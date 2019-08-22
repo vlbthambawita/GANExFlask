@@ -1,5 +1,8 @@
-from GANEX.dlexmongorecorder import DLExMongoRecorder
-from GANEX.fastGAN.ganTrainer.ganTrainer import GanTrainer
+#from GANEX.dlexmongorecorder import DLExMongoRecorder
+#from GANEX.fastGAN.ganTrainer.ganTrainer import GanTrainer
+from fastgantrainer import FastGANTrainer
+from delexrecorder.dlexmongorecorder import DLExMongoRecorder
+
 
 class FastGANBaseModel():
 
@@ -9,7 +12,7 @@ class FastGANBaseModel():
         self.pid = pid
         self.expid = expid
         self.recorder = DLExMongoRecorder(self.db, self.pid, self.expid)
-        self.gt = GanTrainer(self)
+        self.gt = FastGANTrainer(self)
 
     def prepare_data(self):
         """

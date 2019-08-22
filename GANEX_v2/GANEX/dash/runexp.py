@@ -36,7 +36,8 @@ def runexp(pid, expid):
 
             try:
                 # get the GAN class
-                (ganFile, ganClass) = getGANInfo(db, expid)
+                (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
+                print("gan Dir=", ganDir)
                 print("gan file=", ganFile)
                 print("gan class=", ganClass)
 
