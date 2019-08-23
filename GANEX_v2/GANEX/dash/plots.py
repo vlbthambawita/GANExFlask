@@ -25,7 +25,7 @@ def plots(pid, expid):
     return render_template('run/plots.html', pid=pid, expid=expid, statlist=statlist) #trainstat=col_trainstat
 
 
-
+'''
 @bp.route('/<pid>/<expid>/updateplot', methods=('GET',))
 def updateplot(pid, expid):
 
@@ -64,7 +64,7 @@ def updateplot(pid, expid):
             #print(scat_plot)
 
     return Response(generate(), mimetype= 'text/event-stream')
-
+'''
 
 @bp.route("/<pid>/<expid>/updatePlotStatType", methods=('GET',))
 def updatePlotStatType(pid, expid):

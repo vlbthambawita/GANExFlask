@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 def createDataLoader(db, pid, expid):
     # Create the dataset
     recorder = DLExMongoRecorder(db, pid, expid)
-    hyperparams = recorder.getHyperParams()
-    dataroot = recorder.getSetting("expDataPath")
+    hyperparams = recorder.get_hyper_params()
+    dataroot = recorder.get_exp_info("expDataPath")
 
     dataset = dset.ImageFolder(root=dataroot,
                                         transform = transforms.Compose([
@@ -34,7 +34,7 @@ def createDataLoader(db, pid, expid):
 def initDevice(db, pid, expid):
     # Create the dataset
     recorder = DLExMongoRecorder(db, pid, expid)
-    hyperparams = recorder.getHyperParams()
+    hyperparams = recorder.get_hyper_params()
     device = torch.device("cuda:0" if (torch.cuda.is_available() and int(hyperparams["ngpu"]) > 0) else "cpu")
     return device
 

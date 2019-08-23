@@ -3,15 +3,24 @@
 {% block script %}
 <!--Select the corresponding nav item-->
 
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/data.js') }}"></script>
 <script>
   $(document).ready(function(){
+
+        $("#data-tab").addClass("active")
+
+        window.pid = "{{ pid }}"
+        window.expid = "{{ expid }}"
+        window.socket = io('/data')
+     
+        init_socket_ons()
+
+        load_imgs()
+
+        request_gan_gen_images();
     
   
-    $(document).ready(function(){
-      console.log("document is ready")
-      //$("#summary-tab").attr
-      $("#data-tab").addClass("active")
-    })
+    
 
     $("#btn_save_datapath").click(function(){
       //$("#test").html("rw" )
@@ -57,7 +66,7 @@
             This is window for setup data.
         </div>
         <div class="tab-pane fade" id="test-data" role="tabpanel" aria-labelledby="list-profile-list">{% include 'includes/data/testdata.html' %}</div>
-        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">{% include 'includes/data/analyse_data.html' %}</div>
         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
       </div>
     </div>

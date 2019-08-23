@@ -3,12 +3,13 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from flask_pymongo import ObjectId
-
+import importlib
+import sys
 
 
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
-from GANEX.dlexmongo import addInfoToExp, getInfoExp, addImage, getImagePaths
+from GANEX.dlexmongo import addInfoToExp, getInfoExp, addImage, getImagePaths, getGANInfo
 from GANEX.fastGAN.ganInit.ganInit import createDataLoader, initDevice, generateInputImageGrid
 from GANEX.plots import imageplot
 
@@ -58,25 +59,40 @@ def testDataLoad(pid, expid):
 def generateTestData(pid, expid):
     db =get_db()
 
-    try:
-        dataloader = createDataLoader(db, pid, expid)
-        device = initDevice(db, pid, expid)
-        print(device)
-        print(dataloader)
-        imgpath = addImage(db, expid, "INPUTDATA")
-        print(imgpath)
+    #try:
+    dataloader = createDataLoader(db, pid, expid)
+    device = initDevice(db, pid, expid)
+    print(device)
+    print(dataloader)
+    imgpath = addImage(db, expid, "INPUTDATA")
+    print(imgpath)
 
-        generateInputImageGrid(dataloader, imgpath, device)
 
-        print("test data")
+    # generateInputImageGrid(dataloader, imgpath, device)
+    
+    #===============================================
+    # Use selected GAN image grid generate function
+    #===============================================
+    (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
+     # import gan from gan file
+    #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+    #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+    gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
+    # gan.setDevice()
+    # gan.prepareData()
+    gan.generate_input_image_grid(imgpath)
+
+
+    print("test data")
+    #return jsonify(imgpath=imgpath)
         
 
 
-    except Exception as e:
-        flash(e)
+    #except Exception as e:
+     #   flash(e)
 
-    img_path_list  = getImagePaths(db, expid, "INPUTDATA")
-    print("image path list:", img_path_list)
+   # img_path_list  = getImagePaths(db, expid, "INPUTDATA")
+   # print("image path list:", img_path_list)
 
     
     return jsonify(imgpath=imgpath)
@@ -94,4 +110,16 @@ def loadselectimage():
 @bp.route('/<pid>/<expid>/sendImage', methods=('GET', 'POST'))
 def sendImage(pid, expid):
     return send_from_directory("/home/vajira/DL/ganexprojects/p3/DCGAN ex1/output", "5d5179b3cc4f4a7e4c4c9860.png")
+
+
+def create_gan_object(db, pid, expid, gan_dir, gan_file, gan_class):
+    """
+    The method to create gan object from given dir, file and class
+    """
+    sys.path.append(gan_dir)
+    my_module = importlib.import_module(gan_file)
+    gan = eval("my_module.{}(db, pid, expid)".format(gan_class))
+
+    return gan
+    
 

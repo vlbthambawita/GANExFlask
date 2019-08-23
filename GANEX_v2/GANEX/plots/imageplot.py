@@ -1,4 +1,5 @@
-import plotly.graph_objects as go
+# import plotly.graph_objects as go
+from plotly import graph_objs as go
 import json
 import plotly
 from PIL import Image

@@ -9,7 +9,7 @@ from flask_pymongo import ObjectId
 from GANEX.db import get_db
 from GANEX.forms import CreateProject_form
 
-from GANEX.dlexmongo import setHyperparamDict, getHyperparamDict
+from GANEX.dlexmongo import setHyperparamDict, getHyperparamDict, get_default_hyperparams
 
 # Blue print
 bp = Blueprint('hyperparam', __name__, url_prefix='/run')
@@ -20,8 +20,9 @@ def hyperparam(pid, expid):
 
     db = get_db()
     hyperdict = getHyperparamDict(db, expid)
+    default_params = list(get_default_hyperparams(db, pid))
 
-    return render_template('run/hyperparam.html', pid=pid, expid=expid, hyperdict=hyperdict)
+    return render_template('run/hyperparam.html', pid=pid, expid=expid, hyperdict=hyperdict, default_params=default_params)
 
 @bp.route('/<pid>/<expid>/saveparam/', methods=('GET', 'POST'))
 def saveparam(pid, expid):
