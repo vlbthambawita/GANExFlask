@@ -165,7 +165,11 @@ class MNIST_trainer(FastGANTrainer):
 
             current_total_epoch = self.gan.recorder.read_total_epoch()
             self.save_checkpoint(current_total_epoch, "EPOCH") # save model for each epoch
-            # self.save_generator_progress(current_total_epoch, 64)
+            self.save_generator_progress(current_total_epoch, 64)
+
+            self.gan.recorder.record_exp_info("current_epoch", epoch +1) #update current epoch
+         self.gan.recorder.record_exp_info("current_epoch", 0) # reset current epoch to 0
+
 
     def save_inference_output(self, iter, num_of_samples):
         """
@@ -181,6 +185,16 @@ class MNIST_trainer(FastGANTrainer):
         fake = self.gan.netG(z).detach().cpu()
         vutils.save_image(fake.view(num_of_samples, 1, 28, 28), imgpath, nrow=8, padding=2)
         print("Inferenced Image saved")
+
+    def save_generator_progress(self, iter, num_of_samples):
+        imgpath = self.gan.recorder.add_image("GENDATA", iter=iter)
+        hyperparams = self.gan.recorder.get_hyper_params()
+        
+        z = torch.randn(num_of_samples, int(hyperparams["nz"])).cuda()
+        z = Variable(z)
+        with torch.no_grad():
+            fake = self.gan.netG(z).detach().cpu()
+        vutils.save_image(fake.view(num_of_samples, 1, 28, 28), imgpath, nrow=8, padding=2)
     
 
 

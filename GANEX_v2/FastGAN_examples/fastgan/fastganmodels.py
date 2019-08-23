@@ -156,5 +156,5 @@ class FastGANBaseModel():
         self.init_optimizers()
         
         self.gt.load_checkpoint(model_path)
-        self.gt.save_inference_output(self.recorder.read_total_epoch(), 64)
+        self.gt.save_inference_output(self.gt.total_epochs, 64)
 
