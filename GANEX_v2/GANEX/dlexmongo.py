@@ -1,4 +1,5 @@
 from flask_pymongo import ObjectId
+from flask import flash
 import os
 
 #######################################
@@ -287,11 +288,14 @@ def get_output_imgs(db, expid, datatype):
 
 # del img path - old method
 def delImgPath(db, expid, path):
-    col = db.outputdata
+    try:
+        col = db.outputdata
 
-    query ={"expid": expid, "imgpath": path}
-    col.delete_one(query)
-    os.remove(path)
+        query ={"expid": expid, "imgpath": path}
+        col.delete_one(query)
+        os.remove(path)
+    except Exception as e:
+        flash(str(e))
 
 
 

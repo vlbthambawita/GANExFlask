@@ -73,6 +73,9 @@ class DCGAN():
 
     # save image grid
     def generate_input_image_grid(self, path):
+        # new updates
+        self.prepareData()
+        self.setDevice()
         real_data_batch = next(iter(self.dataloader))
         vutils.save_image(real_data_batch[0].to(self.device)[:64], path, nrow=8, padding=2)
 

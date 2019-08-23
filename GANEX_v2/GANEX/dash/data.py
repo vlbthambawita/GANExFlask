@@ -78,8 +78,8 @@ def generateTestData(pid, expid):
     #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
     #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
     gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
-    gan.setDevice()
-    gan.prepareData()
+    # gan.setDevice()
+    # gan.prepareData()
     gan.generate_input_image_grid(imgpath)
 
 

@@ -24,7 +24,15 @@ class FastGANTrainer():
         Main retrain method
         """
 
-        pass
+        self.total_epochs = int(self.gan.recorder.get_exp_info("total_epochs")) 
+        checkpoint_path_to_load = self.gan.recorder.load_checkpoint_path(self.total_epochs,"EPOCH")
+
+        self.load_checkpoint(checkpoint_path_to_load)
+        print("Retraining started")
+        self.train(num_epochs)
+        print("Retainign stopped")
+
+        
 
 
     def save_checkpoint(self, checkpoint_iter, checkpoint_type):
@@ -57,26 +65,32 @@ class FastGANTrainer():
         print("path to load:", checkpoint_path)
 
 
-    def save_generator_progress(self, iter):
+    def save_generator_progress(self, iter, num_of_samples):
         """
         Save generator progress with given key word arguments
         """
+        hyperparams = self.gan.recorder.get_hyper_params()
+        noise = torch.randn(num_of_samples, int(hyperparams["nz"]), 1, 1, device=self.gan.device)
         imgpath = self.gan.recorder.add_image("GENDATA", iter=iter) # can add any number of keywork args
         
         with torch.no_grad():
-            fake = self.gan.netG(self.gan.fixed_noise).detach().cpu()
+            fake = self.gan.netG(noise).detach().cpu()
 
         vutils.save_image(fake, imgpath, nrow=8, padding=2)
         print("generator progress saved")
 
     
-    def save_inference_output(self, iter):
-        imgpath = self.gan.recorder.add_image("INFERENCED", iter=iter) 
+    def save_inference_output(self, iter, num_of_samples):
+        """
+        To save the output of trained checkpoints
+        """
+        hyperparams = self.gan.recorder.get_hyper_params()
         
+        z = torch.randn(num_of_samples, int(hyperparams["nz"])).cuda()
 
+        imgpath = self.gan.recorder.add_image("INFERENCED", iter=iter) 
         self.gan.netG.eval()
-        
-        fake = self.gan.netG(self.gan.fixed_noise).detach().cpu()
+        fake = self.gan.netG(z).detach().cpu()
         vutils.save_image(fake, imgpath, nrow=8, padding=2)
         print("Inferenced Image saved")
         

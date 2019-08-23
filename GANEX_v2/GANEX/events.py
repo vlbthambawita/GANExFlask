@@ -164,6 +164,7 @@ def init_events(socketio):
 # Data window handlings
 ##############################################################
 
+    # Delete method for generated test data
     @socketio.on("data-delete-img", namespace='/data')
     def del_img_path(pid, expid, path):
         db = get_db()
@@ -177,7 +178,7 @@ def init_events(socketio):
         
         print("Emitted")
 
-    
+    # Delete method for analyse data
     @socketio.on("data-delete-gen-img", namespace='/data')
     def del_gen_img_path(pid, expid, path):
         
@@ -208,10 +209,11 @@ def init_events(socketio):
         #===============================================
         (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
         # import gan from gan file
-        my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
-        gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
-        gan.setDevice()
-        gan.prepareData()
+        #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+        #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+        gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
+        #gan.setDevice()
+        #gan.prepareData()
 
         imgpath = addImage(db, expid, "INPUTDATA")
 

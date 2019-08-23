@@ -59,6 +59,26 @@ class DLExMongoRecorder():
         col.update_one(query, new_value, upsert=True)
 
 
+    # function to record total epochs
+    def add_total_epoch(self):
+        current_epoch = self.get_exp_info("total_epochs")
+        self.record_exp_info("total_epochs", current_epoch +1 )
+
+    # function to read current total epoch number
+    def read_total_epoch(self):
+        current_epoch = self.get_exp_info("total_epochs")
+        return current_epoch
+
+    # function to record iterations
+    def record_iters(self, iter_num):
+        self.record_exp_info("iters", iter_num)
+
+    
+    # save dataloader size
+    def record_dataloader_size(self, len_dataloader):
+        self.record_exp_info("dataloader_size", len_dataloader)
+
+
     # Handling models
 
     def generate_checkpoint_path(self, checkpoint_iter, checkpoint_type):

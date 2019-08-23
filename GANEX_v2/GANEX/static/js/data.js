@@ -11,6 +11,7 @@ function init_socket_ons(){
         Plotly.newPlot('plt_image_selected', graph,{})
     })
 
+    // for generated test data
     window.socket.on("data-get-gen-images", function(img_list){
         console.log(img_list)
         //alert("data-get-gen-images")
@@ -18,6 +19,7 @@ function init_socket_ons(){
     })
 
 
+    // for analyse data section
     window.socket.on("data-get-gen-img-plot", function(plot){
         // alert("plot-" + plot)
          const graph = JSON.parse(plot)
@@ -39,7 +41,10 @@ function gen_img(){
 7//********* */
 // delete methods
 /****************** */
+
+
 function del_img(){
+    //Delte method for generated test data
   
     window.socket.emit("data-delete-img", window.pid, window.expid , this.value)
     

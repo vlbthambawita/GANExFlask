@@ -52,6 +52,8 @@ def runexp(pid, expid):
                 # gan.run("BTN_TRAIN")
                 gan.run()
 
+                setExpState(db, expid, "RETRAIN")
+
                 #run(get_db(),pid, expid, status)
                 print("Training")
                 #setExpState(db, expid, "RETRAIN")
@@ -75,6 +77,7 @@ def runexp(pid, expid):
                 gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
                 # * gan.run("BTN_RETRAIN")
                 gan.rerun()
+                setExpState(db, expid, "RETRAIN")
 
                 #run(get_db(),pid, expid, status)
                 print("Training")
