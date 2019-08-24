@@ -1,18 +1,4 @@
-<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/data_testdata.js') }}"></script>
-<script type="text/javascript">
 
-    $(document).ready(function(){
-
-        window.pid = "{{ pid }}"
-        window.expid = "{{ expid }}"
-        window.socket = io('/data')
-     
-        init_socket_ons()
-
-        load_imgs()
-        
-    })
-</script>
 
 <!--
 <p>Test data page</p>

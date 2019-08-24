@@ -1,14 +1,7 @@
 
 <script>
     window.onload = (event) => {
-        console.log('page is fully loaded');
-        window.pid = "{{ pid }}"
-        window.expid = "{{ expid }}"
-        window.socket = io('/plot')
-
-       // test()
-        update_plot_id_list()
-        init_socket_ons()
+        
         window.plot_timer = setInterval( update_plots_repeat, 1000)
     };
 </script>

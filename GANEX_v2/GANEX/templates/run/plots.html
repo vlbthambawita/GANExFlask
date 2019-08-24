@@ -9,6 +9,20 @@
 
                 $("#plots-tab").addClass("active")
 
+                console.log('page is fully loaded');
+                window.pid = "{{ pid }}"
+                window.expid = "{{ expid }}"
+                window.socket = io('/plot')
+
+              // test()
+
+                init_socket_ons()
+                update_plot_id_list()
+                
+                request_plt_settings()
+
+
+
                
 
                 // update plot id list

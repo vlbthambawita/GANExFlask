@@ -6,14 +6,20 @@
 
 
 {% block script %}
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/projects.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
+
+            window.socket = io('/projects')
+            init_socket_ons();
+            rqst_gan_types();
+
             $("#btn_gan_add").click(function(){
                 $.ajax({
                     type: 'GET',
                     url: "{{ url_for('projects.setGanTypes') }}",
-                    data: {"name": $("#input_ganName").val(),"file": $("#input_ganFile").val(), "class": $("#input_ganClass").val()},
+                    data: {"name": $("#input_ganName").val(), "dir": $("#input_ganDir").val(), "file": $("#input_ganFile").val(), "class": $("#input_ganClass").val()},
                     contentType: 'application/json',
                     success: function(data){
                         alert("success")
@@ -78,16 +84,7 @@
 
 
         <div class="tab-pane fade" id="list-gans" role="tabpanel" aria-labelledby="list-profile-list">
-            <label>GAN Name:</label>
-            <input type="text" name="gan_name" id="input_ganName" placeholder="GAN Name"> <br>
-
-            <label>GAN File Name:</label>
-            <input type="text" name="gan_file" id="input_ganFile" placeholder="GAN File Name (without .py)"> <br>
-
-            <label>GAN Class Name (run):</label>
-            <input type="text" name="gan_class" id="input_ganClass" placeholder="GAN Class Name"> <br>
-
-            <button id="btn_gan_add">Add</button>
+            {% include 'includes/projects/update_gan_types.html' %}
         
         </div>
         <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>

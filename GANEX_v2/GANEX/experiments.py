@@ -8,6 +8,7 @@ from flask_socketio import emit
 import pymongo
 import os
 import json
+import shutil
 
 from GANEX.db import get_db
 from GANEX.forms import CreateExperiment_form
@@ -39,7 +40,8 @@ def create(pid):
     gan_types = []
 
     for g in col_gans:
-        gan_types.append((g["name"],g["class"]))
+        print("gggg=", g)
+        gan_types.append((g["name"], g["name"]))
         
     print(gan_types)
     exp_form.ganType.choices = gan_types
@@ -72,6 +74,7 @@ def create(pid):
                 exp_gan = exp_form.ganType.data
                 exp_pro_path = db.projects.find_one({"_id":ObjectId(pid)})["path"]
                 print(exp_pro_path)
+                print("exp gan=", exp_gan)
 
                 #paths
                 exp_path = os.path.join(exp_pro_path, exp_name)
@@ -86,7 +89,7 @@ def create(pid):
                 # initialize exp inforamtion
                 exp_dict = {"name":exp_name, "type":exp_gan, "pid": pid, "status": "TRAIN", 
                             "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path , "iters": 0,
-                            "current_epoch": 0}
+                            "current_epoch": 0, "dataloader_size": 0}
 
                 # modify exp_dict with default parameters
                 exp_para_list = get_default_exp_para(db, pid)
@@ -125,7 +128,10 @@ def deleteExp(pid, expid):
     exp_col = db['experiments']
     query = {"_id":ObjectId(expid)} # need this Object ID
     
-    
+    exp_path = exp_col.find_one(query, {"_id":0, "path": 1})
+
+    print("exp  path", exp_path)
+    shutil.rmtree(exp_path["path"]) # remove exp directoty
 
     x =exp_col.delete_one(query) # delete given expid
 

@@ -1,4 +1,5 @@
 from flask_pymongo import ObjectId
+from flask import flash
 import os
 
 #######################################
@@ -109,15 +110,24 @@ def del_default_exp_para(db, pid, para_key):
 
 
 
-def addGanTypes(db, name, filename, classname):
+def addGanTypes(db, name, directory,  filename, classname):
 
     col = db["gantypes"]
-    query = {"name": name, "file":filename ,"class": classname}
+    query = {"name":name, "dir":directory,  "file":filename ,"class": classname}
 
     x = col.insert_one(query)
     print("Inserted GAN type", x.inserted_id)
 
 
+def get_gan_types(db):
+    col = db.gantypes
+    output = col.find({}, {"_id":0})
+    return list(output)
+
+def del_gan_type(db, gan_name):
+    col = db.gantypes
+    query = {"name": gan_name}
+    col.delete_one(query)
 
 
 
@@ -133,10 +143,13 @@ def getGANInfo(db, expid):
 
     ganFile = db.gantypes.find_one({"name" : ganType})["file"]
 
+    ganDir = db.gantypes.find_one({"name" : ganType})["dir"]
+
     print("GAN class:", ganClass)
     print("GAN file:", ganFile)
+    print("GAN Dir:", ganDir)
 
-    return (ganFile, ganClass)
+    return (ganDir, ganFile, ganClass)
 
 def getTrainStatsList(db, expid):
     col = db.trainstats 
@@ -162,6 +175,18 @@ def getTrainStatAsList(db, expid, stat_name):
     print(result)
 
 
+def delTrainStats(db, expid):
+    col = db.trainstats
+    query = {"expid": expid}
+    col.delete_many(query)
+    print("exp info deleted")
+
+
+
+###############################################
+# plotsettins collection
+##################################################
+
 def addPlotStat(db, expid, plotstatName, plotid):
     col = db.plotsetting
 
@@ -183,15 +208,20 @@ def getPlotStats(db, expid):
     print(plots)
     return plots
 
-def delTrainStats(db, expid):
-    col = db.trainstats
-    query = {"expid": expid}
-    col.delete_many(query)
-    print("exp info deleted")
+
+def del_plt_stat(db, expid, plt_stat_name, plt_id):
+    col = db.plotsetting
+
+    query = {"expid": expid, "plotstat":plt_stat_name , "plotid": plt_id}
+    col.delete_one(query)
 
 
 
-# set hyperpaermeters to hyperparam table
+
+
+##################################################
+# hyperparam collection handling
+##################################################
 
 def setHyperparamDict(db, expid, hyperparam_dict):
     col = db.hyperparam
@@ -208,10 +238,11 @@ def getHyperparamDict(db, expid):
     return output
 
 
+#############################################
+# outputdata collection
+###############################################
 
-# handling outputdata collection
-
-def addImage(db, expid, datatype): # type: INPUTDATA, GENDATA, --> return a path to image
+def addImage(db, expid, datatype): # type: INPUTDATA, GENDATA, INFERENCED --> return a path to image
     
     # get new id for new data
     col = db.outputdata
@@ -248,11 +279,26 @@ def getImagePaths(db, expid, datatype):
 
     return img_path_list
 
-def delImgPath(db, expid, path):
+def get_output_imgs(db, expid, datatype):
     col = db.outputdata
+    query = {"expid": expid,  "type": datatype}
+    output= col.find(query, {"_id":0 })
 
-    query ={"expid": expid, "imgpath": path}
-    col.delete_one(query)
+    return list(output)
+
+# del img path - old method
+def delImgPath(db, expid, path):
+    try:
+        col = db.outputdata
+
+        query ={"expid": expid, "imgpath": path}
+        col.delete_one(query)
+        os.remove(path)
+    except Exception as e:
+        flash(str(e))
+
+
+
 
 # methods for trainsettings
 
@@ -299,7 +345,14 @@ def del_default_hyperpram(db, pid, para_key):
     print("successfullyu deleted")
 
 
-    # handling checkpoints
+    
+
+
+
+
+############################################################
+# Handling model collection
+############################################################
 
 def generate_checkpoint_path(db, pid, expid, checkpoint_iter, checkpoint_type):
 
@@ -324,7 +377,18 @@ def generate_checkpoint_path(db, pid, expid, checkpoint_iter, checkpoint_type):
 
     return model_path
 
+# get available models data as list
+def get_models(db, pid, expid):
+    col = db.models
+    query = {"pid": pid, "expid": expid}
+    outputs = col.find(query, {"_id": 0})
+    return list(outputs)
 
+def del_model(db, pid, expid, model_path):
+    col = db.models
+    query = {"pid": pid, "expid": expid, "path": model_path}
+    col.delete_one(query)
+    os.remove(model_path)
 
 
 

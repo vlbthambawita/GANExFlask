@@ -7,13 +7,19 @@ from GANEX.fastGAN.task import randnumber
 # socketio = get_socket()
 from GANEX.updates import updateplot
 from GANEX.db import get_db
+from GANEX.utils import create_gan_object
 
 from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_default_hyperparams, del_default_hyperpram,
                                 getImagePaths, delImgPath, addImage, getGANInfo,
                                 getPlotStats, addPlotStat, getExpState, getInfoExp,
                                 get_train_settings, 
                                 set_default_exp_para, get_default_exp_para,
-                                del_default_exp_para, get_exp_default_para_info
+                                del_default_exp_para, get_exp_default_para_info,
+                                get_output_imgs
+                            )
+# second import list from sama location
+from GANEX.dlexmongo import (get_models, del_model, del_plt_stat, get_gan_types,
+                                del_gan_type
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -28,6 +34,10 @@ def init_events(socketio):
     # global socketio
    # db = get_db() # this is not working, some context problem
 
+##################################################################
+## Test caseses
+#####################################################################
+
     @socketio.on('joined', namespace='/chat')
     def joined(message):
         """Sent by clients when they enter a room.
@@ -38,17 +48,38 @@ def init_events(socketio):
         x = threading.Thread(target=randnumber, args=(socketio,))
         x.start()
 
-    # plot sta handle - near real time
-    @socketio.on('plotting', namespace='/plot')
-    def plotting(msg):
-        updateplot(socketio, get_db())
+
+
+    
 
             # x = threading.Thread(target=updateplot, args=(socketio,get_db()))
             
             #if (msg["status"] == "connected") and (x.is_alive() != True):
             #    print("plot tab connected")
             #    x.start()
-            
+
+##########################################################################
+# Projects window handling
+##########################################################################
+    @socketio.on("projects-rqst-gan-types", namespace='/projects')
+    def rqst_gan_types():
+        db = get_db()
+        ganlist = get_gan_types(db)
+        emit("projects-get-gans", ganlist, namespace="/projects")
+
+
+    @socketio.on("projects-rqst-del-gantype", namespace='/projects')
+    def rqst_del_gantype(gan_name):
+        db = get_db()
+        del_gan_type(db, gan_name)
+        ganlist = get_gan_types(db)
+        emit("projects-get-gans", ganlist, namespace="/projects")
+
+
+
+
+    
+
 
 ##############################################################################
 # Experiments window handlings 
@@ -133,16 +164,30 @@ def init_events(socketio):
 # Data window handlings
 ##############################################################
 
+    # Delete method for generated test data
     @socketio.on("data-delete-img", namespace='/data')
     def del_img_path(pid, expid, path):
         db = get_db()
         print("pid:", pid)
         print("EXPID:", expid)
         print("path:", path)
-        delImgPath(db,expid, path)
+        delImgPath(db,expid, path) # old method
+        # del_img_path(db, expid, path) # new method
         img_path_list  = getImagePaths(db, expid, "INPUTDATA")
         emit('data-get-img-paths', img_path_list, namespace='/data')
+        
         print("Emitted")
+
+    # Delete method for analyse data
+    @socketio.on("data-delete-gen-img", namespace='/data')
+    def del_gen_img_path(pid, expid, path):
+        
+        db = get_db()
+        delImgPath(db, expid, path)
+        img_gen_list  = get_output_imgs(db, expid, "GENDATA")
+        emit('data-get-gen-images', img_gen_list, namespace='/data')
+        
+        print("Emitted to data-get-gen-images")
 
 
     @socketio.on("data-load-imgs", namespace='/data')
@@ -162,12 +207,13 @@ def init_events(socketio):
         #===============================================
         # Use selected GAN image grid generate function
         #===============================================
-        (ganFile, ganClass) = getGANInfo(db, expid)
+        (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
         # import gan from gan file
-        my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
-        gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
-        gan.setDevice()
-        gan.prepareData()
+        #* my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+        #* gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+        gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
+        #gan.setDevice()
+        #gan.prepareData()
 
         imgpath = addImage(db, expid, "INPUTDATA")
 
@@ -183,6 +229,22 @@ def init_events(socketio):
 
         plot = imageplot.createImagePlot(path)
         emit('data-get-img-plot', plot, namespace='/data')
+
+
+    @socketio.on("data-show-gen-img", namespace='/data')
+    def show_gen_img(path):
+
+        plot = imageplot.createImagePlot(path)
+        emit('data-get-gen-img-plot', plot, namespace='/data')
+
+
+
+    @socketio.on('data-request-gan-gen-images', namespace='/data')
+    def data_request_gan_gen_images(pid, expid):
+        db =get_db()
+        img_list  = get_output_imgs(db, expid, "GENDATA")
+        emit('data-get-gen-images', img_list , namespace='/data')
+
 
 
 
@@ -208,7 +270,8 @@ def init_events(socketio):
         print("trainsettings:", train_settings)
 
         info_dict = {"current_status": status, "total_epochs_to_run": total_epochs_to_run, 
-                    "current_epoch": current_epoch }
+                    "current_epoch": current_epoch, "current_iter": exp_info["iters"],
+                    "dataloader_size": exp_info["dataloader_size"] }
 
                     
         emit('runexp-get-current-state-info', info_dict, namespace='/runexp')
@@ -225,6 +288,11 @@ def init_events(socketio):
 ##########################################################################
 # Plot window handling
 ###########################################################################
+
+    # plot sta handle - near real time
+    @socketio.on('plotting', namespace='/plot')
+    def plotting(msg):
+        updateplot(socketio, get_db())
 
 
     @socketio.on("plot-update-plots", namespace="/plot")
@@ -244,7 +312,86 @@ def init_events(socketio):
         db = get_db()
 
         addPlotStat(db, expid, plot_stat_name, plot_id)
+        plt_settings_list = getPlotStats(db, expid)
+        emit("plt-get-plt-settings",plt_settings_list,  namespace="/plot")
         print("plot settings updated")
+
+
+
+    @socketio.on("plt-rqst-plt-setttings", namespace="/plot")
+    def plt_rqst_plt_settings(pid, expid):
+        db = get_db()
+        plt_settings_list = getPlotStats(db, expid)
+        print("plt settings list ", plt_settings_list)
+        emit("plt-get-plt-settings",plt_settings_list,  namespace="/plot")
+
+    
+    @socketio.on("plt-rqst-del-plt-setting", namespace="/plot")
+    def rqst_del_plt_setting(pid, expid, plt_values):  # plt_values = [plt_stat_name, plt_id]
+        db = get_db()
+        del_plt_stat(db, expid, plt_values[0], plt_values[1] )
+        plt_settings_list = getPlotStats(db, expid)
+        emit("plt-get-plt-settings",plt_settings_list,  namespace="/plot")
+
+
+
+#################################################################################
+# Inference window handling
+#################################################################################
+
+    @socketio.on("inference-request-available-models", namespace="/inference")
+    def request_available_models(pid, expid):
+        db = get_db()
+        model_data_list  = get_models(db, pid, expid)
+        emit("inference-get-available-models", model_data_list, namespace='/inference')
+
+    @socketio.on("inference-request-available-inferenced-imgs", namespace="/inference")
+    def request_available_inferenced_imgs(pid, expid):
+        db = get_db()
+        img_list = get_output_imgs(db, expid, "INFERENCED")
+
+        emit("inference-get-inferenced-imgs", img_list, namespace='/inference' )
+
+    
+    @socketio.on("inference-request-inference-generate", namespace="/inference")
+    def request_inference_generate(pid, expid, model_path):
+        
+        print("Request received to make inference plot")
+        db =get_db()
+
+        (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
+       # my_module = importlib.import_module("GANEX.fastGAN.{}".format(ganFile))
+       # gan = eval("my_module.{}(db, pid, expid)".format(ganClass))
+        gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
+        gan.inference(model_path)
+
+        img_list = get_output_imgs(db, expid, "INFERENCED")
+
+        emit("inference-get-inferenced-imgs", img_list, namespace='/inference' )
+        print(img_list)
+
+
+    @socketio.on("inference-rqst-del-img", namespace='/inference')
+    def rqst_del_img(expid, path):
+        db = get_db()
+        delImgPath(db,expid, path) 
+        img_list = get_output_imgs(db, expid, "INFERENCED")
+
+        emit("inference-get-inferenced-imgs", img_list, namespace='/inference' )
+
+    
+    @socketio.on("inf-rqst-show-img", namespace='/inference')
+    def rqst_show_img(path):
+        plot = imageplot.createImagePlot(path)
+        emit('inf-get-img-plt', plot, namespace='/inference')
+
+    
+    @socketio.on("inf-rqst-del-model", namespace='/inference')
+    def rqst_del_model(pid, expid, model_path):
+        db = get_db()
+        del_model(db, pid, expid, model_path)
+        model_data_list  = get_models(db, pid, expid)
+        emit("inference-get-available-models", model_data_list, namespace='/inference')
 
 
 

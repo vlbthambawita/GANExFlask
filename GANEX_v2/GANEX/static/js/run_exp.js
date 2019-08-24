@@ -12,6 +12,15 @@ function init_sockets_ons(){
             var pg_bar = document.getElementById("pg_bar_epoch")
             // set current progerss
             pg_bar.setAttribute("style", "width: "+ curren_progress + "%")
+
+
+            // interation progress bar
+            var total_iters = info_data.dataloader_size
+            var curretn_iter = info_data.current_iter
+            var current_iter_progress = (Number(curretn_iter) / Number(total_iters)) * 100
+            
+            var pg_iter_bar = document.getElementById("pg_bar_iters")
+            pg_iter_bar.setAttribute("style", "width: "+ current_iter_progress + "%")
             
 
 
