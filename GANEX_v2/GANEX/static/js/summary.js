@@ -29,8 +29,10 @@ function update_table(info_dict){
     var cell1 = row.insertCell(1)
    
 
-    cell0.innerHTML = "Parameter Key"
-    cell1.innerHTML = "Parameter Value"
+    cell0.innerHTML = "<b>Parameter Key</b>"
+    cell1.innerHTML = "<b>Parameter Value</b>"
+
+    
     
 
     var i=1 ;

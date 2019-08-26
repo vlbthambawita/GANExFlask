@@ -76,13 +76,20 @@ function request_gan_gen_images(){
 // For generating image list
 function createImageList(imgpathlist){
 
-    var ol = document.getElementById("ol_images");
-    ol.innerHTML = "";
+   // var ol = document.getElementById("ol_images");
+
+    var tbl = document.getElementById("tbl_generated_img_list")
+    tbl.innerHTML = ""
+   // ol.innerHTML = "";
     
     for (var i=0; i < imgpathlist.length ; i++){
        // var span = document.createElement("SPAN");
 
         var ol_item = document.createElement("LI")
+        var row = tbl.insertRow(i);
+        var cell0 = row.insertCell(0);
+        var cell1 = row.insertCell(1);
+        var cell2 = row.insertCell(2);
        // ol_item.setAttribute("class","list-group-item") // boostrap
        // var textnode = document.createTextNode("Image")
         //ol_item.appendChild(textnode)
@@ -107,13 +114,17 @@ function createImageList(imgpathlist){
 
         //span.appendChild(ol_item)
         //span.appendChild(btn_del)
+        cell0.appendChild(document.createTextNode(i))
+        cell1.appendChild(btn_img)
+        cell2.appendChild(btn_del) 
 
 
-        ol_item.appendChild(btn_img)
-        
-        ol_item.appendChild(btn_del)
+       // ol_item.appendChild(btn_img)
+       // ol_item.appendChild(document.createTextNode(" "))
+        //ol_item.appendChild(btn_del)
+        //ol_item.appendChild(document.createElement("br"))
 
-        ol.appendChild(ol_item)
+        //ol.appendChild(ol_item)
 
     }
 

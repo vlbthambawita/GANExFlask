@@ -12,6 +12,7 @@ function init_sockets_ons(){
             var pg_bar = document.getElementById("pg_bar_epoch")
             // set current progerss
             pg_bar.setAttribute("style", "width: "+ curren_progress + "%")
+            pg_bar.textContent = Math.round(curren_progress) + "%"
 
 
             // interation progress bar
@@ -21,6 +22,7 @@ function init_sockets_ons(){
             
             var pg_iter_bar = document.getElementById("pg_bar_iters")
             pg_iter_bar.setAttribute("style", "width: "+ current_iter_progress + "%")
+            pg_iter_bar.textContent = Math.round(current_iter_progress) + "%"
             
 
 
@@ -136,7 +138,7 @@ function generate_tbl_for_models(model_list){
     
     
   
-    cell0.innerHTML = "Model Iter"
+    cell0.innerHTML = "<b>Model Iter</b>"
     
     
   
@@ -153,12 +155,14 @@ function generate_tbl_for_models(model_list){
         input_rd_btn.setAttribute("type", "radio")
         input_rd_btn.setAttribute("name", "inference_model")
         input_rd_btn.setAttribute("value", model_list[i].path)
+        input_rd_btn.className = "form-check-input"
   
         var btn_del = document.createElement("BUTTON");
         var btn_text = document.createTextNode("Delete")
         btn_del.setAttribute("value",model_list[i].path)
         btn_del.onclick =  del_model;       
         btn_del.appendChild(btn_text)
+        btn_del.className = "btn btn-danger"
 
         
   
