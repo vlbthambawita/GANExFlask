@@ -378,7 +378,8 @@ def init_events(socketio):
         statlist = getPlotStats(db, expid)
         
         if len(statlist) > 0:
-            plots = training_plots.trainLossPlot(db, expid, statlist)
+            # plots = training_plots.trainLossPlot(db, expid, statlist)
+            plots = training_plots.trainLossPlot_v3(db, expid, statlist)
             emit("plot-get-plots-data", plots ,namespace="/plot")
             print("plot emited")
 

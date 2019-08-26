@@ -5,9 +5,20 @@
 function init_socket_ons(){
     window.socket.on("plot-get-plots-data", function(plots){
        // alert("plot get plot data")
-        const graphs = JSON.parse(plots) //| safe;
+       var div_plots = document.getElementById("plots")
+       div_plots.innerHTML = "";
+       for (var i=0; i < plots.length ; i++){
+        var div_p = document.createElement("DIV"); 
+        const graphs = JSON.parse(plots[i])
+        Plotly.newPlot(div_p,graphs,{});
+
+        div_plots.appendChild(div_p)
+
+       }
+
+       // const graphs = JSON.parse(plots) //| safe;
                        
-        Plotly.newPlot('plots_2',graphs,{});
+      //  Plotly.newPlot('plots_2',graphs,{});
 
     })
 
