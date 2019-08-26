@@ -348,7 +348,7 @@ def init_events(socketio):
     
 
     @socketio.on("runexp-rqst-del-model", namespace='/runexp')
-    def rqst_del_model(pid, expid, model_path):
+    def rqst_del_model_runexp_window(pid, expid, model_path):
         db = get_db()
         del_model(db, pid, expid, model_path)
         model_data_list  = get_models(db, pid, expid)
