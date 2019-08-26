@@ -122,10 +122,12 @@ def trainLossPlot_v3(db, expid, statlist):
 
 
     # fig = make_subplots(rows=1, cols=2)
-        fig.add_trace(go.Scatter(x=data_x, y=data_y))
+        fig.add_trace(go.Scatter(x=data_x, y=data_y, name=str(statlist[i][0])))
 
     # fig.add_trace(go.Scatter(x=df['x'], y=df['y']), row=1, col=2)
         fig.update_layout(height=600, width=1200)
+        fig.update_layout(showlegend=True)
+        fig.update_layout(template="plotly_dark")
 
     for fig in figs.values():
         graphs.append(json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder))
