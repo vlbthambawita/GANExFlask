@@ -66,7 +66,7 @@ function onclick_btn_inference(){
 
 
 
-// Generate a table for generated images
+// Generate a table for saved models
 function generate_tbl_for_models(model_list){
     
     var tbl = document.getElementById("tbl_models")

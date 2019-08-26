@@ -15,6 +15,7 @@
             window.socket = io('/runexp')
 
             init_sockets_ons();
+            rqst_available_checkpoints();
             setInterval(request_current_info, 1000);
 
         })
@@ -33,14 +34,14 @@ This is the page for train, re-train and reset experiments..!
         <div id="pg_bar_iters" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
 </div>
 
-<form method="POST" action="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">
+<!--<form method="POST" action="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">-->
     
-        <button id="btnTrain" name="runexp_btn" value="train">Train</button>
-        <button id="btnRetrain" name="runexp_btn" value="re-train">Re-Train</button>
-        <button id="btnReset" name="runexp_btn" value="reset">Reset</button>
-</form>
+        <button id="btnTrain" name="runexp_btn" value="train" onclick="click_btn_train();">Train</button>
+        <button id="btnRetrain" name="runexp_btn" value="re-train" onclick="click_btn_retrain();">Re-Train</button>
+        <button id="btnReset" name="runexp_btn" value="reset" onclick="click_btn_reset();">Reset</button>
+<!--</form> -->
 
-
+<table class="table" id="tbl_models_runexp_window"></table>
 
 <div id="Results">...</div>   
   

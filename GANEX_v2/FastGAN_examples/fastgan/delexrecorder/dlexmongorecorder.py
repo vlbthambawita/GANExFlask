@@ -62,12 +62,16 @@ class DLExMongoRecorder():
     # function to record total epochs
     def add_total_epoch(self):
         current_epoch = self.get_exp_info("total_epochs")
-        self.record_exp_info("total_epochs", current_epoch +1 )
+        self.record_exp_info("total_epochs", int(current_epoch) +1 )
 
     # function to read current total epoch number
     def read_total_epoch(self):
         current_epoch = self.get_exp_info("total_epochs")
         return current_epoch
+        
+    # Recording total epoch
+    def set_total_epoch(self, epoch):
+        self.record_exp_info("total_epochs", int(epoch))
 
     # function to record iterations
     def record_iters(self, iter_num):

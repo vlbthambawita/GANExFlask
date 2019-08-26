@@ -1,6 +1,6 @@
 import time
 
-from flask import session
+from flask import session, flash
 from flask_socketio import emit, join_room, leave_room
 #from . import socketio
 from GANEX.fastGAN.task import randnumber
@@ -19,7 +19,7 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                             )
 # second import list from sama location
 from GANEX.dlexmongo import (get_models, del_model, del_plt_stat, get_gan_types,
-                                del_gan_type
+                                del_gan_type, setExpState, delTrainStats, update_exp_info
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -278,6 +278,81 @@ def init_events(socketio):
         print("emitted to runexp")
 
 
+    # send available checkpoints to window
+    @socketio.on("runexp-rqst-available-checkpoints", namespace='/runexp')
+    def rqst_available_checkpoints(pid, expid):
+        db = get_db()
+        model_data_list  = get_models(db, pid, expid)
+        print(model_data_list)
+        emit("runexp-get-available-checkpoints", model_data_list, namespace='/runexp')
+
+
+
+
+    # Train button functionalities
+    @socketio.on("runexp-rqst-train-exp", namespace='/runexp')
+    def rqst_train_exp(pid, expid):
+        print("Training")
+        try:
+            db = get_db()
+           #  status = getExpState(db, expid)
+            (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
+            gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
+            # gan.run()
+            x = threading.Thread(target=gan.run)
+            x.start()
+            setExpState(db, expid, "RETRAIN")
+
+            
+
+        except Exception as e:
+            print(str(e))
+
+    # Retrain btn functionalities
+    @socketio.on("runexp-rqst-retrain-exp", namespace='/runexp')
+    def rqst_retrain_exp(pid, expid, model_path):
+        print("Re-Training")
+        print("Model path ", model_path)
+        try:
+            db = get_db()
+            # status = getExpState(db, expid)
+            (ganDir, ganFile, ganClass) = getGANInfo(db, expid)
+            gan = create_gan_object(db, pid, expid, ganDir, ganFile, ganClass)
+            # gan.rerun()
+            x = threading.Thread(target=gan.rerun, args=(model_path,))
+            x.start()
+            setExpState(db, expid, "RETRAIN")
+
+        except Exception as e:
+            print(str(e))
+
+    # Reset btn functionalities
+    @socketio.on("runexp-rqst-reset-exp", namespace='/runexp')
+    def rqst_reset_exp(pid, expid):
+        try:
+            db = get_db()
+            delTrainStats(db, expid)
+            setExpState(db, expid, "TRAIN")
+
+            # reset default exp para
+            exp_para_list = get_default_exp_para(db, pid)
+            for exp_para in exp_para_list:
+                temp_dict = {exp_para["para_key"]: exp_para["para_value"]}
+                update_exp_info(db, expid, temp_dict)
+                print("exp para :", exp_para )
+
+        except Exception as e:
+            print(str(e))
+
+    
+    
+
+    @socketio.on("runexp-rqst-del-model", namespace='/runexp')
+    def rqst_del_model(pid, expid, model_path):
+        db = get_db()
+        del_model(db, pid, expid, model_path)
+        model_data_list  = get_models(db, pid, expid)
+        emit("runexp-get-available-checkpoints", model_data_list, namespace='/runexp')
 
 
 

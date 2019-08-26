@@ -19,15 +19,15 @@ class FastGANTrainer():
         """
         pass
 
-    def retrain(self, num_epochs):
+    def retrain(self, num_epochs, checkpoint_path):
         """
         Main retrain method
         """
 
-        self.total_epochs = int(self.gan.recorder.get_exp_info("total_epochs")) 
-        checkpoint_path_to_load = self.gan.recorder.load_checkpoint_path(self.total_epochs,"EPOCH")
+       # self.total_epochs = int(self.gan.recorder.get_exp_info("total_epochs")) 
+       # checkpoint_path_to_load = self.gan.recorder.load_checkpoint_path(self.total_epochs,"EPOCH")
 
-        self.load_checkpoint(checkpoint_path_to_load)
+        self.load_checkpoint(checkpoint_path)
         print("Retraining started")
         self.train(num_epochs)
         print("Retainign stopped")
@@ -57,6 +57,8 @@ class FastGANTrainer():
         
         checkpoint = torch.load(checkpoint_path)
         self.total_epochs = checkpoint['epoch']
+        self.gan.recorder.set_total_epoch(self.total_epochs) # set total epoch to checkppoint epoch
+
         self.gan.netG.load_state_dict(checkpoint['G_state_dict'])
         self.gan.netD.load_state_dict(checkpoint['D_state_dict'])
         self.gan.optimizerG.load_state_dict(checkpoint['optimizerG_state_dict'])

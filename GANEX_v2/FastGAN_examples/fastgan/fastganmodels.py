@@ -119,7 +119,7 @@ class FastGANBaseModel():
         
         # pass
 
-    def rerun(self):
+    def rerun(self,checkpoint_path):
         """
         Main compulsory method to rerun models
         """
@@ -141,12 +141,15 @@ class FastGANBaseModel():
         self.init_optimizers()
         print("inittialize optimizers")
 
+        print("Loading checkpoint to start retrain")
+        # self.gt.load_checkpoint(model_path)
+
         #self.gt = GanTrainer(self)
         print("initialized gan trainer")
 
        
         print("gan trainer started")
-        self.gt.retrain(int(train_settings["num_epochs"]))
+        self.gt.retrain(int(train_settings["num_epochs"]), checkpoint_path)
         print("gan trainer is working")
 
     def inference(self, model_path):
