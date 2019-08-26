@@ -83,19 +83,23 @@ function createImageList(imgpathlist){
        // var span = document.createElement("SPAN");
 
         var ol_item = document.createElement("LI")
-       // ol_item.setAttribute("value", imgpathlist[i])
+       // ol_item.setAttribute("class","list-group-item") // boostrap
        // var textnode = document.createTextNode("Image")
         //ol_item.appendChild(textnode)
 
         var btn_img = document.createElement("BUTTON")
         var btn_text = document.createTextNode("Show Image")
+        //btn_img.setAttribute("class", "btn btn-info")
+        btn_img.className = "btn btn-info"
         btn_img.setAttribute("value", imgpathlist[i])
+        
         //btn_img.setAttribute("onclick", "click_del_img(this.value)")
         btn_img.onclick = show_img;
         btn_img.appendChild(btn_text)
 
         var btn_del = document.createElement("BUTTON")
         var btn_text = document.createTextNode("Delete")
+        btn_del.className = "btn btn-danger"
         btn_del.setAttribute("value", imgpathlist[i])
         btn_del.onclick = del_img;//test_fn;
         //btn_del.addEventListener('click', )
@@ -106,6 +110,7 @@ function createImageList(imgpathlist){
 
 
         ol_item.appendChild(btn_img)
+        
         ol_item.appendChild(btn_del)
 
         ol.appendChild(ol_item)

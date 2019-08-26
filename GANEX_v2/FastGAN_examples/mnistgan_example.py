@@ -156,6 +156,8 @@ class MNIST_trainer(FastGANTrainer):
                 #print("Finisjhed============")
                 self.gan.recorder.record_iters(i +1)
                 print(i)
+
+                
             
             print("Finished iters")
             # self.gan.recorder.record_exp_info("total_epochs", int(self.total_epochs))
@@ -164,6 +166,15 @@ class MNIST_trainer(FastGANTrainer):
             self.gan.recorder.record_iters(0) # reset iters
 
             current_total_epoch = self.gan.recorder.read_total_epoch()
+
+
+            # after read total epoch, collect plot data
+            # recording stats to plot
+            self.gan.recorder.record_train_stat(current_total_epoch, "d_loss", d_loss.item())
+            self.gan.recorder.record_train_stat(current_total_epoch, "g_loss", g_loss.item())
+            
+
+
             self.save_checkpoint(current_total_epoch, "EPOCH") # save model for each epoch
             self.save_generator_progress(current_total_epoch, 64)
 
