@@ -35,10 +35,10 @@ function generate_tbl_gan_types(gan_list){ // gan_list -> a list of dictionary (
     
     
   
-    cell0.innerHTML = "GAN Name"
-    cell1.innerHTML = "GAN Directory"
-    cell2.innerHTML = "GAN File"
-    cell3.innerHTML = "GAN Class Name"
+    cell0.innerHTML = "<b>GAN Name</b>"
+    cell1.innerHTML = "<b>GAN Directory</b>"
+    cell2.innerHTML = "<b>GAN File</b>"
+    cell3.innerHTML = "<b>GAN Class Name</b>"
     
     
   
@@ -59,6 +59,7 @@ function generate_tbl_gan_types(gan_list){ // gan_list -> a list of dictionary (
         btn_del.setAttribute("value",gan_list[i].name) //settings_list[i][0]
         btn_del.onclick =  del_gan_type;       
         btn_del.appendChild(btn_text)
+        btn_del.className = "btn btn-danger"
 
         
   

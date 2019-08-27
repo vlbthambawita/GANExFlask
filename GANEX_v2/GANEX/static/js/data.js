@@ -164,17 +164,20 @@ function generate_tbl_for_gen_images(img_list){
         btn_del.setAttribute("value",img_list[i].imgpath)
         btn_del.onclick =  del_gen_img;       
         btn_del.appendChild(btn_text)
+        btn_del.className = "btn btn-danger"
 
         var btn_show = document.createElement("BUTTON");
         var btn_text = document.createTextNode("Show")
         btn_show.setAttribute("value",img_list[i].imgpath)
         btn_show.onclick =  show_gen_img;       
         btn_show.appendChild(btn_text)
+        btn_show.className = "btn btn-info"
   
 
         cell1.innerHTML = img_list[i].iter;
-        cell2.appendChild(btn_del)  
-        cell3.appendChild(btn_show)        
+        cell2.appendChild(btn_show)
+        cell3.appendChild(btn_del)  
+                
        // alert(i)
   
     }

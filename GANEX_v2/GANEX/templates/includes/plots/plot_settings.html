@@ -1,11 +1,28 @@
-<select class="browser-default custom-select" id="plot_stat" >
-    {% for l in statlist %}
-            <option value="{{ l }}">{{ l }}</option>
-    {% endfor %}
 
-</select>
-<select class="browser-default custom-select" id="plot_id"></select>
-<button class="btn btn-primary" id="btn_add_plot" onclick="update_plot_settings()">Add plot</button>
+<div class="row">
+
+    <div class="col-4">
+        <select class="browser-default custom-select" id="plot_stat" >
+            {% for l in statlist %}
+                    <option value="{{ l }}">{{ l }}</option>
+            {% endfor %}
+        
+        </select>
+    </div>
+
+    <div class="col-4">
+        <select class="browser-default custom-select" id="plot_id"></select>
+    </div>
+
+    <div class="col-4">
+        <button class="btn btn-primary" id="btn_add_plot" onclick="update_plot_settings()">Add plot</button>
+    </div>
+
+</div>
 
 
-<table class="table table-dark" id="tbl_plt_settings"></table>
+<div class="row"><br></div>
+
+<div class="row">
+    <table class="table table-dark" id="tbl_plt_settings"></table>
+</div>
