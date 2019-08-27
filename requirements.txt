@@ -1,0 +1,8 @@
+## Requirements
+dash
+Flask-SocketIO
+Flask-PyMongo
+Flask-WTF
+
+
+
