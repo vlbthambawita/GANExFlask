@@ -76,6 +76,11 @@ function del_plt_stat(){
     window.socket.emit("plt-rqst-del-plt-setting", window.pid, window.expid, plt_values)
 }
 
+// Clear timer when clicked on plot settings
+function click_plt_settings(){
+    clearInterval( window.plot_timer);
+}
+
 
 function generate_tbl_plt_settings(settings_list){ // settings_list -> a list of tuples (plotstat, plotid)
     
@@ -91,8 +96,8 @@ function generate_tbl_plt_settings(settings_list){ // settings_list -> a list of
     
     
   
-    cell0.innerHTML = "Plot Stat Name"
-    cell1.innerHTML = "Plot ID"
+    cell0.innerHTML = "<b>Plot Stat Name</b>"
+    cell1.innerHTML = "<b>Plot ID</b>"
     
     
   
@@ -111,6 +116,7 @@ function generate_tbl_plt_settings(settings_list){ // settings_list -> a list of
         btn_del.setAttribute("value",[settings_list[i][0],settings_list[i][1]]) //settings_list[i][0]
         btn_del.onclick =  del_plt_stat;       
         btn_del.appendChild(btn_text)
+        btn_del.className = "btn btn-danger"
 
         
   

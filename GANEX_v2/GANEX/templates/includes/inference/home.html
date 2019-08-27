@@ -1,12 +1,22 @@
-This is home of inference tab
+<div class="row">
+    <div class="col-2">
+        <button  class="btn btn-primary btn-lg" onclick="onclick_btn_inference()">Inference</button>
+    </div>
+    <div class="col-10"></div>
+</div>
 
-<table class="table" id="tbl_models"></table>
+<div class="row">
+    <div class="col-3">
+        <table class="table table-dark" id="tbl_models"></table>
 
+    </div>
+    <div class="col-3">
+        <table class="table table-dark" id="tbl_gen_images"></table>
+    </div>
+    <div class="col-6">
+        <div id="plot_inferenced"></div>
+    </div>
+</div>
 
-<button onclick="onclick_btn_inference()">Inference</button>
-
-<table class="table" id="tbl_gen_images"></table>
-
-<div id="plot_inferenced"></div>
 
 <div class="row"></div>
