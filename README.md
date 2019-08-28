@@ -22,6 +22,9 @@ Note: If you faced any problem to install one of the above requirements from con
 
 ###    3. Download or clone this git repository
 
+###    5. Add database linnk to GANExFlask/GANEX/GANEX/db.py file
+Ex: current_app.config["MONGO_URI"] = "mongodb+srv://test:test_pswd@cluster0-uv3hx.mongodb.net/test?retryWrites=true&w=majority" #"mongodb://localhost:27017/GANEXdb"
+
 ###    4. Run the file called ganex.py
 python GANExFlask/GANEX/ganex.py
 
