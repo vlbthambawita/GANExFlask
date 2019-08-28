@@ -28,5 +28,7 @@ Ex: current_app.config["MONGO_URI"] = "mongodb+srv://test:test_pswd@cluster0-uv3
 ###    4. Run the file called ganex.py
 python GANExFlask/GANEX/ganex.py
 
+####  5. Enjoy the GANEx tool in [http://localhost:5000/] (http://localhost:5000/) 
+
 :+1:
         
