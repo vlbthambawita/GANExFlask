@@ -1,4 +1,7 @@
 import time
+import shutil
+
+from flask_pymongo import ObjectId
 
 
 from flask import session, flash
@@ -74,15 +77,43 @@ def init_events(socketio):
 
     @socketio.on("projects-rqst-create-project", namespace='/projects')
     def rqst_project_create(pro_name, pro_path):
-        db = get_db()
-        pro_full_path = os.path.join(pro_path, pro_name) 
+        try:
+            db = get_db()
+            pro_full_path = os.path.join(pro_path, pro_name) 
 
-        os.mkdir(pro_full_path)
-        add_project(db, pro_name, pro_full_path)
+            os.mkdir(pro_full_path)
+            add_project(db, pro_name, pro_full_path)
 
-        project_list = get_projects(db)
-        emit("projects-get-projects", project_list, namespace='/projects')
-        
+            project_list = get_projects(db)
+            emit("projects-get-projects", project_list, namespace='/projects')
+        except Exception as e:
+            emit("get-info", str(e), namespace="/info")
+
+    
+    @socketio.on("projects-rqst-delete-project", namespace='/projects')
+    def rqst_project_delete(pid):
+
+        try:
+            # Delete directory
+            db = get_db()
+            shutil.rmtree(db.projects.find_one({"_id":ObjectId(pid)})["path"])
+
+            # Delete project
+            col = db['projects']
+            query = {"_id":ObjectId(pid)} # need this Object ID
+            x =col.delete_many(query)
+
+            
+            #Delete corresponding all experiments
+            db.experiments.delete_many({"pid": pid})
+
+            # update projects table
+            project_list = get_projects(db)
+            emit("projects-get-projects", project_list, namespace='/projects')
+
+        except Exception as e:
+            emit("get-info", str(e), namespace="/info")
+
 
 
     ### Update GAN Types ###

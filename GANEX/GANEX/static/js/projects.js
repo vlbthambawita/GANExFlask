@@ -1,12 +1,12 @@
 function init_socket_ons(){
     window.socket.on("projects-get-gans", function(gan_type_list){
-        console.log(gan_type_list)
+        //console.log(gan_type_list)
         generate_tbl_gan_types(gan_type_list)
     })
 
     window.socket.on("projects-get-projects", function(project_list){
         var p_list = JSON.parse(project_list)
-        console.log(p_list)
+        //console.log(p_list)
         generate_tbl_projects(p_list)
     })
 }
@@ -18,7 +18,7 @@ function rqst_gan_types(){
 }
 
 function del_gan_type(){
-    console.log(this.value)
+    //console.log(this.value)
     window.socket.emit("projects-rqst-del-gantype", this.value)
 }
 
@@ -30,7 +30,7 @@ function rqst_projects(){
 
 // create project btn click
 function click_create_project(){
-    alert("project create request")
+    //alert("project create request")
     pro_name = document.getElementById("input_proName").value
     pro_path = document.getElementById("input_proPath").value
     window.socket.emit("projects-rqst-create-project", pro_name, pro_path)
@@ -39,7 +39,8 @@ function click_create_project(){
 // Project delete function
 function del_project(){
 
-    console.log("Delete project")
+    //console.log("Delete project"+ this.value)
+    window.socket.emit("projects-rqst-delete-project", this.value)
 }
 
 
@@ -123,11 +124,18 @@ function generate_tbl_gan_types(gan_list){ // gan_list -> a list of dictionary (
     cell0.innerHTML = "<b>Project ID</b>"
     cell1.innerHTML = "<b>Project Name</b>"
     cell2.innerHTML = "<b>Project Path</b>"
+
+    var url = window.location;
+    var main_url = url.protocol + "//" + url.host
+    
+   // alert(main_url)
     
     var i ;
     for (i= 0; i < project_list.length; i++){
   
         var row = tbl.insertRow(i+1);
+
+        var pro_id = project_list[i]._id.$oid
   
         var cell0 = row.insertCell(0);
         var cell1 = row.insertCell(1);
@@ -137,16 +145,23 @@ function generate_tbl_gan_types(gan_list){ // gan_list -> a list of dictionary (
   
         var btn_del = document.createElement("BUTTON");
         var btn_text = document.createTextNode("Delete")
-        btn_del.setAttribute("value",project_list[i]._id.$oid) //$oid - comes form dumps function
+        btn_del.setAttribute("value",pro_id) //$oid - comes form dumps function
         btn_del.onclick =  del_project;       
         btn_del.appendChild(btn_text)
         btn_del.className = "btn btn-danger"
 
+        var a = document.createElement('a');
+        var linkText = document.createTextNode(project_list[i].name);
+        a.appendChild(linkText);
+        a.href = main_url + "/" + pro_id + "/create";
+       // a.href= Flask.url_for('experiments.create', {pid:pro_id})
+
         
   
 
-        cell0.innerHTML = project_list[i]._id.$oid;
-        cell1.innerHTML = project_list[i].name;
+        cell0.innerHTML = pro_id;
+       // cell1.innerHTML = project_list[i].name;
+        cell1.appendChild(a)
         cell2.innerHTML = project_list[i].path;
         
         

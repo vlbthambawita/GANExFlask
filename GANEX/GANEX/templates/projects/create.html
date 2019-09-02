@@ -14,7 +14,7 @@
             window.socket = io('/projects')
             init_socket_ons();
             rqst_gan_types();
-            //rqst_projects();
+            rqst_projects();
 
             $("#btn_gan_add").click(function(){
                 $.ajax({
@@ -50,7 +50,7 @@
     <div class="col-9">
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-           <!-- {% include 'includes/projects/create_project.html' %} -->
+           {% include 'includes/projects/create_project.html' %} 
             <form action="" method="POST" novalidate>
                 {{ form.hidden_tag() }}
 

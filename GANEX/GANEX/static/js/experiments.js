@@ -164,3 +164,11 @@ function update_default_exp_para_table(para_list){
   
   // alert("table updated")
 }
+
+// ***************************************
+/// Experiment Home window handling
+// ***************************************
+
+function update_gan_types_list(gan_list){
+  alert(gan_list)
+}
