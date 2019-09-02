@@ -24,7 +24,8 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
 # second import list from sama location
 from GANEX.dlexmongo import (get_models, del_model, del_plt_stat, get_gan_types,
                                 del_gan_type, setExpState, delTrainStats, update_exp_info,
-                                get_projects, add_project
+                                get_projects, add_project,
+                                get_exps_of_pid
                             )
 
 from GANEX.plots import imageplot, training_plots
@@ -140,6 +141,83 @@ def init_events(socketio):
 ##############################################################################
 # Experiments window handlings 
 ###############################################################################
+
+
+    ### Exp window home tab handling ###
+
+    # experiment list
+    @socketio.on('exp-rqst-exps', namespace='/experiments')
+    def rqst_experiments(pid):
+        db = get_db()
+        exp_list = get_exps_of_pid(db, pid)
+        print(exp_list)
+        emit("exp-get-exps", exp_list,namespace='/experiments' )
+
+    # gan type list
+    @socketio.on('exp-rqst-gan-types', namespace='/experiments')
+    def rqst_exp_gan_types():
+        db = get_db()
+        ganlist = get_gan_types(db)
+        emit("exp-get-gans", ganlist, namespace="/experiments")
+
+    # create exp on btn click
+    @socketio.on('exp-rqst-create-exp', namespace='/experiments')
+    def rqst_exp_create(pid, exp_name, exp_type):
+        db = get_db()
+        col_exp = db.experiments
+        exp_pro_path = db.projects.find_one({"_id":ObjectId(pid)})["path"]
+
+        #paths
+        exp_path = os.path.join(exp_pro_path, exp_name)
+        exp_models_path = os.path.join(exp_pro_path, exp_name + "/models")
+        exp_output_path = os.path.join(exp_pro_path, exp_name + "/output")
+
+        os.mkdir(exp_path)
+        os.mkdir(exp_models_path)
+        os.mkdir(exp_output_path)
+
+        # initialize exp inforamtion
+        exp_dict = {"name":exp_name, "type":exp_type, "pid": pid, "status": "TRAIN", 
+                    "path":exp_path, "models_path":exp_models_path, "output_path": exp_output_path , "iters": 0,
+                    "current_epoch": 0, "dataloader_size": 0}
+
+        # modify exp_dict with default parameters
+        exp_para_list = get_default_exp_para(db, pid)
+
+        for exp_para in exp_para_list:
+           # print("exp para000=====", exp_para) 
+            exp_dict.update({exp_para["para_key"]: exp_para["para_value"]})
+
+        # insert exp dict
+        x = col_exp.insert_one(exp_dict)
+
+         # initialize train settings
+        dict_settings = {"num_epochs": 0, "checkpoint_interval": 0, "checkpoint_type":"EPOCH"}
+        set_train_settings(db, str(x.inserted_id), dict_settings)
+
+
+        #update the table
+        exp_list = get_exps_of_pid(db, pid)
+        emit("exp-get-exps", exp_list,namespace='/experiments' )
+
+
+    # Delete Exp request
+    @socketio.on('exp-rqst-create-exp', namespace='/experiments')
+    def rqst_exp_del(pid,expid):
+        db = get_db()
+        exp_col = db.experiments
+        query = {"_id":ObjectId(expid)}
+        exp_path = exp_col.find_one(query, {"_id":0, "path": 1})
+        shutil.rmtree(exp_path["path"]) # remove exp directoty
+        x =exp_col.delete_one(query) # delete given expid
+        
+        #update the table
+        exp_list = get_exps_of_pid(db, pid)
+        emit("exp-get-exps", exp_list,namespace='/experiments' )
+
+        emit("get-info","Deleted experiment: " + expid ,namespace='/info')
+
+
     
     # Experiments window handlings           
     @socketio.on('default_param_add', namespace='/experiments')
