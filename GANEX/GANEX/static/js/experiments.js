@@ -209,7 +209,7 @@ function click_btn_create_exp(){
 
 function del_exp(){
   alert("Delete exp")
-  window.socket.emit("exp-rqst-create-exp", window.pid, this.value)
+  window.socket.emit("exp-rqst-delete-exp", window.pid, this.value)
 }
 
 

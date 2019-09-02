@@ -202,7 +202,7 @@ def init_events(socketio):
 
 
     # Delete Exp request
-    @socketio.on('exp-rqst-create-exp', namespace='/experiments')
+    @socketio.on('exp-rqst-delete-exp', namespace='/experiments')
     def rqst_exp_del(pid,expid):
         db = get_db()
         exp_col = db.experiments
