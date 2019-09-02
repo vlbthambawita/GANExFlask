@@ -82,9 +82,9 @@ function update_table(para_list){
     var cell1 = row.insertCell(1)
     var cell2 = row.insertCell(2)
 
-    cell0.innerHTML = "Parameter Name"
-    cell1.innerHTML = "Parameter Key"
-    cell2.innerHTML = "Parameter Default Value"
+    cell0.innerHTML = "<b>Parameter Name</b>"
+    cell1.innerHTML = "<b>Parameter Key</b>"
+    cell2.innerHTML = "<b>Parameter Default Value</b>"
 
     var i ;
     for (i= 0; i < para_list.length; i++){
@@ -102,6 +102,7 @@ function update_table(para_list){
         btn_del.setAttribute("name", "btn_delete")
         btn_del.setAttribute("onclick", "btn_del_click(this.value)")
         btn_del.appendChild(btn_text)
+        btn_del.className = "btn btn-danger"
 
         cell1.innerHTML = para_list[i].para_name;
         cell2.innerHTML = para_list[i].para_key;
@@ -149,9 +150,9 @@ function update_default_exp_para_table(para_list){
   var cell1 = row.insertCell(1)
   var cell2 = row.insertCell(2)
 
-  cell0.innerHTML = "Parameter Name"
-  cell1.innerHTML = "Parameter Key"
-  cell2.innerHTML = "Parameter Default Value"
+  cell0.innerHTML = "<b>Parameter Name</b>"
+  cell1.innerHTML = "<b>Parameter Key</b>"
+  cell2.innerHTML = "<b>Parameter Default Value</b>"
 
   var i ;
   for (i= 0; i < para_list.length; i++){
@@ -169,6 +170,7 @@ function update_default_exp_para_table(para_list){
       btn_del.setAttribute("name", "btn_delete_exp_para")
       btn_del.setAttribute("onclick", "del_default_exp_para(this.value)")
       btn_del.appendChild(btn_text)
+      btn_del.className = "btn btn-danger"
 
       cell1.innerHTML = para_list[i].para_name;
       cell2.innerHTML = para_list[i].para_key;

@@ -1,17 +1,27 @@
 This is default exp para page
 
 <form id="frm_default_exp_para" >
-    <label>Parameter Name:</label>
-    <input id="exp_para_name" type="text" required>
 
-    <label>Parameter Key:</label>
-    <input id="exp_para_key" type="text" required>
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Parameter Name:</label>
+            <input class="col-8 form-control browser-default " id="exp_para_name" type="text" required>
+    </div>
+    
 
-    <label>Default Value:</label>
-    <input id="exp_para_value" type="text" required>
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Parameter Key:</label>
+            <input class="col-8 form-control browser-default " id="exp_para_key" type="text" required>
+    </div>
+    
 
-    <input type="button" onclick="btn_exp_para_add()" value="Add">
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Default Value:</label>
+            <input class="col-8 form-control browser-default " id="exp_para_value" type="text" required>
+    </div>
+    
+
+    <input class="btn btn-primary" type="button" onclick="btn_exp_para_add()" value="Add">
 
 </form>
 
-<table class="table" id="tbl_default_exp_para"></table>
+<table class="table table-dark" id="tbl_default_exp_para"></table>
