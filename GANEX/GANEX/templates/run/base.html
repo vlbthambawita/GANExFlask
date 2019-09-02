@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block titile %} {{ expid }} {% endblock %}
+
+{% block headding %}DASHBOARD - PID - {{ pid }} - EXPID - {{ expid }} {% endblock %}
+
+{% block nav2 %}
+
+    
+    <!--<nav class="nav nav-pills nav-fill">-->
+        <div class="nav nav-tabs" id="nav-tab" role="tablist"> 
+            <a class="nav-link" id="summary-tab" href="{{ url_for('summary.summary', pid=pid, expid=expid) }}">Summary</a> 
+            <a class="nav-link" id="data-tab" href="{{ url_for('data.data', pid=pid, expid=expid) }}"> Data</a> 
+            <a class="nav-link" id="hyperparam-tab" href="{{ url_for('hyperparam.hyperparam', pid=pid, expid=expid) }}">Hyper Parameters</a> 
+            <a class="nav-link" id="trainsettings-tab" href="{{ url_for('trainsettings.trainsettings', pid=pid, expid=expid) }}">Train Settings</a> 
+            <a class="nav-link" id="runexp-tab" href="{{ url_for('runexp.runexp', pid=pid, expid=expid) }}">RUN Experiment</a> 
+            <a class="nav-link" id="plots-tab" href="{{ url_for('plots.plots', pid=pid, expid=expid) }}">Plots</a> 
+            <a class="nav-link" id="inference-tab" href="{{ url_for('inference.inference', pid=pid, expid=expid) }}">Inference</a> 
+            <a class="nav-link" id="benchmark-tab" href="{{ url_for('benchmark.benchmark', pid=pid, expid=expid) }}">Benchmarking</a> 
+       </div> 
+   <!-- </nav>-->
+    
+    
+
+
+<!--
+<script>
+    document.getElementById("summary-tab").onclick = function () {
+        location.href = "{{ url_for('summary.summary', pid=pid, expid=expid) }}" ;
+    };
+
+    document.getElementById("data-tab").onclick = function () {
+        location.href = "{{ url_for('data.data', pid=pid, expid=expid) }}";
+    };
+</script>
+
+-->
+
+
+{% endblock %}
+

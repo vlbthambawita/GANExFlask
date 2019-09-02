@@ -1,0 +1,34 @@
+
+
+<!--
+<p>Test data page</p>
+<p id="p_image_list"></p>
+
+
+
+<img src="{{ url_for('data.sendImage', pid=pid, expid=expid) }}" alt="test"> 
+<div id="plt_image"></div>
+
+-->
+
+<div class="row">
+        <button  class="btn btn-primary" id="btn_gen_data" onclick="gen_img()">Generate Input Sample</button>
+</div>
+<div class="row"><br></div>
+
+<div class="row">
+    <div class="col-3" style="height: 500px; overflow: auto">
+        
+        
+       <p></p>
+               
+       <!-- <ol id="ol_images"></ol> -->
+
+        <table id="tbl_generated_img_list"></table>
+    
+    </div>
+    <div class="col-9">
+        <div id="plt_image_selected"></div>
+    </div>
+</div>
+    

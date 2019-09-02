@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block script %}
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/experiments.js') }}"></script>
+
+<script>
+   $(document).ready(function(){
+      window.pid = "{{ pid }}";
+      window.socket = io('/experiments');
+      init_load()
+   })
+</script>
+
+
+{% endblock %}
+
+{% block nav %}
+<h5>
+        <nav>
+                <a href="{{ url_for('projects.create') }}">Projects</a>
+        </nav>
+</h5>
+{% endblock %}
+
+{% block headding %}Experiments Main Window{% endblock %}
+
+{% block content %}
+
+
+
+<div class="row"><br></div> <!-- Space between heading and below contents -->
+<div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-hyperparam" role="tab" aria-controls="profile">Default Hyperparameters</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-exp-para" role="tab" aria-controls="messages">Default Experiment Parameters</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+      </div>
+    </div>
+    <div class="col-9">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+            <div>{% include 'includes/experiments/create.html' %}</div>
+        </div>
+        <div class="tab-pane fade" id="list-hyperparam" role="tabpanel" aria-labelledby="list-profile-list">
+            {% include 'includes/experiments/default_hyperparams.html' %}
+        </div>
+        <div class="tab-pane fade" id="list-exp-para" role="tabpanel" aria-labelledby="list-messages-list">
+          {% include 'includes/experiments/default_exp_para.html' %}
+        </div>
+        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+      </div>
+    </div>
+</div>
+
+    
+
+    
+
+    
+{% endblock %}
