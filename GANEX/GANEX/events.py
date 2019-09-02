@@ -1,5 +1,6 @@
 import time
 
+
 from flask import session, flash
 from flask_socketio import emit, join_room, leave_room
 #from . import socketio
@@ -19,13 +20,15 @@ from GANEX.dlexmongo import (set_train_settings, set_default_hyperparam, get_def
                             )
 # second import list from sama location
 from GANEX.dlexmongo import (get_models, del_model, del_plt_stat, get_gan_types,
-                                del_gan_type, setExpState, delTrainStats, update_exp_info
+                                del_gan_type, setExpState, delTrainStats, update_exp_info,
+                                get_projects, add_project
                             )
 
 from GANEX.plots import imageplot, training_plots
 
 import threading
 import importlib
+import os
 
 # from . import socketio
 
@@ -61,6 +64,28 @@ def init_events(socketio):
 ##########################################################################
 # Projects window handling
 ##########################################################################
+
+    #### Home Tab #####
+    @socketio.on("projects-rqst-projects", namespace='/projects')
+    def rqst_projects():
+        db = get_db()
+        project_list = get_projects(db)
+        emit("projects-get-projects", project_list, namespace='/projects')
+
+    @socketio.on("projects-rqst-create-project", namespace='/projects')
+    def rqst_project_create(pro_name, pro_path):
+        db = get_db()
+        pro_full_path = os.path.join(pro_path, pro_name) 
+
+        os.mkdir(pro_full_path)
+        add_project(db, pro_name, pro_full_path)
+
+        project_list = get_projects(db)
+        emit("projects-get-projects", project_list, namespace='/projects')
+        
+
+
+    ### Update GAN Types ###
     @socketio.on("projects-rqst-gan-types", namespace='/projects')
     def rqst_gan_types():
         db = get_db()
