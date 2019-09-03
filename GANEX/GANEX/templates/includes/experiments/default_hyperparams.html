@@ -32,21 +32,30 @@
 </script>
 
 <form id="frm_default_hyperpara" >
-    <label>Parameter Name:</label>
-    <input id="para_name" type="text" required>
 
-    <label>Parameter Key:</label>
-    <input id="para_key" type="text" required>
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Parameter Name:</label>
+            <input class="col-8 form-control browser-default " id="para_name" type="text" required>
+    </div>
 
-    <label>Default Value:</label>
-    <input id="para_value" type="text" required>
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Parameter Key:</label>
+            <input class="col-8 form-control browser-default "  id="para_key" type="text" required>
+    </div>
+    
 
-    <input type="button" onclick="btnAddClick()" value="Add">
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Default Value:</label>
+            <input class="col-8 form-control browser-default " id="para_value" type="text" required>
+    </div>
+    
+
+    <input class="btn btn-primary" type="button" onclick="btnAddClick()" value="Add">
 
 </form>
 
 {{ default_para_list }}
 
-<table class="table" id="tbl_params">
+<table class="table table-dark" id="tbl_params">
     
 </table>

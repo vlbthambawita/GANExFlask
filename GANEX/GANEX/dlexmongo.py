@@ -1,10 +1,43 @@
 from flask_pymongo import ObjectId
 from flask import flash
 import os
+from bson.json_util import dumps
+
+
+#######################################
+# Project collection handling
+#######################################
+def get_projects(db):
+    col = db.projects
+    all_projects_list = dumps(list(col.find({}))) # dumps to serialize object id
+    # print(all_projects_list)
+    return all_projects_list
+
+
+
+def add_project(db, pro_name, pro_path):
+    col = db.projects
+    pdict = {"name":pro_name,"path":pro_path}
+    x = col.insert_one(pdict)
+    print("New project inserted")
+
+
+
+
+
 
 #######################################
 # Experiments collection handling
 #######################################
+
+# get all experiments of 
+
+def get_exps_of_pid(db, pid):
+    col = db.experiments
+    all_exps = col.find({"pid":pid})
+    exp_list = dumps(list(all_exps))
+    return exp_list
+
 
 # get the experiment state
 def getExpState(db, expid):

@@ -7,7 +7,10 @@
    $(document).ready(function(){
       window.pid = "{{ pid }}";
       window.socket = io('/experiments');
-      init_load()
+      init_load();
+
+      update_gan_types_list();
+      rqst_exps_of_pid();
    })
 </script>
 
@@ -41,7 +44,8 @@
     <div class="col-9">
       <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-            <div>{% include 'includes/experiments/create.html' %}</div>
+            <!--<div>{% include 'includes/experiments/create.html' %}</div> -->
+            <div>{% include 'includes/experiments/create_v2.html' %}</div>
         </div>
         <div class="tab-pane fade" id="list-hyperparam" role="tabpanel" aria-labelledby="list-profile-list">
             {% include 'includes/experiments/default_hyperparams.html' %}
