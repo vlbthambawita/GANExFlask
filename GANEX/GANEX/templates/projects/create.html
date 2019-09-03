@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block headding %} Main Window {% endblock %}
+
+
+
+
+{% block script %}
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='js/projects.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            window.socket = io('/projects')
+            init_socket_ons();
+            rqst_gan_types();
+            rqst_projects();
+
+            
+
+            $("#btn_gan_add").click(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ url_for('projects.setGanTypes') }}",
+                    data: {"name": $("#input_ganName").val(), "dir": $("#input_ganDir").val(), "file": $("#input_ganFile").val(), "class": $("#input_ganClass").val()},
+                    contentType: 'application/json',
+                    success: function(data){
+                        alert("success")
+                    }
+                })
+                // clear input feilds
+            })
+        })
+    </script>
+
+{% endblock %}
+
+{% block content %}
+
+    
+    <div class="row">
+    <div class="col-3">
+      <div class="list-group" id="list-tab" role="tablist">
+        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
+        <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-gans" role="tab" aria-controls="gans">Update GAN Types</a>
+        <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+        <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+      </div>
+    </div>
+
+
+    <div class="col-9">
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+           {% include 'includes/projects/create_project.html' %} 
+           <!--
+            <form action="" method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-group"> 
+                   
+                        {{ form.projectName.label }} <br>
+                        {{ form.projectName(size=32) }}
+                    
+                </div>
+                
+
+                <p>
+                    {{ form.projectPath.label }} <br>
+                    {{ form.projectPath(size=32) }}
+                </p>
+
+                <p>
+                    {{ form.submit() }}
+                </p>
+
+            </form>
+
+    <div>
+        <h2>Projects</h2>
+        {% for p in projects %}
+            <p> 
+                {{ p["_id"] }} - <a href="{{ url_for('experiments.create', pid=p['_id']) }}">{{ p["name"] }}</a>
+                <a href="{{ url_for('projects.delete', pid=p['_id']) }}">Delete</a>
+            </p>
+            
+        {% endfor %}
+    </div>
+    -->
+
+        </div>
+
+
+        <div class="tab-pane fade" id="list-gans" role="tabpanel" aria-labelledby="list-profile-list">
+            {% include 'includes/projects/update_gan_types.html' %}
+        
+        </div>
+        <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+        <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
+      </div>
+    </div>
+</div>
+
+    
+{% endblock %}

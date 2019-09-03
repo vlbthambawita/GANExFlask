@@ -1,0 +1,61 @@
+ 
+    
+<script>
+   
+    $(document).ready(function(){
+
+       // var socket = io('/experiments');
+
+        //set_pid_to_js_file("{{ pid }}");
+       // set_socket_to_js_file(socket);
+       //window.pid = "{{ pid }}"
+       //alert("PID" + window.pid)
+       //init_load()
+
+       /*
+        $("#frm_default_hyperpara").submit(function(e){
+            e.preventDefault();
+    
+            socket.emit('my test', {"para_name": $("#para_name").val(), 
+                        "para_key": $("#para_key").val(),
+                        "para_value": $("#para_value").val()}, pid="{{ pid }}");
+
+            socket.on('get_default_hyperparams', function(data){
+                alert("get default hyper param")
+                update_table(data)
+            })
+   
+        }) */
+        
+    })
+
+</script>
+
+<form id="frm_default_hyperpara" >
+
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Parameter Name:</label>
+            <input class="col-8 form-control browser-default " id="para_name" type="text" required>
+    </div>
+
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Parameter Key:</label>
+            <input class="col-8 form-control browser-default "  id="para_key" type="text" required>
+    </div>
+    
+
+    <div class="form-group row">
+            <label class="col-4 col-form-label">Default Value:</label>
+            <input class="col-8 form-control browser-default " id="para_value" type="text" required>
+    </div>
+    
+
+    <input class="btn btn-primary" type="button" onclick="btnAddClick()" value="Add">
+
+</form>
+
+{{ default_para_list }}
+
+<table class="table table-dark" id="tbl_params">
+    
+</table>
